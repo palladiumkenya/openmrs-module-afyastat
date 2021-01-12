@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <property name="clob.type" value="longtext"/>
+
+    <!--  MEDIC MOBILE TABLE DESIGN SCHEMA -->
+
+   <changeSet id="medic_data_source-20200723-1433" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_data_source"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_data_source">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1024)"/>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="retired" type="tinyint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retired_by" type="int"/>
+            <column name="date_retired" type="datetime"/>
+            <column name="retire_reason" type="varchar(255)" defaultValue="null"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medic_data_source_creator"
+                                 baseTableName="medic_data_source" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_data_source_changed_by"
+                                 baseTableName="medic_data_source" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_data_source_retired_by"
+                                 baseTableName="medic_data_source" baseColumnNames="retired_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+   <changeSet id="medic_queue_data_20200723-1444" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_queue_data"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_queue_data">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="discriminator" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_source" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="mediumtext">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="provider" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="form_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="form_data_uuid" type="varchar(255)">
+            <constraints nullable="true"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="patient_uuid" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medic_queue_data_creator"
+                                 baseTableName="medic_queue_data" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_queue_data_changed_by"
+                                 baseTableName="medic_queue_data" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_queue_data_data_source"
+                                 baseTableName="medic_queue_data" baseColumnNames="data_source"
+                                 referencedTableName="medic_data_source" referencedColumnNames="id"/>
+       <addForeignKeyConstraint constraintName="medic_queue_data_location"
+                                baseTableName="medic_queue_data" baseColumnNames="location"
+                                referencedTableName="location" referencedColumnNames="location_id"/>
+    </changeSet>
+
+    <changeSet id="medic_archive_data_20200723-1448" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_archive_data"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_archive_data">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="discriminator" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_source" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="mediumtext">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="form_data_uuid" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_archived" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="patient_uuid" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medic_archive_data_creator"
+                                 baseTableName="medic_archive_data" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_archive_data_changed_by"
+                                 baseTableName="medic_archive_data" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_archive_data_data_source"
+                                 baseTableName="medic_archive_data" baseColumnNames="data_source"
+                                 referencedTableName="medic_data_source" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20200723-1449" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_error_data"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_error_data">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="discriminator" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_source" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="mediumtext">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_processed" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="provider" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="form_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="form_data_uuid" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="patient_uuid" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medic_error_data_creator"
+                                 baseTableName="medic_error_data" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_error_data_changed_by"
+                                 baseTableName="medic_error_data" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_error_data_data_source"
+                                 baseTableName="medic_error_data" baseColumnNames="data_source"
+                                 referencedTableName="medic_data_source" referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="medic_error_data_location"
+                                 baseTableName="medic_error_data" baseColumnNames="location"
+                                 referencedTableName="location" referencedColumnNames="location_id"/>
+    </changeSet>
+
+    <changeSet id="medic_notification_data_20200723-1451" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_notification_data"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_notification_data">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="subject" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receiver" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patient" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="tinyint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)" defaultValue="null"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medic_notification_data_creator"
+                                 baseTableName="medic_notification_data" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_notification_data_changed_by"
+                                 baseTableName="medic_notification_data" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_notification_data_voided_by"
+                                 baseTableName="medic_notification_data" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_notification_data_sender"
+                                 baseTableName="medic_notification_data" baseColumnNames="sender"
+                                 referencedTableName="person" referencedColumnNames="person_id"/>
+        <addForeignKeyConstraint constraintName="medic_notification_data_receiver"
+                                 baseTableName="medic_notification_data" baseColumnNames="receiver"
+                                 referencedTableName="person" referencedColumnNames="person_id"/>
+        <addForeignKeyConstraint constraintName="medic_notification_patient"
+                                 baseTableName="medic_notification_data" baseColumnNames="patient"
+                                 referencedTableName="patient" referencedColumnNames="patient_id"/>
+    </changeSet>
+
+    <changeSet id="medic_notification_data_20200723-1500" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="medic_notification_data" columnName="receiver"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="medic_notification_data" columnName="receiver" columnDataType="int"/>
+    </changeSet>
+
+    <changeSet id="medic_error_message_20200723-1501" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_error_message"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_error_message">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="medic_error_data_id" type="int">
+            </column>
+            <column name="message" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+           </createTable>
+        <addForeignKeyConstraint constraintName="medic_error_message_creator"
+                                 baseTableName="medic_error_message" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_error_message_changed_by"
+                                 baseTableName="medic_error_message" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_error_message_data"
+                                 baseTableName="medic_error_message" baseColumnNames="medic_error_data_id"
+                                 referencedTableName="medic_error_data" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="medic_registration-_20200723-1534" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="medic_registration_data"/>
+            </not>
+        </preConditions>
+        <createTable tableName="medic_registration_data">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="temporary_uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="assigned_uuid" type="char(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+
+            <column name="voided" type="tinyint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)" defaultValue="null"/>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="medic_registration_data_creator"
+                                 baseTableName="medic_registration_data" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_registration_data_changed_by"
+                                 baseTableName="medic_registration_data" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="medic_registration_data_voided_by"
+                                 baseTableName="medic_registration_data" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="medic_datasource-_20200723-1549" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from `medic_data_source` WHERE `uuid` ='0d62b128-010e-4c1b-ba86-ef963b7f8a72'</sqlCheck>
+        </preConditions>
+        <comment>Creating a default medic data source with the name Mobile Devices</comment>
+        <insert tableName="medic_data_source">
+            <column name="name" value="Mobile Devices"/>
+            <column name="description" value="Default data source"/>
+            <column name="creator" value="1"/>
+            <column name="date_created" valueDate="2018-02-14T10:00:00"/>
+            <column name="uuid" value="0d62b128-010e-4c1b-ba86-ef963b7f8a72"/>
+        </insert>
+    </changeSet>
+
+    <!--Inserting Medic Queue Data Processor into schedule_task_config table-->
+    <changeSet id="medic_queue_20200724-1320" author="pwangoo">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.afyastat.task.ProcessQueueInfoTask'
+                And name = 'Medic Queue Data Processor'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting Medic Queue Data Processor into 'schedule_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="Medic Queue Data Processor" />
+            <column name="description" value="Processes Medic Queue Data Processor" />
+            <column name="schedulable_class" value="org.openmrs.module.afyastat.task.ProcessQueueInfoTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="2020-07-23T23:59:59" />
+            <column name="repeat_interval" value="180" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="1" />
+            <column name="started" value="1" />
+            <column name="uuid" value="ba4fb987-47ae-45f7-a2f4-98d1c707c4c5" />
+        </insert>
+    </changeSet>
+
+
+    <!--Adding scheduled task to push contact list to the Medic Mobile system // should be include once everything is working-->
+   <!-- <changeSet id="kenyaemr_hiv_testing_021" author="aojwang">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.hivtestingservices.task.PushContactsToMedicMobileTask'
+                And name = 'Push Contact list to Medic Mobile CHT system'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting processor for pushing records to CHT into 'schedule_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="Push Contact list to Medic Mobile CHT system" />
+            <column name="description" value="Push lab requests to Medic Mobile CHT" />
+            <column name="schedulable_class" value="org.openmrs.module.hivtestingservices.task.PushContactsToMedicMobileTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="2020-04-04T23:59:59" />
+            <column name="repeat_interval" value="3600" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="1" />
+            <column name="started" value="1" />
+            <column name="uuid" value="e8e35121-c569-479f-b1d7-6c713fd72198" />
+        </insert>
+    </changeSet>-->
+
+</databaseChangeLog>
