@@ -27,15 +27,15 @@
 
     <!-- Wraps AfyastatService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="afyastat.AfyastatService"
+    <!--<bean id="afyastat.AfyastatService"
             class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager" />
         </property>
         <property name="target">
-            <bean class="org.openmrs.module.afyastat.api.impl.AfyastatServiceImpl">
+            <bean class="org.openmrs.module.afyastat.api.service.impl.AfyastatServiceImpl">
                 <property name="dao" >
-                    <bean class="org.openmrs.module.afyastat.api.dao.AfyastatDao">
+                    <bean class="org.openmrs.module.afyastat.api.db.AfyastatDao">
                         <property name="sessionFactory">
                             <ref bean="sessionFactory" />
 
@@ -50,15 +50,105 @@
         <property name="transactionAttributeSource">
             <ref bean="transactionAttributeSource" />
         </property>
-    </bean>
+    </bean>-->
 
     <!-- Adds AfyastatService to OpenMRS context so it can be accessed
     calling Context.getService(AfyastatService.class) -->
+    <!-- Services accessible via Context.getService() -->
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
                 <value>org.openmrs.module.afyastat.api.AfyastatService</value>
-                <ref bean="afyastat.AfyastatService" />
+                <bean
+                        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="transactionManager">
+                        <ref bean="transactionManager" />
+                    </property>
+                    <property name="target">
+                        <bean class="org.openmrs.module.afyastat.api.service.impl.AfyastatServiceImpl">
+                            <property name="patientContactDAO">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaStatDAO">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory" />
+                                    </property>
+                                </bean>
+                            </property>
+                        </bean>
+                    </property>
+                    <property name="preInterceptors">
+                        <ref bean="serviceInterceptors" />
+                    </property>
+                    <property name="transactionAttributeSource">
+                        <ref bean="transactionAttributeSource" />
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- Medic services  -->
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list merge="true">
+                <value>org.openmrs.module.afyastat.api.service.AfyaStatDataService</value>
+                <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="transactionManager">
+                        <ref bean="transactionManager"/>
+                    </property>
+                    <property name="target">
+                        <bean class="org.openmrs.module.afyastat.api.service.impl.InfoServiceImpl">
+                            <property name="errorDataDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorInfoDao">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                            <property name="queueDataDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateQueueInfoDao">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                            <property name="archiveDataDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateArchiveInfoDao">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                            <property name="dataSourceDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateInfoSourceDao">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                            <property name="notificationDataDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateNotificationInfoDao">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                            <property name="errorMessageDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorMessageInfoDao">
+                                    <property name="sessionFactory">
+                                        <ref bean="sessionFactory"/>
+                                    </property>
+                                </bean>
+                            </property>
+                        </bean>
+                    </property>
+                    <property name="preInterceptors">
+                        <ref bean="serviceInterceptors"/>
+                    </property>
+                    <property name="transactionAttributeSource">
+                        <ref bean="transactionAttributeSource"/>
+                    </property>
+                </bean>
             </list>
         </property>
     </bean>

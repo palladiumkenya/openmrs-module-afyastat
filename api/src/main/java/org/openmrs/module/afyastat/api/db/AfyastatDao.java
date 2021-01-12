@@ -7,50 +7,43 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.afyastat.api;
+package org.openmrs.module.afyastat.api.db;
 
 import org.openmrs.Cohort;
 import org.openmrs.Patient;
-import org.openmrs.api.OpenmrsService;
-
+import org.openmrs.module.afyastat.api.ContactTrace;
+import org.openmrs.module.afyastat.api.PatientContact;
 import org.openmrs.module.afyastat.api.service.MedicQueData;
 import org.openmrs.module.reporting.common.DurationUnit;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
-/**
- * The main service of this module, which is exposed for other modules. See
- * moduleApplicationContext.xml on how it is wired up.
- */
-@Transactional
-public interface AfyastatService extends OpenmrsService {
-	
-	public List<PatientContact> getPatientContacts();
+public interface AfyastatDao {
 	
 	public PatientContact savePatientContact(PatientContact patientContact);
 	
-	public List<PatientContact> searchPatientContact(String searchName);
+	public List<PatientContact> getPatientContactByPatient(Patient patient);
+	
+	public List<PatientContact> getPatientContacts();
 	
 	public void voidPatientContact(int theId);
+	
+	public List<PatientContact> searchPatientContact(String searchName);
 	
 	public PatientContact getPatientContactByID(Integer patientContactId);
 	
 	public PatientContact getPatientContactByUuid(String uuid);
 	
-	public List<PatientContact> getPatientContactByPatient(Patient patient);
-	
 	public ContactTrace saveClientTrace(ContactTrace contactTrace);
 	
 	public MedicQueData saveQueData(MedicQueData medicQueData);
 	
-	public List<ContactTrace> getContactTraceByPatientContact(PatientContact patientContact);
-	
-	public ContactTrace getPatientContactTraceById(Integer patientContactId);
+	public ContactTrace getPatientContactTraceById(Integer patientContactTraceId);
 	
 	public ContactTrace getLastTraceForPatientContact(PatientContact patientContact);
+	
+	List<ContactTrace> getContactTraceByPatientContact(PatientContact patientContact);
 	
 	public PatientContact getPatientContactEntryForPatient(Patient patient);
 	
