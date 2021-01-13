@@ -15,19 +15,19 @@ package org.openmrs.module.afyastat.api.db.hibernate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.afyastat.api.db.QueueInfoDao;
+import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 
 /**
  */
-public class HibernateQueueInfoDao extends HibernateAfyaDataDao<AfyaStatQueueData> implements QueueInfoDao {
+public class HibernateAfyaStatQueueDataDao extends HibernateAfyaDataDao<AfyaStatQueueData> implements AfyaStatQueueDataDao {
 	
-	private final Log log = LogFactory.getLog(HibernateQueueInfoDao.class);
+	private final Log log = LogFactory.getLog(HibernateAfyaStatQueueDataDao.class);
 	
 	/**
 	 * Default constructor.
 	 */
-	protected HibernateQueueInfoDao() {
+	protected HibernateAfyaStatQueueDataDao() {
 		super(AfyaStatQueueData.class);
 	}
 }

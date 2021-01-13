@@ -22,8 +22,8 @@ import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
 import org.openmrs.module.afyastat.api.db.ErrorInformationDao;
 import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
-import org.openmrs.module.afyastat.api.db.QueueInfoDao;
-import org.openmrs.module.afyastat.api.db.ErrorMessageInfoDao;
+import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
+import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
 import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
@@ -49,7 +49,7 @@ public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataS
 	
 	private ErrorInformationDao errorDataDao;
 	
-	private QueueInfoDao queueDataDao;
+	private AfyaStatQueueDataDao queueDataDao;
 	
 	private ArchiveInfoDao archiveDataDao;
 	
@@ -57,13 +57,13 @@ public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataS
 	
 	private NotificationInfoDao notificationDataDao;
 	
-	private ErrorMessageInfoDao errorMessageDao;
+	private ErrorMessagesInfoDao errorMessageDao;
 	
-	public QueueInfoDao getQueueDataDao() {
+	public AfyaStatQueueDataDao getQueueDataDao() {
 		return queueDataDao;
 	}
 	
-	public void setQueueDataDao(final QueueInfoDao queueDataDao) {
+	public void setQueueDataDao(final AfyaStatQueueDataDao queueDataDao) {
 		this.queueDataDao = queueDataDao;
 	}
 	
@@ -99,11 +99,11 @@ public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataS
 		this.notificationDataDao = notificationDataDao;
 	}
 	
-	public ErrorMessageInfoDao getErrorMessageDao() {
+	public ErrorMessagesInfoDao getErrorMessageDao() {
 		return errorMessageDao;
 	}
 	
-	public void setErrorMessageDao(final ErrorMessageInfoDao errorMessageDao) {
+	public void setErrorMessageDao(final ErrorMessagesInfoDao errorMessageDao) {
 		this.errorMessageDao = errorMessageDao;
 	}
 	

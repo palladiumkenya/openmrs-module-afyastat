@@ -110,7 +110,7 @@
                                 </bean>
                             </property>
                             <property name="queueDataDao">
-                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateQueueInfoDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaStatQueueDataDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
@@ -138,7 +138,7 @@
                                 </bean>
                             </property>
                             <property name="errorMessageDao">
-                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorMessageInfoDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorMessagesInfoDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>

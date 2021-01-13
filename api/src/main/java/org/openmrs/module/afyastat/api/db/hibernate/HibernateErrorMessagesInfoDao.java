@@ -13,12 +13,12 @@
  */
 package org.openmrs.module.afyastat.api.db.hibernate;
 
-import org.openmrs.module.afyastat.api.db.ErrorMessageInfoDao;
+import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
 import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
 
-public class HibernateErrorMessageInfoDao extends HibernateAfyaDataDao<ErrorMessagesInfo> implements ErrorMessageInfoDao {
+public class HibernateErrorMessagesInfoDao extends HibernateAfyaDataDao<ErrorMessagesInfo> implements ErrorMessagesInfoDao {
 	
-	protected HibernateErrorMessageInfoDao() {
+	protected HibernateErrorMessagesInfoDao() {
 		super(ErrorMessagesInfo.class);
 	}
 }

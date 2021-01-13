@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * This is a default implementation of SingleClassDao<T>.
+ * This is a default implementation of SingleClassInfoDao<T>.
  */
 public class HibernateSingleClassInfoDao<T> implements SingleClassInfoDao<T> {
 	
