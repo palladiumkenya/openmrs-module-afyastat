@@ -50,7 +50,7 @@ import java.util.*;
 
 public class MedicDataExchange {
 
-	AfyastatService htsService = Context.getService(AfyastatService.class);
+	AfyastatService afyastatService = Context.getService(AfyastatService.class);
 	AfyaStatDataService dataService = Context.getService(AfyaStatDataService.class);
 	
 	PersonService personService = Context.getPersonService();
@@ -193,7 +193,7 @@ public class MedicDataExchange {
 		medicQueData.setLocation(location);
 		medicQueData.setDataSource(dataSource);
 		medicQueData.setCreator(user);
-		//  htsService.saveQueData(medicQueData); //should be activated
+		afyastatService.saveQueData(medicQueData);
 	}
 	
 	private ObjectNode processRegistrationPayload(ObjectNode jNode) {
@@ -726,7 +726,7 @@ public class MedicDataExchange {
 		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
 		ObjectNode responseWrapper = factory.objectNode();
 		
-		//HTSService htsService = Context.getService(HTSService.class);
+		//AfyastatService afyastatService = Context.getService(AfyastatService.class);
 		//Set<Integer> listedContacts = getListedContacts(lastContactEntry, lastContactId);
 		Map<Integer, ArrayNode> contactMap = new HashMap<Integer, ArrayNode>();
 		
@@ -736,7 +736,7 @@ public class MedicDataExchange {
 		/*if (listedContacts != null && listedContacts.size() > 0) {
 
 		    for (Integer pc : listedContacts) {
-		        PatientContact c = htsService.getPatientContactByID(pc);
+		        PatientContact c = afyastatService.getPatientContactByID(pc);
 		        Patient indexClient = c.getPatientRelatedTo();
 		        ArrayNode contacts = null;
 
