@@ -434,12 +434,12 @@
     </changeSet>
 
 
-    <!--Adding scheduled task to push contact list to the Medic Mobile system // should be include once everything is working-->
-   <!-- <changeSet id="kenyaemr_hiv_testing_021" author="aojwang">
+    <!--Adding scheduled task to push contact list to the Medic Mobile system -->
+    <changeSet id="medic_queue_021" author="aojwang">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*) FROM scheduler_task_config
-                WHERE schedulable_class = 'org.openmrs.module.hivtestingservices.task.PushContactsToMedicMobileTask'
+                WHERE schedulable_class = 'org.openmrs.module.afyastat.task.PushContactsToMedicMobileTask'
                 And name = 'Push Contact list to Medic Mobile CHT system'
             </sqlCheck>
         </preConditions>
@@ -447,7 +447,7 @@
         <insert tableName="scheduler_task_config">
             <column name="name" value="Push Contact list to Medic Mobile CHT system" />
             <column name="description" value="Push lab requests to Medic Mobile CHT" />
-            <column name="schedulable_class" value="org.openmrs.module.hivtestingservices.task.PushContactsToMedicMobileTask" />
+            <column name="schedulable_class" value="org.openmrs.module.afyastat.task.PushContactsToMedicMobileTask" />
             <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
             <column name="start_time" valueDate="2020-04-04T23:59:59" />
             <column name="repeat_interval" value="3600" />
@@ -457,6 +457,6 @@
             <column name="started" value="1" />
             <column name="uuid" value="e8e35121-c569-479f-b1d7-6c713fd72198" />
         </insert>
-    </changeSet>-->
+    </changeSet>
 
 </databaseChangeLog>
