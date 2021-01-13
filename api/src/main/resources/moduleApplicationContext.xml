@@ -103,7 +103,7 @@
                     <property name="target">
                         <bean class="org.openmrs.module.afyastat.api.service.impl.InfoServiceImpl">
                             <property name="errorDataDao">
-                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorInfoDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorInformationDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
@@ -124,7 +124,7 @@
                                 </bean>
                             </property>
                             <property name="dataSourceDao">
-                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateInfoSourceDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaDataSourceDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>

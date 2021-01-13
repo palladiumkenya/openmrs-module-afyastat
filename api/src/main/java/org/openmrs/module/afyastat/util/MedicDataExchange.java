@@ -97,6 +97,7 @@ public class MedicDataExchange {
 	}
 	
 	public String processIncomingRegistration(String resultPayload) {
+		System.out.println("resultPayload=============="+resultPayload);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
@@ -196,9 +197,10 @@ public class MedicDataExchange {
 		afyastatService.saveQueData(medicQueData);
 	}
 	
-	private ObjectNode processRegistrationPayload(ObjectNode jNode) {
+	private ObjectNode processRegistrationPayload(ObjectNode jsonNode) {
+		System.out.println("jsonNode======"+jsonNode);
 		
-		ObjectNode jsonNode = (ObjectNode) jNode.get("registration");
+		//ObjectNode jsonNode = (ObjectNode) jNode.get("registration");
 		ObjectNode patientNode = getJsonNodeFactory().objectNode();
 		ObjectNode obs = getJsonNodeFactory().objectNode();
 		ObjectNode tmp = getJsonNodeFactory().objectNode();

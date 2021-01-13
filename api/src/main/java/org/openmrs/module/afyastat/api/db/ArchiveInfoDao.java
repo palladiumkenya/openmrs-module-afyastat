@@ -4,4 +4,4 @@ import org.openmrs.module.afyastat.model.ArchiveInfo;
 
 /**
  */
-public interface ArchiveInfoDao extends InfoDao<ArchiveInfo> {}
+public interface ArchiveInfoDao extends AfyaDataDao<ArchiveInfo> {}

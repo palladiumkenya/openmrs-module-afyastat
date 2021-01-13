@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  */
-public interface InfoSourceDao extends SingleClassInfoDao<AfyaDataSource> {
+public interface AfyaDataSourceDao extends SingleClassInfoDao<AfyaDataSource> {
 	
 	/**
 	 * Return the data source with the given uuid.

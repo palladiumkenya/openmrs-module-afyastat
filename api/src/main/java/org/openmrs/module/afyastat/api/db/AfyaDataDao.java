@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  */
-public interface InfoDao<T extends AfyaData> extends SingleClassInfoDao<T> {
+public interface AfyaDataDao<T extends AfyaData> extends SingleClassInfoDao<T> {
 	
 	/**
 	 * Return the data with the given id.

@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
-import org.openmrs.module.afyastat.api.db.InfoSourceDao;
+import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.model.AfyaDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,9 +25,9 @@ import java.util.List;
 
 /**
  */
-public class HibernateInfoSourceDao extends HibernateSingleClassInfoDao<AfyaDataSource> implements InfoSourceDao {
+public class HibernateAfyaDataSourceDao extends HibernateSingleClassInfoDao<AfyaDataSource> implements AfyaDataSourceDao {
 	
-	public HibernateInfoSourceDao() {
+	public HibernateAfyaDataSourceDao() {
 		super(AfyaDataSource.class);
 	}
 	

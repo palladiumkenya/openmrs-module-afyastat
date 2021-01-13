@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
-import org.openmrs.module.afyastat.api.db.InfoDao;
+import org.openmrs.module.afyastat.api.db.AfyaDataDao;
 import org.openmrs.module.afyastat.model.AfyaData;
 import org.openmrs.module.afyastat.model.handler.InfoHandler;
 import org.openmrs.util.HandlerUtil;
@@ -31,19 +31,19 @@ import java.util.List;
 
 /**
  */
-public abstract class HibernateInfoDao<T extends AfyaData> extends HibernateSingleClassInfoDao<T> implements InfoDao<T> {
+public abstract class HibernateAfyaDataDao<T extends AfyaData> extends HibernateSingleClassInfoDao<T> implements AfyaDataDao<T> {
 	
 	@Autowired
 	protected SessionFactory sessionFactory;
 	
-	private final Log log = LogFactory.getLog(HibernateInfoDao.class);
+	private final Log log = LogFactory.getLog(HibernateAfyaDataDao.class);
 	
 	/**
 	 * Default constructor.
 	 * 
 	 * @param mappedClass
 	 */
-	protected HibernateInfoDao(final Class<T> mappedClass) {
+	protected HibernateAfyaDataDao(final Class<T> mappedClass) {
 		super(mappedClass);
 	}
 	
@@ -105,7 +105,7 @@ public abstract class HibernateInfoDao<T extends AfyaData> extends HibernateSing
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see InfoDao#getAllDataByFormDataUuid(String)
+	 * @see AfyaDataDao#getAllDataByFormDataUuid(String)
 	 */
 	@Override
 	public List<T> getAllDataByFormDataUuid(final String formDataUuid) {

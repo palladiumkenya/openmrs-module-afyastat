@@ -18,21 +18,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
-import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
+import org.openmrs.module.afyastat.api.db.ErrorInformationDao;
 import org.openmrs.module.afyastat.model.ErrorInformation;
 
 import java.util.List;
 
 /**
  */
-public class HibernateErrorInfoDao extends HibernateInfoDao<ErrorInformation> implements ErrorInfoDao {
+public class HibernateErrorInformationDao extends HibernateAfyaDataDao<ErrorInformation> implements ErrorInformationDao {
 	
-	private final Log log = LogFactory.getLog(HibernateErrorInfoDao.class);
+	private final Log log = LogFactory.getLog(HibernateErrorInformationDao.class);
 	
 	/**
 	 * Default constructor.
 	 */
-	protected HibernateErrorInfoDao() {
+	protected HibernateErrorInformationDao() {
 		super(ErrorInformation.class);
 	}
 	

@@ -19,9 +19,9 @@ import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
-import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
+import org.openmrs.module.afyastat.api.db.ErrorInformationDao;
 import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
-import org.openmrs.module.afyastat.api.db.InfoSourceDao;
+import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.api.db.QueueInfoDao;
 import org.openmrs.module.afyastat.api.db.ErrorMessageInfoDao;
 import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
@@ -47,13 +47,13 @@ import java.util.List;
  */
 public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataService {
 	
-	private ErrorInfoDao errorDataDao;
+	private ErrorInformationDao errorDataDao;
 	
 	private QueueInfoDao queueDataDao;
 	
 	private ArchiveInfoDao archiveDataDao;
 	
-	private InfoSourceDao dataSourceDao;
+	private AfyaDataSourceDao dataSourceDao;
 	
 	private NotificationInfoDao notificationDataDao;
 	
@@ -67,11 +67,11 @@ public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataS
 		this.queueDataDao = queueDataDao;
 	}
 	
-	public ErrorInfoDao getErrorDataDao() {
+	public ErrorInformationDao getErrorDataDao() {
 		return errorDataDao;
 	}
 	
-	public void setErrorDataDao(final ErrorInfoDao errorDataDao) {
+	public void setErrorDataDao(final ErrorInformationDao errorDataDao) {
 		this.errorDataDao = errorDataDao;
 	}
 	
@@ -83,11 +83,11 @@ public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataS
 		this.archiveDataDao = archiveDataDao;
 	}
 	
-	public InfoSourceDao getDataSourceDao() {
+	public AfyaDataSourceDao getDataSourceDao() {
 		return dataSourceDao;
 	}
 	
-	public void setDataSourceDao(final InfoSourceDao dataSourceDao) {
+	public void setDataSourceDao(final AfyaDataSourceDao dataSourceDao) {
 		this.dataSourceDao = dataSourceDao;
 	}
 	
