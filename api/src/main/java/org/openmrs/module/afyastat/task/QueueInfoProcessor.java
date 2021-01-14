@@ -123,7 +123,7 @@ public class QueueInfoProcessor {
 			errorMessage.add(error);
 		}
 		errorData.setMessage("Unable to process queue data");
-		errorData.setErrorMessageInfos(errorMessage);
+		errorData.setErrorMessages(errorMessage);
 		Context.getService(AfyaStatDataService.class).saveErrorData(errorData);
 	}
 	

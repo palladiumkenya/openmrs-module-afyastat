@@ -24,7 +24,7 @@ public class ErrorInformation extends AuditTableData {
 	
 	private Date dateProcessed;
 	
-	private Set<ErrorMessagesInfo> errorMessageInfos;
+	private Set<ErrorMessagesInfo> errorMessages;
 	
 	public ErrorInformation() {
 	}
@@ -49,11 +49,11 @@ public class ErrorInformation extends AuditTableData {
 		this.dateProcessed = dateProcessed;
 	}
 	
-	public Set<ErrorMessagesInfo> getErrorMessageInfos() {
-		return errorMessageInfos;
+	public Set<ErrorMessagesInfo> getErrorMessages() {
+		return errorMessages;
 	}
 	
-	public void setErrorMessageInfos(Set<ErrorMessagesInfo> errorMessageInfos) {
-		this.errorMessageInfos = errorMessageInfos;
+	public void setErrorMessages(Set<ErrorMessagesInfo> errorMessages) {
+		this.errorMessages = errorMessages;
 	}
 }
