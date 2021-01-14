@@ -316,8 +316,8 @@ public class MedicDataExchange {
 		return registrationWrapper;
 	}
 	
-	private ObjectNode processFormPayload(ObjectNode jNode) {
-		ObjectNode jsonNode = (ObjectNode) jNode.get("encData");
+	private ObjectNode processFormPayload(ObjectNode jsonNode) {
+		//ObjectNode jsonNode = (ObjectNode) jNode.get("encData");
 		ObjectNode formsNode = JsonNodeFactory.instance.objectNode();
 		ObjectNode discriminator = JsonNodeFactory.instance.objectNode();
 		ObjectNode encounter = JsonNodeFactory.instance.objectNode();

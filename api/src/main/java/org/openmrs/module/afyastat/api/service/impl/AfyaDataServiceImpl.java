@@ -45,7 +45,7 @@ import java.util.List;
 
 /**
  */
-public class InfoServiceImpl extends BaseOpenmrsService implements AfyaStatDataService {
+public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatDataService {
 	
 	private ErrorInformationDao errorDataDao;
 	

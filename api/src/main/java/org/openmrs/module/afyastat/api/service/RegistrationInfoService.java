@@ -68,10 +68,10 @@ public interface RegistrationInfoService extends OpenmrsService {
 	/**
 	 * Create a new registration data entry in the database.
 	 * 
-	 * @param registrationInfo the registration data to be created.
+	 * @param registrationData the registration data to be created.
 	 * @return the new registration data.
 	 */
-	RegistrationInfo saveRegistrationData(final RegistrationInfo registrationInfo);
+	RegistrationInfo saveRegistrationData(final RegistrationInfo registrationData);
 	
 	/**
 	 * Delete a registration data.

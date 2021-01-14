@@ -215,19 +215,19 @@ public interface AfyaStatDataService extends OpenmrsService {
 	/**
 	 * Save archive data into the database.
 	 * 
-	 * @param ArchiveData the archive data.
+	 * @param ArchiveInfo the archive data.
 	 * @return saved archive data.
 	 * @should save archive data into the database.
 	 */
-	ArchiveInfo saveArchiveData(final ArchiveInfo ArchiveData);
+	ArchiveInfo saveArchiveData(final ArchiveInfo ArchiveInfo);
 	
 	/**
 	 * Delete archive data from the database.
 	 * 
-	 * @param ArchiveData the archive data
+	 * @param ArchiveInfo the archive data
 	 * @should remove archive data from the database
 	 */
-	void purgeArchiveData(final ArchiveInfo ArchiveData);
+	void purgeArchiveData(final ArchiveInfo ArchiveInfo);
 	
 	/**
 	 * Get the total number of the archive data in the database with partial matching search term on
@@ -280,19 +280,19 @@ public interface AfyaStatDataService extends OpenmrsService {
 	/**
 	 * Save data source into the database.
 	 * 
-	 * @param DataSource the data source.
+	 * @param AfyaDataSource the data source.
 	 * @return saved data source.
 	 * @should save data source into the database.
 	 */
-	AfyaDataSource saveDataSource(final AfyaDataSource DataSource);
+	AfyaDataSource saveDataSource(final AfyaDataSource AfyaDataSource);
 	
 	/**
 	 * Delete data source from the database.
 	 * 
-	 * @param DataSource the data source
+	 * @param AfyaDataSource the data source
 	 * @should remove data source from the database
 	 */
-	void purgeDataSource(final AfyaDataSource DataSource);
+	void purgeDataSource(final AfyaDataSource AfyaDataSource);
 	
 	/**
 	 * Get the total number of the data source in the database with partial matching search term on
@@ -402,27 +402,27 @@ public interface AfyaStatDataService extends OpenmrsService {
 	/**
 	 * Save notification data into the database.
 	 * 
-	 * @param notificationInfo the notification data.
+	 * @param notificationData the notification data.
 	 * @return saved notification data.
 	 * @should save notification data into the database.
 	 */
-	NotificationInfo saveNotificationData(final NotificationInfo notificationInfo);
+	NotificationInfo saveNotificationData(final NotificationInfo notificationData);
 	
 	/**
 	 * Delete notification data from the database.
 	 * 
-	 * @param notificationInfo the notification data
+	 * @param notificationData the notification data
 	 * @should remove notification data from the database
 	 */
-	void purgeNotificationData(final NotificationInfo notificationInfo);
+	void purgeNotificationData(final NotificationInfo notificationData);
 	
 	/**
 	 * Void a single notification data.
 	 * 
-	 * @param notificationInfo the notification data to be voided.
+	 * @param notificationData the notification data to be voided.
 	 * @return the voided notification data.
 	 */
-	NotificationInfo voidNotificationData(final NotificationInfo notificationInfo, final String reason);
+	NotificationInfo voidNotificationData(final NotificationInfo notificationData, final String reason);
 	
 	/**
 	 * Return the error message with the given id.
