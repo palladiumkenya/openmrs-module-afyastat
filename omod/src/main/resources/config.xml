@@ -102,7 +102,7 @@
 		RegistrationInfo.hbm.xml
 		AfyaStatQueueData.hbm.xml
 		NotificationInfo.hbm.xml
-		ErrorInformation.hbm.xml
+		ErrorInfo.hbm.xml
 		AfyaDataSource.hbm.xml
 		ArchiveInfo.hbm.xml
 		ErrorMessagesInfo.hbm.xml

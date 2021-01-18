@@ -13,10 +13,10 @@
  */
 package org.openmrs.module.afyastat.api.db;
 
-import org.openmrs.module.afyastat.model.ErrorInformation;
+import org.openmrs.module.afyastat.model.ErrorInfo;
 
 /**
  */
-public interface ErrorInformationDao extends AfyaDataDao<ErrorInformation> {
+public interface ErrorInfoDao extends AfyaDataDao<ErrorInfo> {
 	
 }

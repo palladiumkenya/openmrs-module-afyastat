@@ -19,7 +19,7 @@ import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
-import org.openmrs.module.afyastat.api.db.ErrorInformationDao;
+import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
 import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
@@ -27,14 +27,8 @@ import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
 import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
-import org.openmrs.module.afyastat.model.RegistrationInfo;
-import org.openmrs.module.afyastat.model.AfyaDataSource;
-import org.openmrs.module.afyastat.model.NotificationInfo;
-import org.openmrs.module.afyastat.model.ArchiveInfo;
-import org.openmrs.module.afyastat.model.ErrorInformation;
-import org.openmrs.module.afyastat.model.AfyaStatQueueData;
-import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
-import org.openmrs.module.afyastat.model.FormInfoStatus;
+import org.openmrs.module.afyastat.model.*;
+import org.openmrs.module.afyastat.model.ErrorInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.util.HandlerUtil;
 
@@ -45,9 +39,9 @@ import java.util.List;
 
 /**
  */
-public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatDataService {
+public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaStatDataService {
 	
-	private ErrorInformationDao errorDataDao;
+	private ErrorInfoDao errorDataDao;
 	
 	private AfyaStatQueueDataDao queueDataDao;
 	
@@ -67,11 +61,11 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 		this.queueDataDao = queueDataDao;
 	}
 	
-	public ErrorInformationDao getErrorDataDao() {
+	public ErrorInfoDao getErrorDataDao() {
 		return errorDataDao;
 	}
 	
-	public void setErrorDataDao(final ErrorInformationDao errorDataDao) {
+	public void setErrorDataDao(final ErrorInfoDao errorDataDao) {
 		this.errorDataDao = errorDataDao;
 	}
 	
@@ -202,7 +196,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @should return null when no error data with matching id.
 	 */
 	@Override
-	public ErrorInformation getErrorData(final Integer id) {
+	public ErrorInfo getErrorData(final Integer id) {
 		return getErrorDataDao().getData(id);
 	}
 	
@@ -215,7 +209,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @should return null when no error data with matching uuid.
 	 */
 	@Override
-	public ErrorInformation getErrorDataByUuid(final String uuid) {
+	public ErrorInfo getErrorDataByUuid(final String uuid) {
 		return getErrorDataDao().getDataByUuid(uuid);
 	}
 	
@@ -228,10 +222,10 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @should return null when no registration error data with matching patientUuid.
 	 */
 	@Override
-	public ErrorInformation getRegistrationErrorDataByPatientUuid(String patientUuid) {
+	public ErrorInfo getRegistrationErrorDataByPatientUuid(String patientUuid) {
 		
-		List<ErrorInformation> errors = getErrorDataDao().getPagedData(patientUuid, null, null);
-		for (ErrorInformation errorData : errors) {
+		List<ErrorInfo> errors = getErrorDataDao().getPagedData(patientUuid, null, null);
+		for (ErrorInfo errorData : errors) {
 			if (StringUtils.equals("json-registration", errorData.getDiscriminator())) {
 				return errorData;
 			}
@@ -247,7 +241,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @should return all saved error data.
 	 */
 	@Override
-	public List<ErrorInformation> getAllErrorData() {
+	public List<ErrorInfo> getAllErrorData() {
 		return getErrorDataDao().getAllData();
 	}
 	
@@ -259,7 +253,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @should save error data into the database.
 	 */
 	@Override
-	public ErrorInformation saveErrorData(final ErrorInformation errorData) {
+	public ErrorInfo saveErrorData(final ErrorInfo errorData) {
 		return getErrorDataDao().saveData(errorData);
 	}
 	
@@ -270,7 +264,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @should remove error data from the database
 	 */
 	@Override
-	public void purgeErrorData(final ErrorInformation errorData) {
+	public void purgeErrorData(final ErrorInfo errorData) {
 		getErrorDataDao().purgeData(errorData);
 	}
 	
@@ -295,7 +289,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	 * @return list of all error data with matching search term for a particular page.
 	 */
 	@Override
-	public List<ErrorInformation> getPagedErrorData(final String search, final Integer pageNumber, final Integer pageSize) {
+	public List<ErrorInfo> getPagedErrorData(final String search, final Integer pageNumber, final Integer pageSize) {
 		return errorDataDao.getPagedData(search, pageNumber, pageSize);
 	}
 	
@@ -331,7 +325,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	}
 	
 	@Override
-	public List<ErrorInformation> getErrorDataByFormDataUuid(final String formDataUuid) {
+	public List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid) {
 		return getErrorDataDao().getAllDataByFormDataUuid(formDataUuid);
 	}
 	
@@ -675,7 +669,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	@Override
 	public List<ErrorMessagesInfo> validateData(String uuid, String formData) {
 		List<ErrorMessagesInfo> errorMessages = new ArrayList<ErrorMessagesInfo>();
-		ErrorInformation errorData = getErrorDataByUuid(uuid);
+		ErrorInfo errorData = getErrorDataByUuid(uuid);
 		errorDataDao.detachDataFromHibernateSession(errorData);
 		errorData.setPayload(formData);
 		
@@ -725,7 +719,7 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 	public List<AfyaStatQueueData> mergeDuplicatePatient(@NotNull final String errorDataUuid,
 	        @NotNull final String existingPatientUuid, @NotNull final String payload) {
 		List<AfyaStatQueueData> requeued = new ArrayList<AfyaStatQueueData>();
-		ErrorInformation errorData = this.getErrorDataByUuid(errorDataUuid);
+		ErrorInfo errorData = this.getErrorDataByUuid(errorDataUuid);
 		errorData.setPayload(payload);
 		String submittedPatientUuid = errorData.getPatientUuid();
 		
@@ -741,8 +735,8 @@ public class AfyaDataServiceImpl extends BaseOpenmrsService implements AfyaStatD
 		
 		// Fetch all ErrorData associated with the patient UUID (the one determined to be of a duplicate patient).
 		int countOfErrors = this.countErrorData(submittedPatientUuid).intValue();
-		List<ErrorInformation> allToRequeue = this.getPagedErrorData(submittedPatientUuid, 1, countOfErrors);
-		for (ErrorInformation errorData1 : allToRequeue) {
+		List<ErrorInfo> allToRequeue = this.getPagedErrorData(submittedPatientUuid, 1, countOfErrors);
+		for (ErrorInfo errorData1 : allToRequeue) {
 			queueData = new AfyaStatQueueData(errorData1);
 			queueData = this.saveQueueData(queueData);
 			this.purgeErrorData(errorData1);

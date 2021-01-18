@@ -18,22 +18,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
-import org.openmrs.module.afyastat.api.db.ErrorInformationDao;
-import org.openmrs.module.afyastat.model.ErrorInformation;
+import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
+import org.openmrs.module.afyastat.model.ErrorInfo;
 
 import java.util.List;
 
 /**
  */
-public class HibernateErrorInformationDao extends HibernateAfyaDataDao<ErrorInformation> implements ErrorInformationDao {
+public class HibernateErrorInfoDao extends HibernateAfyaDataDao<ErrorInfo> implements ErrorInfoDao {
 	
-	private final Log log = LogFactory.getLog(HibernateErrorInformationDao.class);
+	private final Log log = LogFactory.getLog(HibernateErrorInfoDao.class);
 	
 	/**
 	 * Default constructor.
 	 */
-	protected HibernateErrorInformationDao() {
-		super(ErrorInformation.class);
+	protected HibernateErrorInfoDao() {
+		super(ErrorInfo.class);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class HibernateErrorInformationDao extends HibernateAfyaDataDao<ErrorInfo
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ErrorInformation> getPagedData(final String search, final Integer pageNumber, final Integer pageSize) {
+	public List<ErrorInfo> getPagedData(final String search, final Integer pageNumber, final Integer pageSize) {
 		Criteria criteria = createCriteria(search);
 		if (pageNumber != null) {
 			criteria.setFirstResult((pageNumber - 1) * pageSize);
@@ -72,7 +72,7 @@ public class HibernateErrorInformationDao extends HibernateAfyaDataDao<ErrorInfo
 	}
 	
 	private Criteria createCriteria(String search) {
-		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(ErrorInformation.class);
+		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(ErrorInfo.class);
 		criteria.createAlias("location", "location", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("provider", "provider", CriteriaSpecification.LEFT_JOIN);
 		

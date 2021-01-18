@@ -67,12 +67,13 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 	 */
 	@Override
 	public boolean validate(AfyaStatQueueData queueData) {
+
 		try {
 			queueProcessorException = new StreamProcessorException();
 			log.info("Processing encounter form data: " + queueData.getUuid());
 			encounter = new Encounter();
 			String payload = queueData.getPayload();
-			
+
 			//Object encounterObject = JsonUtils.readAsObject(queueData.getPayload(), "$['encounter']");
 			processEncounter(encounter, payload);
 			
@@ -181,7 +182,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 					candidatePatient = Context.getPatientService().getPatientByUuid(registrationData.getAssignedUuid());
 				} else {
 					candidatePatient = Context.getPatientService().getPatientByUuid(uuid);
-					
+
 				}
 			}
 		} /*else if (!StringUtils.isBlank(patientIdentifier.getIdentifier())) {

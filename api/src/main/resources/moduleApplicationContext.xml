@@ -101,9 +101,9 @@
                         <ref bean="transactionManager"/>
                     </property>
                     <property name="target">
-                        <bean class="org.openmrs.module.afyastat.api.service.impl.AfyaDataServiceImpl">
+                        <bean class="org.openmrs.module.afyastat.api.service.impl.AfyaStatDataServiceImpl">
                             <property name="errorDataDao">
-                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorInformationDao">
+                                <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorInfoDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>

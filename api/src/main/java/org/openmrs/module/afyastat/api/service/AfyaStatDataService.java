@@ -86,7 +86,7 @@ public interface AfyaStatDataService extends OpenmrsService {
 	 * @should return error data with matching id.
 	 * @should return null when no error data with matching id.
 	 */
-	ErrorInformation getErrorData(final Integer id);
+	ErrorInfo getErrorData(final Integer id);
 	
 	/**
 	 * Return the error data with the given uuid.
@@ -96,7 +96,7 @@ public interface AfyaStatDataService extends OpenmrsService {
 	 * @should return error data with matching uuid.
 	 * @should return null when no error data with matching uuid.
 	 */
-	ErrorInformation getErrorDataByUuid(final String uuid);
+	ErrorInfo getErrorDataByUuid(final String uuid);
 	
 	/**
 	 * Return the registration error data with the given patientUuid.
@@ -106,7 +106,7 @@ public interface AfyaStatDataService extends OpenmrsService {
 	 * @should return error data with matching uuid.
 	 * @should return null when no error data with matching uuid.
 	 */
-	ErrorInformation getRegistrationErrorDataByPatientUuid(final String patientUuid);
+	ErrorInfo getRegistrationErrorDataByPatientUuid(final String patientUuid);
 	
 	/**
 	 * Return all saved error data.
@@ -115,24 +115,24 @@ public interface AfyaStatDataService extends OpenmrsService {
 	 * @should return empty list when no error data are saved in the database.
 	 * @should return all saved error data.
 	 */
-	List<ErrorInformation> getAllErrorData();
+	List<ErrorInfo> getAllErrorData();
 	
 	/**
 	 * Save error data into the database.
 	 * 
-	 * @param ErrorInformation the error data.
+	 * @param ErrorInfo the error data.
 	 * @return saved error data.
 	 * @should save error data into the database.
 	 */
-	ErrorInformation saveErrorData(final ErrorInformation ErrorInformation);
+	ErrorInfo saveErrorData(final ErrorInfo ErrorInfo);
 	
 	/**
 	 * Delete error data from the database.
 	 * 
-	 * @param ErrorInformation the error data
+	 * @param ErrorInfo the error data
 	 * @should remove error data from the database
 	 */
-	void purgeErrorData(final ErrorInformation ErrorInformation);
+	void purgeErrorData(final ErrorInfo ErrorInfo);
 	
 	/**
 	 * Get the total number of the error data in the database with partial matching search term on
@@ -151,7 +151,7 @@ public interface AfyaStatDataService extends OpenmrsService {
 	 * @param pageSize the size of the page.
 	 * @return list of all error data with matching search term for a particular page.
 	 */
-	List<ErrorInformation> getPagedErrorData(final String search, final Integer pageNumber, final Integer pageSize);
+	List<ErrorInfo> getPagedErrorData(final String search, final Integer pageNumber, final Integer pageSize);
 	
 	/**
 	 * Return the archive data with the given id.
@@ -191,7 +191,7 @@ public interface AfyaStatDataService extends OpenmrsService {
 	 * @should return the list of error data with the matching formDataUuid
 	 * @should return empty list when no error data with matching formDataUuid
 	 */
-	List<ErrorInformation> getErrorDataByFormDataUuid(final String formDataUuid);
+	List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid);
 	
 	/**
 	 * Return all queue data with the given form data uuid.

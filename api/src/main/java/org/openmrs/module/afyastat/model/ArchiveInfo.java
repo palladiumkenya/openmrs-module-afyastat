@@ -17,7 +17,7 @@ import java.util.Date;
 
 /**
  */
-public class ArchiveInfo extends AuditTableData {
+public class ArchiveInfo extends AuditableData {
 	
 	private String message;
 	
@@ -26,7 +26,7 @@ public class ArchiveInfo extends AuditTableData {
 	public ArchiveInfo() {
 	}
 	
-	public ArchiveInfo(final AuditTableData data) {
+	public ArchiveInfo(final AuditableData data) {
 		super(data);
 	}
 	

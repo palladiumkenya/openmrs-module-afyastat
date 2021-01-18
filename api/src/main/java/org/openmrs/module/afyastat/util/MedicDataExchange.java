@@ -389,8 +389,8 @@ public class MedicDataExchange {
 		return formsNode;
 	}
 	
-	private ObjectNode processPeerCalenderPayload(ObjectNode jNode) {
-		ObjectNode jsonNode = (ObjectNode) jNode.get("peerCalendarData");
+	private ObjectNode processPeerCalenderPayload(ObjectNode jsonNode) {
+	//	ObjectNode jsonNode = (ObjectNode) jNode.get("peerCalendarData");
 		ObjectNode formsNode = JsonNodeFactory.instance.objectNode();
 		ObjectNode discriminator = JsonNodeFactory.instance.objectNode();
 		ObjectNode encounter = JsonNodeFactory.instance.objectNode();

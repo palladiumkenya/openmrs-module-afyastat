@@ -13,7 +13,7 @@
  */
 package org.openmrs.module.afyastat.model;
 
-public class ErrorMessagesInfo extends AuditTableData {
+public class ErrorMessagesInfo extends AuditableData {
 	
 	private Integer id;
 	

@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  */
-public class ErrorInformation extends AuditTableData {
+public class ErrorInfo extends AuditableData {
 	
 	private String message;
 	
@@ -26,10 +26,10 @@ public class ErrorInformation extends AuditTableData {
 	
 	private Set<ErrorMessagesInfo> errorMessages;
 	
-	public ErrorInformation() {
+	public ErrorInfo() {
 	}
 	
-	public ErrorInformation(final AuditTableData data) {
+	public ErrorInfo(final AuditableData data) {
 		super(data);
 	}
 	

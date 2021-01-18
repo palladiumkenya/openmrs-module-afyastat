@@ -24,7 +24,7 @@ import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.ArchiveInfo;
-import org.openmrs.module.afyastat.model.ErrorInformation;
+import org.openmrs.module.afyastat.model.ErrorInfo;
 import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.util.HandlerUtil;
@@ -110,12 +110,13 @@ public class QueueInfoProcessor {
 	}
 	
 	private void createErrorData(final AfyaStatQueueData queueData, StreamProcessorException exception) {
-		ErrorInformation errorData = new ErrorInformation(queueData);
+		ErrorInfo errorData = new ErrorInfo(queueData);
 		errorData.setDateProcessed(new Date());
 		Set errorMessage = new HashSet();
 		for (Exception e : exception.getAllException()) {
 			ErrorMessagesInfo error = new ErrorMessagesInfo();
 			String message = e.getMessage();
+			System.out.println("message=================" + message);
 			if (message == null) {
 				message = "Queue data was processed but the processor unable to determine the cause of the error.";
 			}
