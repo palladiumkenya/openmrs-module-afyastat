@@ -97,7 +97,6 @@ public class MedicDataExchange {
 	}
 	
 	public String processIncomingRegistration(String resultPayload) {
-		System.out.println("resultPayload=============="+resultPayload);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
@@ -197,10 +196,8 @@ public class MedicDataExchange {
 		afyastatService.saveQueData(medicQueData);
 	}
 	
-	private ObjectNode processRegistrationPayload(ObjectNode jsonNode) {
-		System.out.println("jsonNode======"+jsonNode);
-		
-		//ObjectNode jsonNode = (ObjectNode) jNode.get("registration");
+	private ObjectNode processRegistrationPayload(ObjectNode jNode) {
+		ObjectNode jsonNode = (ObjectNode) jNode.get("registration");
 		ObjectNode patientNode = getJsonNodeFactory().objectNode();
 		ObjectNode obs = getJsonNodeFactory().objectNode();
 		ObjectNode tmp = getJsonNodeFactory().objectNode();
@@ -316,8 +313,8 @@ public class MedicDataExchange {
 		return registrationWrapper;
 	}
 	
-	private ObjectNode processFormPayload(ObjectNode jsonNode) {
-		//ObjectNode jsonNode = (ObjectNode) jNode.get("encData");
+	private ObjectNode processFormPayload(ObjectNode jNode) {
+		ObjectNode jsonNode = (ObjectNode) jNode.get("encData");
 		ObjectNode formsNode = JsonNodeFactory.instance.objectNode();
 		ObjectNode discriminator = JsonNodeFactory.instance.objectNode();
 		ObjectNode encounter = JsonNodeFactory.instance.objectNode();
@@ -389,8 +386,8 @@ public class MedicDataExchange {
 		return formsNode;
 	}
 	
-	private ObjectNode processPeerCalenderPayload(ObjectNode jsonNode) {
-	//	ObjectNode jsonNode = (ObjectNode) jNode.get("peerCalendarData");
+	private ObjectNode processPeerCalenderPayload(ObjectNode jNode) {
+		ObjectNode jsonNode = (ObjectNode) jNode.get("peerCalendarData");
 		ObjectNode formsNode = JsonNodeFactory.instance.objectNode();
 		ObjectNode discriminator = JsonNodeFactory.instance.objectNode();
 		ObjectNode encounter = JsonNodeFactory.instance.objectNode();
