@@ -18,13 +18,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.afyastat.api.AfyastatService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.module.afyastat.utils.JsonFormatUtils;
-import org.openmrs.module.afyastat.api.ContactTrace;
-import org.openmrs.module.afyastat.api.PatientContact;
+import org.openmrs.module.hivtestingservices.api.ContactTrace;
+import org.openmrs.module.hivtestingservices.api.HTSService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -100,8 +99,7 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private void setContactTraceFromPayload() {
-		
-		AfyastatService contact = Context.getService(AfyastatService.class);
+		HTSService contact = Context.getService(HTSService.class);
 		Date traceDate = JsonFormatUtils.readAsDate(payload, "$['fields']['group_follow_up']['date_last_contact']");
 		String contactType = contactTypeConverter(JsonFormatUtils.readAsString(payload,
 		    "$['fields']['group_follow_up']['follow_up_type']"));
@@ -117,7 +115,7 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		    "$['fields']['group_follow_up']['health_care_worker_handed_to']");
 		String remarks = JsonFormatUtils.readAsString(payload, "$['fields']['group_follow_up']['remarks']");
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
-		Integer contactId = getContactId(JsonFormatUtils.readAsString(payload, "$['fields']['inputs']['contact']['_id']"));
+		// Integer contactId = getContactId(JsonFormatUtils.readAsString(payload, "$['fields']['inputs']['contact']['_id']"));
 		Boolean voided = false;
 		
 		unsavedContactTrace.setDate(traceDate);
@@ -128,15 +126,15 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		unsavedContactTrace.setFacilityLinkedTo(facilityLinkedTo);
 		unsavedContactTrace.setHealthWorkerHandedTo(healthWorkerHandedTo);
 		unsavedContactTrace.setRemarks(remarks);
-		unsavedContactTrace.setPatientContact(contact.getPatientContactByID(contactId));
+		// unsavedContactTrace.setPatientContact(contact.getPatientContactByID(contactId));
 		unsavedContactTrace.setUuid(uuid);
 		unsavedContactTrace.setVoided(voided);
 	}
 	
 	private void registerUnsavedContactTrace() {
-		AfyastatService afyastatService = Context.getService(AfyastatService.class);
+		HTSService htsService = Context.getService(HTSService.class);
 		try {
-			afyastatService.saveClientTrace(unsavedContactTrace);
+			htsService.saveClientTrace(unsavedContactTrace);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -144,16 +142,16 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		}
 	}
 	
-	private Integer getContactId(String uuid) {
+	/*private Integer getContactId(String uuid) {
 		Integer contactId = null;
-		AfyastatService afyastatService = Context.getService(AfyastatService.class);
-		PatientContact patientContact = afyastatService.getPatientContactByUuid(uuid);
+		HTSService htsService = Context.getService(HTSService.class);
+		PatientContact patientContact = htsService.getPatientContactByUuid(uuid);
 		if (patientContact != null) {
 			contactId = patientContact.getId();
 		}
 		return contactId;
 		
-	}
+	}*/
 	
 	private String contactTypeConverter(String follow_up_type) {
 		String contactType = null;

@@ -70,7 +70,7 @@
                     </property>
                     <property name="target">
                         <bean class="org.openmrs.module.afyastat.api.service.impl.AfyastatServiceImpl">
-                            <property name="patientContactDAO">
+                            <property name="queueDataDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaStatDAO">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory" />

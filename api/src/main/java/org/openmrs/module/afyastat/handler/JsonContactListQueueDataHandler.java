@@ -19,14 +19,14 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.afyastat.api.AfyastatService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.RegistrationInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.module.afyastat.utils.JsonFormatUtils;
-import org.openmrs.module.afyastat.api.PatientContact;
+import org.openmrs.module.hivtestingservices.api.HTSService;
+import org.openmrs.module.hivtestingservices.api.PatientContact;
 
 import java.util.Date;
 
@@ -153,7 +153,7 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private void registerUnsavedPatientContact() {
-		AfyastatService htsService = Context.getService(AfyastatService.class);
+		HTSService htsService = Context.getService(HTSService.class);
 		RegistrationInfoService registrationDataService = Context.getService(RegistrationInfoService.class);
 		String temporaryUuid = getPatientContactUuidFromPayload();
 		RegistrationInfo registrationData = registrationDataService.getRegistrationDataByTemporaryUuid(temporaryUuid);

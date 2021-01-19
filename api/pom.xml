@@ -85,6 +85,11 @@
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>kenyaui-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>hivtestingservices-api</artifactId>
+		</dependency>
+
 
 		<!-- End OpenMRS modules -->
 
