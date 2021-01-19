@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface AfyastatService extends OpenmrsService {
-
+	
 	public MedicQueData saveQueData(MedicQueData medicQueData);
-
+	
 }

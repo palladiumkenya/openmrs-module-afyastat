@@ -19,7 +19,7 @@ import org.openmrs.module.afyastat.api.service.MedicQueData;
 public class AfyastatServiceImpl extends BaseOpenmrsService implements AfyastatService {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
-
+	
 	private HibernateAfyaStatDAO queueDataDao;
 	
 	public void setQueueDataDao(HibernateAfyaStatDAO queueDataDao) {

@@ -24,6 +24,7 @@ import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.module.afyastat.utils.JsonFormatUtils;
 import org.openmrs.module.hivtestingservices.api.ContactTrace;
 import org.openmrs.module.hivtestingservices.api.HTSService;
+import org.openmrs.module.hivtestingservices.api.PatientContact;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -115,7 +116,7 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		    "$['fields']['group_follow_up']['health_care_worker_handed_to']");
 		String remarks = JsonFormatUtils.readAsString(payload, "$['fields']['group_follow_up']['remarks']");
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
-		// Integer contactId = getContactId(JsonFormatUtils.readAsString(payload, "$['fields']['inputs']['contact']['_id']"));
+		Integer contactId = getContactId(JsonFormatUtils.readAsString(payload, "$['fields']['inputs']['contact']['_id']"));
 		Boolean voided = false;
 		
 		unsavedContactTrace.setDate(traceDate);
@@ -126,7 +127,7 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		unsavedContactTrace.setFacilityLinkedTo(facilityLinkedTo);
 		unsavedContactTrace.setHealthWorkerHandedTo(healthWorkerHandedTo);
 		unsavedContactTrace.setRemarks(remarks);
-		// unsavedContactTrace.setPatientContact(contact.getPatientContactByID(contactId));
+		unsavedContactTrace.setPatientContact(contact.getPatientContactByID(contactId));
 		unsavedContactTrace.setUuid(uuid);
 		unsavedContactTrace.setVoided(voided);
 	}
@@ -142,7 +143,7 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		}
 	}
 	
-	/*private Integer getContactId(String uuid) {
+	private Integer getContactId(String uuid) {
 		Integer contactId = null;
 		HTSService htsService = Context.getService(HTSService.class);
 		PatientContact patientContact = htsService.getPatientContactByUuid(uuid);
@@ -151,7 +152,7 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		}
 		return contactId;
 		
-	}*/
+	}
 	
 	private String contactTypeConverter(String follow_up_type) {
 		String contactType = null;

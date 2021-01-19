@@ -14,5 +14,5 @@ import org.openmrs.module.afyastat.api.service.MedicQueData;
 public interface AfyastatDao {
 	
 	public MedicQueData saveQueData(MedicQueData medicQueData);
-
+	
 }
