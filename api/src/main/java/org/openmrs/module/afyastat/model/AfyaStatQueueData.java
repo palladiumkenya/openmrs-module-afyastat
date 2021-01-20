@@ -17,12 +17,12 @@ package org.openmrs.module.afyastat.model;
  * It is a model class. It should extend either {@link org.openmrs.BaseOpenmrsObject} or
  * {@link org.openmrs.BaseOpenmrsMetadata}.
  */
-public class AfyaStatQueueData extends AuditableData {
+public class AfyaStatQueueData extends AuditableInfo {
 	
 	public AfyaStatQueueData() {
 	}
 	
-	public AfyaStatQueueData(final AuditableData data) {
+	public AfyaStatQueueData(final AuditableInfo data) {
 		super(data);
 	}
 }

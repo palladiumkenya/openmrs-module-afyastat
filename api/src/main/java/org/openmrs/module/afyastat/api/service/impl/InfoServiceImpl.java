@@ -24,7 +24,7 @@ import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
 import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
-import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
+import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.model.*;
@@ -39,66 +39,66 @@ import java.util.List;
 
 /**
  */
-public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaStatDataService {
+public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 	
-	private ErrorInfoDao errorDataDao;
+	private ErrorInfoDao errorInfoDao;
 	
-	private AfyaStatQueueDataDao queueDataDao;
+	private AfyaStatQueueDataDao afyaStatQueueDataDao;
 	
-	private ArchiveInfoDao archiveDataDao;
+	private ArchiveInfoDao archiveInfoDao;
 	
-	private AfyaDataSourceDao dataSourceDao;
+	private AfyaDataSourceDao afyaDataSourceDao;
 	
-	private NotificationInfoDao notificationDataDao;
+	private NotificationInfoDao notificationInfoDao;
 	
-	private ErrorMessagesInfoDao errorMessageDao;
+	private ErrorMessagesInfoDao errorMessagesInfoDao;
 	
-	public AfyaStatQueueDataDao getQueueDataDao() {
-		return queueDataDao;
+	public AfyaStatQueueDataDao getAfyaStatQueueDataDao() {
+		return afyaStatQueueDataDao;
 	}
 	
-	public void setQueueDataDao(final AfyaStatQueueDataDao queueDataDao) {
-		this.queueDataDao = queueDataDao;
+	public void setAfyaStatQueueDataDao(final AfyaStatQueueDataDao afyaStatQueueDataDao) {
+		this.afyaStatQueueDataDao = afyaStatQueueDataDao;
 	}
 	
-	public ErrorInfoDao getErrorDataDao() {
-		return errorDataDao;
+	public ErrorInfoDao getErrorInfoDao() {
+		return errorInfoDao;
 	}
 	
-	public void setErrorDataDao(final ErrorInfoDao errorDataDao) {
-		this.errorDataDao = errorDataDao;
+	public void setErrorInfoDao(final ErrorInfoDao errorDataDao) {
+		this.errorInfoDao = errorDataDao;
 	}
 	
-	public ArchiveInfoDao getArchiveDataDao() {
-		return archiveDataDao;
+	public ArchiveInfoDao getArchiveInfoDao() {
+		return archiveInfoDao;
 	}
 	
-	public void setArchiveDataDao(final ArchiveInfoDao archiveDataDao) {
-		this.archiveDataDao = archiveDataDao;
+	public void setArchiveInfoDao(final ArchiveInfoDao archiveInfoDao) {
+		this.archiveInfoDao = archiveInfoDao;
 	}
 	
-	public AfyaDataSourceDao getDataSourceDao() {
-		return dataSourceDao;
+	public AfyaDataSourceDao getAfyaDataSourceDao() {
+		return afyaDataSourceDao;
 	}
 	
-	public void setDataSourceDao(final AfyaDataSourceDao dataSourceDao) {
-		this.dataSourceDao = dataSourceDao;
+	public void setAfyaDataSourceDao(final AfyaDataSourceDao afyaDataSourceDao) {
+		this.afyaDataSourceDao = afyaDataSourceDao;
 	}
 	
-	public NotificationInfoDao getNotificationDataDao() {
-		return notificationDataDao;
+	public NotificationInfoDao getNotificationInfoDao() {
+		return notificationInfoDao;
 	}
 	
-	public void setNotificationDataDao(final NotificationInfoDao notificationDataDao) {
-		this.notificationDataDao = notificationDataDao;
+	public void setNotificationInfoDao(final NotificationInfoDao notificationDataDao) {
+		this.notificationInfoDao = notificationDataDao;
 	}
 	
-	public ErrorMessagesInfoDao getErrorMessageDao() {
-		return errorMessageDao;
+	public ErrorMessagesInfoDao getErrorMessagesInfoDao() {
+		return errorMessagesInfoDao;
 	}
 	
-	public void setErrorMessageDao(final ErrorMessagesInfoDao errorMessageDao) {
-		this.errorMessageDao = errorMessageDao;
+	public void setErrorMessagesInfoDao(final ErrorMessagesInfoDao errorMessagesInfoDao) {
+		this.errorMessagesInfoDao = errorMessagesInfoDao;
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public AfyaStatQueueData getQueueData(final Integer id) {
-		return getQueueDataDao().getData(id);
+		return getAfyaStatQueueDataDao().getData(id);
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public AfyaStatQueueData getQueueDataByUuid(final String uuid) {
-		return getQueueDataDao().getDataByUuid(uuid);
+		return getAfyaStatQueueDataDao().getDataByUuid(uuid);
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<AfyaStatQueueData> getAllQueueData() {
-		return getQueueDataDao().getAllData();
+		return getAfyaStatQueueDataDao().getAllData();
 	}
 	
 	/**
@@ -148,7 +148,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public AfyaStatQueueData saveQueueData(final AfyaStatQueueData formData) {
-		return getQueueDataDao().saveData(formData);
+		return getAfyaStatQueueDataDao().saveData(formData);
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public void purgeQueueData(final AfyaStatQueueData formData) {
-		getQueueDataDao().purgeData(formData);
+		getAfyaStatQueueDataDao().purgeData(formData);
 	}
 	
 	/**
@@ -171,7 +171,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public Number countQueueData(final String search) {
-		return queueDataDao.countData(search);
+		return afyaStatQueueDataDao.countData(search);
 	}
 	
 	/**
@@ -184,7 +184,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<AfyaStatQueueData> getPagedQueueData(final String search, final Integer pageNumber, final Integer pageSize) {
-		return queueDataDao.getPagedData(search, pageNumber, pageSize);
+		return afyaStatQueueDataDao.getPagedData(search, pageNumber, pageSize);
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public ErrorInfo getErrorData(final Integer id) {
-		return getErrorDataDao().getData(id);
+		return getErrorInfoDao().getData(id);
 	}
 	
 	/**
@@ -210,7 +210,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public ErrorInfo getErrorDataByUuid(final String uuid) {
-		return getErrorDataDao().getDataByUuid(uuid);
+		return getErrorInfoDao().getDataByUuid(uuid);
 	}
 	
 	/**
@@ -224,7 +224,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	@Override
 	public ErrorInfo getRegistrationErrorDataByPatientUuid(String patientUuid) {
 		
-		List<ErrorInfo> errors = getErrorDataDao().getPagedData(patientUuid, null, null);
+		List<ErrorInfo> errors = getErrorInfoDao().getPagedData(patientUuid, null, null);
 		for (ErrorInfo errorData : errors) {
 			if (StringUtils.equals("json-registration", errorData.getDiscriminator())) {
 				return errorData;
@@ -242,30 +242,30 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<ErrorInfo> getAllErrorData() {
-		return getErrorDataDao().getAllData();
+		return getErrorInfoDao().getAllData();
 	}
 	
 	/**
 	 * Save error data into the database.
 	 * 
-	 * @param errorData the error data.
+	 * @param errorInfo the error data.
 	 * @return saved error data.
 	 * @should save error data into the database.
 	 */
 	@Override
-	public ErrorInfo saveErrorData(final ErrorInfo errorData) {
-		return getErrorDataDao().saveData(errorData);
+	public ErrorInfo saveErrorData(final ErrorInfo errorInfo) {
+		return getErrorInfoDao().saveData(errorInfo);
 	}
 	
 	/**
 	 * Delete error data from the database.
 	 * 
-	 * @param errorData the error data
+	 * @param errorInfo the error data
 	 * @should remove error data from the database
 	 */
 	@Override
-	public void purgeErrorData(final ErrorInfo errorData) {
-		getErrorDataDao().purgeData(errorData);
+	public void purgeErrorData(final ErrorInfo errorInfo) {
+		getErrorInfoDao().purgeData(errorInfo);
 	}
 	
 	/**
@@ -277,7 +277,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public Number countErrorData(final String search) {
-		return errorDataDao.countData(search);
+		return errorInfoDao.countData(search);
 	}
 	
 	/**
@@ -290,7 +290,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<ErrorInfo> getPagedErrorData(final String search, final Integer pageNumber, final Integer pageSize) {
-		return errorDataDao.getPagedData(search, pageNumber, pageSize);
+		return errorInfoDao.getPagedData(search, pageNumber, pageSize);
 	}
 	
 	/**
@@ -303,7 +303,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public ArchiveInfo getArchiveData(final Integer id) {
-		return getArchiveDataDao().getData(id);
+		return getArchiveInfoDao().getData(id);
 	}
 	
 	/**
@@ -316,22 +316,22 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public ArchiveInfo getArchiveDataByUuid(final String uuid) {
-		return getArchiveDataDao().getDataByUuid(uuid);
+		return getArchiveInfoDao().getDataByUuid(uuid);
 	}
 	
 	@Override
 	public List<ArchiveInfo> getArchiveDataByFormDataUuid(final String formDataUuid) {
-		return getArchiveDataDao().getAllDataByFormDataUuid(formDataUuid);
+		return getArchiveInfoDao().getAllDataByFormDataUuid(formDataUuid);
 	}
 	
 	@Override
 	public List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid) {
-		return getErrorDataDao().getAllDataByFormDataUuid(formDataUuid);
+		return getErrorInfoDao().getAllDataByFormDataUuid(formDataUuid);
 	}
 	
 	@Override
 	public List<AfyaStatQueueData> getQueueDataByFormDataUuid(final String formDataUuid) {
-		return getQueueDataDao().getAllDataByFormDataUuid(formDataUuid);
+		return getAfyaStatQueueDataDao().getAllDataByFormDataUuid(formDataUuid);
 	}
 	
 	/**
@@ -343,30 +343,30 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<ArchiveInfo> getAllArchiveData() {
-		return getArchiveDataDao().getAllData();
+		return getArchiveInfoDao().getAllData();
 	}
 	
 	/**
 	 * Save archive data into the database.
 	 * 
-	 * @param archiveData the archive data.
+	 * @param archiveInfo the archive data.
 	 * @return saved archive data.
 	 * @should save archive data into the database.
 	 */
 	@Override
-	public ArchiveInfo saveArchiveData(final ArchiveInfo archiveData) {
-		return getArchiveDataDao().saveData(archiveData);
+	public ArchiveInfo saveArchiveData(final ArchiveInfo archiveInfo) {
+		return getArchiveInfoDao().saveData(archiveInfo);
 	}
 	
 	/**
 	 * Delete archive data from the database.
 	 * 
-	 * @param archiveData the archive data
+	 * @param archiveInfo the archive data
 	 * @should remove archive data from the database
 	 */
 	@Override
-	public void purgeArchiveData(final ArchiveInfo archiveData) {
-		getArchiveDataDao().purgeData(archiveData);
+	public void purgeArchiveData(final ArchiveInfo archiveInfo) {
+		getArchiveInfoDao().purgeData(archiveInfo);
 	}
 	
 	/**
@@ -378,7 +378,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public Number countArchiveData(final String search) {
-		return archiveDataDao.countData(search);
+		return archiveInfoDao.countData(search);
 	}
 	
 	/**
@@ -391,7 +391,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<ArchiveInfo> getPagedArchiveData(final String search, final Integer pageNumber, final Integer pageSize) {
-		return archiveDataDao.getPagedData(search, pageNumber, pageSize);
+		return archiveInfoDao.getPagedData(search, pageNumber, pageSize);
 	}
 	
 	/**
@@ -404,7 +404,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public AfyaDataSource getDataSource(final Integer id) {
-		return getDataSourceDao().getById(id);
+		return getAfyaDataSourceDao().getById(id);
 	}
 	
 	/**
@@ -417,7 +417,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public AfyaDataSource getDataSourceByUuid(final String uuid) {
-		return getDataSourceDao().getDataSourceByUuid(uuid);
+		return getAfyaDataSourceDao().getDataSourceByUuid(uuid);
 	}
 	
 	/**
@@ -429,19 +429,19 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<AfyaDataSource> getAllDataSource() {
-		return getDataSourceDao().getAll();
+		return getAfyaDataSourceDao().getAll();
 	}
 	
 	/**
 	 * Save data source into the database.
 	 * 
-	 * @param dataSource the data source.
+	 * @param afyaDataSource the data source.
 	 * @return saved data source.
 	 * @should save data source into the database.
 	 */
 	@Override
-	public AfyaDataSource saveDataSource(final AfyaDataSource dataSource) {
-		return getDataSourceDao().saveOrUpdate(dataSource);
+	public AfyaDataSource saveDataSource(final AfyaDataSource afyaDataSource) {
+		return getAfyaDataSourceDao().saveOrUpdate(afyaDataSource);
 	}
 	
 	/**
@@ -452,7 +452,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public void purgeDataSource(final AfyaDataSource dataSource) {
-		getDataSourceDao().delete(dataSource);
+		getAfyaDataSourceDao().delete(dataSource);
 	}
 	
 	/**
@@ -464,7 +464,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public Number countDataSource(final String search) {
-		return dataSourceDao.countDataSource(search);
+		return afyaDataSourceDao.countDataSource(search);
 	}
 	
 	/**
@@ -477,7 +477,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<AfyaDataSource> getPagedDataSource(final String search, final Integer pageNumber, final Integer pageSize) {
-		return dataSourceDao.getPagedDataSources(search, pageNumber, pageSize);
+		return afyaDataSourceDao.getPagedDataSources(search, pageNumber, pageSize);
 	}
 	
 	/**
@@ -490,7 +490,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public NotificationInfo getNotificationData(final Integer id) {
-		return getNotificationDataDao().getData(id);
+		return getNotificationInfoDao().getData(id);
 	}
 	
 	/**
@@ -503,7 +503,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public NotificationInfo getNotificationDataByUuid(final String uuid) {
-		return getNotificationDataDao().getDataByUuid(uuid);
+		return getNotificationInfoDao().getDataByUuid(uuid);
 	}
 	
 	/**
@@ -515,7 +515,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public List<NotificationInfo> getAllNotificationData() {
-		return getNotificationDataDao().getAllData();
+		return getNotificationInfoDao().getAllData();
 	}
 	
 	/**
@@ -532,7 +532,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	@Override
 	public List<NotificationInfo> getNotificationDataByReceiver(final Person person, final String search,
 	        final Integer pageNumber, final Integer pageSize, final String status, final Date syncDate) {
-		return getNotificationDataDao().getNotificationsByReceiver(person, search, pageNumber, pageSize, status, syncDate);
+		return getNotificationInfoDao().getNotificationsByReceiver(person, search, pageNumber, pageSize, status, syncDate);
 	}
 	
 	/**
@@ -549,7 +549,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	@Override
 	public List<NotificationInfo> getNotificationDataBySender(final Person person, final String search,
 	        final Integer pageNumber, final Integer pageSize, final String status, final Date syncDate) {
-		return getNotificationDataDao().getNotificationsBySender(person, search, pageNumber, pageSize, status, syncDate);
+		return getNotificationInfoDao().getNotificationsBySender(person, search, pageNumber, pageSize, status, syncDate);
 	}
 	
 	/**
@@ -564,7 +564,7 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public Number countNotificationDataByReceiver(final Person person, final String search, final String status) {
-		return getNotificationDataDao().countNotificationsByReceiver(person, search, status);
+		return getNotificationInfoDao().countNotificationsByReceiver(person, search, status);
 	}
 	
 	/**
@@ -579,86 +579,86 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	 */
 	@Override
 	public Number countNotificationDataBySender(final Person person, final String search, final String status) {
-		return getNotificationDataDao().countNotificationsBySender(person, search, status);
+		return getNotificationInfoDao().countNotificationsBySender(person, search, status);
 	}
 	
 	@Override
 	public List<NotificationInfo> getNotificationDataByRole(final Role role, final String search, final Integer pageNumber,
 	        final Integer pageSize, final String status) {
-		return getNotificationDataDao().getNotificationsByRole(role, search, pageNumber, pageSize, status);
+		return getNotificationInfoDao().getNotificationsByRole(role, search, pageNumber, pageSize, status);
 	}
 	
 	@Override
 	public Number countNotificationDataByRole(final Role role, final String search, final String status) {
-		return getNotificationDataDao().countNotificationsByRole(role, search, status);
+		return getNotificationInfoDao().countNotificationsByRole(role, search, status);
 	}
 	
 	/**
 	 * Save notification data into the database.
 	 * 
-	 * @param notificationData the notification data.
+	 * @param notificationInfo the notification data.
 	 * @return saved notification data.
 	 * @should save notification data into the database.
 	 */
 	@Override
-	public NotificationInfo saveNotificationData(final NotificationInfo notificationData) {
-		return getNotificationDataDao().saveOrUpdate(notificationData);
+	public NotificationInfo saveNotificationData(final NotificationInfo notificationInfo) {
+		return getNotificationInfoDao().saveOrUpdate(notificationInfo);
 	}
 	
 	/**
 	 * Delete notification data from the database.
 	 * 
-	 * @param notificationData the notification data
+	 * @param notificationInfo the notification data
 	 * @should remove notification data from the database
 	 */
 	@Override
-	public void purgeNotificationData(final NotificationInfo notificationData) {
-		getNotificationDataDao().purgeData(notificationData);
+	public void purgeNotificationData(final NotificationInfo notificationInfo) {
+		getNotificationInfoDao().purgeData(notificationInfo);
 	}
 	
 	/**
 	 * Void a single notification data.
 	 * 
-	 * @param notificationData the notification data to be voided.
+	 * @param notificationInfo the notification data to be voided.
 	 * @return the voided notification data.
 	 */
 	@Override
-	public NotificationInfo voidNotificationData(final NotificationInfo notificationData, final String reason) {
-		notificationData.setVoided(Boolean.TRUE);
-		notificationData.setVoidedBy(Context.getAuthenticatedUser());
-		notificationData.setDateVoided(new Date());
-		notificationData.setVoidReason(reason);
-		return saveNotificationData(notificationData);
+	public NotificationInfo voidNotificationData(final NotificationInfo notificationInfo, final String reason) {
+		notificationInfo.setVoided(Boolean.TRUE);
+		notificationInfo.setVoidedBy(Context.getAuthenticatedUser());
+		notificationInfo.setDateVoided(new Date());
+		notificationInfo.setVoidReason(reason);
+		return saveNotificationData(notificationInfo);
 	}
 	
 	@Override
 	public ErrorMessagesInfo getErrorMessage(Integer id) {
-		return getErrorMessageDao().getById(id);
+		return getErrorMessagesInfoDao().getById(id);
 	}
 	
 	@Override
 	public ErrorMessagesInfo getErrorMessageByUuid(String uuid) {
-		return getErrorMessageDao().getDataByUuid(uuid);
+		return getErrorMessagesInfoDao().getDataByUuid(uuid);
 	}
 	
 	@Override
 	public List<ErrorMessagesInfo> getAllErrorMessage() {
-		return getErrorMessageDao().getAll();
+		return getErrorMessagesInfoDao().getAll();
 	}
 	
 	@Override
-	public ErrorMessagesInfo saveErrorMessage(ErrorMessagesInfo errormessage) {
-		return getErrorMessageDao().saveData(errormessage);
+	public ErrorMessagesInfo saveErrorMessage(ErrorMessagesInfo errorMessagesInfo) {
+		return getErrorMessagesInfoDao().saveData(errorMessagesInfo);
 	}
 	
 	@Override
-	public void purgeErrorMessage(ErrorMessagesInfo errormessage) {
-		getErrorMessageDao().purgeData(errormessage);
+	public void purgeErrorMessage(ErrorMessagesInfo errorMessagesInfo) {
+		getErrorMessagesInfoDao().purgeData(errorMessagesInfo);
 	}
 	
 	@Override
 	public Number countErrorMessage(String search) {
-		return getErrorMessageDao().countData(search);
+		return getErrorMessagesInfoDao().countData(search);
 	}
 	
 	@Override
@@ -669,11 +669,11 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	@Override
 	public List<ErrorMessagesInfo> validateData(String uuid, String formData) {
 		List<ErrorMessagesInfo> errorMessages = new ArrayList<ErrorMessagesInfo>();
-		ErrorInfo errorData = getErrorDataByUuid(uuid);
-		errorDataDao.detachDataFromHibernateSession(errorData);
-		errorData.setPayload(formData);
+		ErrorInfo errorInfo = getErrorDataByUuid(uuid);
+		errorInfoDao.detachDataFromHibernateSession(errorInfo);
+		errorInfo.setPayload(formData);
 		
-		AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+		AfyaStatQueueData queueData = new AfyaStatQueueData(errorInfo);
 		
 		List<QueueInfoHandler> queueDataHandlers = HandlerUtil.getHandlersForType(QueueInfoHandler.class,
 		    AfyaStatQueueData.class);
@@ -706,41 +706,41 @@ public class AfyaStatDataServiceImpl extends BaseOpenmrsService implements AfyaS
 	}
 	
 	private List<ErrorMessagesInfo> createErrorMessageList(StreamProcessorException ex) {
-		List<ErrorMessagesInfo> errorMessages = new ArrayList<ErrorMessagesInfo>();
+		List<ErrorMessagesInfo> errorMessagesInfos = new ArrayList<ErrorMessagesInfo>();
 		for (Exception exception : ex.getAllException()) {
 			ErrorMessagesInfo error = new ErrorMessagesInfo();
 			error.setMessage(exception.getMessage());
-			errorMessages.add(error);
+			errorMessagesInfos.add(error);
 		}
-		return errorMessages;
+		return errorMessagesInfos;
 	}
 	
 	@Override
 	public List<AfyaStatQueueData> mergeDuplicatePatient(@NotNull final String errorDataUuid,
 	        @NotNull final String existingPatientUuid, @NotNull final String payload) {
 		List<AfyaStatQueueData> requeued = new ArrayList<AfyaStatQueueData>();
-		ErrorInfo errorData = this.getErrorDataByUuid(errorDataUuid);
-		errorData.setPayload(payload);
-		String submittedPatientUuid = errorData.getPatientUuid();
+		ErrorInfo errorInfo = this.getErrorDataByUuid(errorDataUuid);
+		errorInfo.setPayload(payload);
+		String submittedPatientUuid = errorInfo.getPatientUuid();
 		
-		errorData.setDiscriminator("json-demographics-update");
+		errorInfo.setDiscriminator("json-demographics-update");
 		
-		errorData = this.saveErrorData(errorData);
+		errorInfo = this.saveErrorData(errorInfo);
 		
 		registerTemporaryUuid(submittedPatientUuid, existingPatientUuid);
-		AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
-		queueData = this.saveQueueData(queueData);
-		this.purgeErrorData(errorData);
-		requeued.add(queueData);
+		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData(errorInfo);
+		afyaStatQueueData = this.saveQueueData(afyaStatQueueData);
+		this.purgeErrorData(errorInfo);
+		requeued.add(afyaStatQueueData);
 		
 		// Fetch all ErrorData associated with the patient UUID (the one determined to be of a duplicate patient).
 		int countOfErrors = this.countErrorData(submittedPatientUuid).intValue();
 		List<ErrorInfo> allToRequeue = this.getPagedErrorData(submittedPatientUuid, 1, countOfErrors);
 		for (ErrorInfo errorData1 : allToRequeue) {
-			queueData = new AfyaStatQueueData(errorData1);
-			queueData = this.saveQueueData(queueData);
+			afyaStatQueueData = new AfyaStatQueueData(errorData1);
+			afyaStatQueueData = this.saveQueueData(afyaStatQueueData);
 			this.purgeErrorData(errorData1);
-			requeued.add(queueData);
+			requeued.add(afyaStatQueueData);
 		}
 		return requeued;
 	}

@@ -20,7 +20,7 @@ import org.openmrs.module.afyastat.model.ArchiveInfo;
 
 /**
  */
-public class HibernateArchiveInfoDao extends HibernateAfyaDataDao<ArchiveInfo> implements ArchiveInfoDao {
+public class HibernateArchiveInfoDao extends HibernateInfoDao<ArchiveInfo> implements ArchiveInfoDao {
 	
 	private final Log log = LogFactory.getLog(HibernateArchiveInfoDao.class);
 	

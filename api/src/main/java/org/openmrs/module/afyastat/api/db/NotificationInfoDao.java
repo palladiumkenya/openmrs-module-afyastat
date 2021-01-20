@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * TODO: Write brief description about the class here.
  */
-public interface NotificationInfoDao extends AfyaDataDao<NotificationInfo> {
+public interface NotificationInfoDao extends InfoDao<NotificationInfo> {
 	
 	/**
 	 * Get all notification for this particular person.

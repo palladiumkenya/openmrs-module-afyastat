@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  */
-public interface AfyaStatDataService extends OpenmrsService {
+public interface InfoService extends OpenmrsService {
 	
 	/**
 	 * Return the queue data with the given id.
@@ -402,27 +402,27 @@ public interface AfyaStatDataService extends OpenmrsService {
 	/**
 	 * Save notification data into the database.
 	 * 
-	 * @param notificationData the notification data.
+	 * @param notificationInfo the notification data.
 	 * @return saved notification data.
 	 * @should save notification data into the database.
 	 */
-	NotificationInfo saveNotificationData(final NotificationInfo notificationData);
+	NotificationInfo saveNotificationData(final NotificationInfo notificationInfo);
 	
 	/**
 	 * Delete notification data from the database.
 	 * 
-	 * @param notificationData the notification data
+	 * @param notificationInfo the notification data
 	 * @should remove notification data from the database
 	 */
-	void purgeNotificationData(final NotificationInfo notificationData);
+	void purgeNotificationData(final NotificationInfo notificationInfo);
 	
 	/**
 	 * Void a single notification data.
 	 * 
-	 * @param notificationData the notification data to be voided.
+	 * @param notificationInfo the notification data to be voided.
 	 * @return the voided notification data.
 	 */
-	NotificationInfo voidNotificationData(final NotificationInfo notificationData, final String reason);
+	NotificationInfo voidNotificationData(final NotificationInfo notificationInfo, final String reason);
 	
 	/**
 	 * Return the error message with the given id.

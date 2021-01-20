@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  */
-public class HibernateNotificationInfoDao extends HibernateAfyaDataDao<NotificationInfo> implements NotificationInfoDao {
+public class HibernateNotificationInfoDao extends HibernateInfoDao<NotificationInfo> implements NotificationInfoDao {
 	
 	private final Log log = LogFactory.getLog(HibernateNotificationInfoDao.class);
 	

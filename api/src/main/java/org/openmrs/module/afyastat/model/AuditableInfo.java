@@ -19,7 +19,7 @@ import org.openmrs.Provider;
 
 /**
  */
-public abstract class AuditableData extends BaseOpenmrsData implements AfyaData {
+public abstract class AuditableInfo extends BaseOpenmrsData implements Info {
 	
 	private Integer id;
 	
@@ -43,10 +43,10 @@ public abstract class AuditableData extends BaseOpenmrsData implements AfyaData 
 	 * **** Audit information ******
 	 */
 	
-	public AuditableData() {
+	public AuditableInfo() {
 	}
 	
-	public AuditableData(final AuditableData data) {
+	public AuditableInfo(final AuditableInfo data) {
 		setPayload(data.getPayload());
 		setDataSource(data.getDataSource());
 		setDiscriminator(data.getDiscriminator());

@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  */
-public class HibernateErrorInfoDao extends HibernateAfyaDataDao<ErrorInfo> implements ErrorInfoDao {
+public class HibernateErrorInfoDao extends HibernateInfoDao<ErrorInfo> implements ErrorInfoDao {
 	
 	private final Log log = LogFactory.getLog(HibernateErrorInfoDao.class);
 	

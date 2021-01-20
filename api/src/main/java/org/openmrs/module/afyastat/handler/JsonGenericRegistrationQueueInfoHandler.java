@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
+import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
@@ -30,8 +30,6 @@ import org.openmrs.module.afyastat.model.RegistrationInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.module.afyastat.utils.JsonFormatUtils;
 import org.openmrs.module.afyastat.utils.PatientLookUpUtils;
-import org.openmrs.module.idgen.IdentifierSource;
-import org.openmrs.module.idgen.service.IdentifierSourceService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -85,7 +83,7 @@ public class JsonGenericRegistrationQueueInfoHandler implements QueueInfoHandler
 					encounterQueueData.setProvider(queueData.getProvider());
 					encounterQueueData.setPatientUuid(queueData.getPatientUuid());
 					encounterQueueData.setFormDataUuid(queueData.getFormDataUuid());
-					Context.getService(AfyaStatDataService.class).saveQueueData(encounterQueueData);
+					Context.getService(InfoService.class).saveQueueData(encounterQueueData);
 				}
 			}
 		}

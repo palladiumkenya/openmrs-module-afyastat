@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
+import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.ArchiveInfo;
@@ -52,46 +52,46 @@ public class QueueInfoProcessor {
 		try {
 			isRunning = true;
 			log.info("Starting up queue data processor ...");
-			AfyaStatDataService dataService = Context.getService(AfyaStatDataService.class);
-			List<AfyaStatQueueData> queueDataList = dataService.getAllQueueData();
+			InfoService infoService = Context.getService(InfoService.class);
+			List<AfyaStatQueueData> queueDataList = infoService.getAllQueueData();
 			List<QueueInfoHandler> queueDataHandlers = HandlerUtil.getHandlersForType(QueueInfoHandler.class,
 			    AfyaStatQueueData.class);
 			for (QueueInfoHandler queueDataHandler : queueDataHandlers) {
 				Iterator<AfyaStatQueueData> queueDataIterator = queueDataList.iterator();
 				while (queueDataIterator.hasNext()) {
-					AfyaStatQueueData queueData = queueDataIterator.next();
+					AfyaStatQueueData afyaStatQueueData = queueDataIterator.next();
 					try {
-						if (queueDataHandler.accept(queueData)) {
-							queueDataHandler.process(queueData);
+						if (queueDataHandler.accept(afyaStatQueueData)) {
+							queueDataHandler.process(afyaStatQueueData);
 							queueDataIterator.remove();
 							// archive them after we're done processing the queue data.
-							createArchiveData(queueData, "Queue data processed successfully!");
-							dataService.purgeQueueData(queueData);
+							createArchiveData(afyaStatQueueData, "Queue data processed successfully!");
+							infoService.purgeQueueData(afyaStatQueueData);
 						}
 					}
 					catch (Exception e) {
 						log.error("Unable to process queue data due to: " + e.getMessage(), e);
-						if (queueData.getLocation() == null) {
-							Location location = extractLocationFromPayload(queueData.getPayload());
-							queueData.setLocation(location);
+						if (afyaStatQueueData.getLocation() == null) {
+							Location location = extractLocationFromPayload(afyaStatQueueData.getPayload());
+							afyaStatQueueData.setLocation(location);
 						}
-						if (queueData.getProvider() == null) {
-							Provider provider = extractProviderFromPayload(queueData.getPayload());
-							queueData.setProvider(provider);
+						if (afyaStatQueueData.getProvider() == null) {
+							Provider provider = extractProviderFromPayload(afyaStatQueueData.getPayload());
+							afyaStatQueueData.setProvider(provider);
 						}
-						if (queueData.getFormName() == null) {
-							String formName = extractFormNameFromPayload(queueData.getPayload());
-							queueData.setFormName(formName);
+						if (afyaStatQueueData.getFormName() == null) {
+							String formName = extractFormNameFromPayload(afyaStatQueueData.getPayload());
+							afyaStatQueueData.setFormName(formName);
 						}
-						if (queueData.getPatientUuid() == null) {
-							String patientUuid = extractPatientUuidFromPayload(queueData.getPayload());
+						if (afyaStatQueueData.getPatientUuid() == null) {
+							String patientUuid = extractPatientUuidFromPayload(afyaStatQueueData.getPayload());
 							if (patientUuid == null) {
-								queueData.setPatientUuid("");
+								afyaStatQueueData.setPatientUuid("");
 							}
-							queueData.setPatientUuid(patientUuid);
+							afyaStatQueueData.setPatientUuid(patientUuid);
 						}
-						createErrorData(queueData, (StreamProcessorException) e);
-						dataService.purgeQueueData(queueData);
+						createErrorData(afyaStatQueueData, (StreamProcessorException) e);
+						infoService.purgeQueueData(afyaStatQueueData);
 					}
 				}
 			}
@@ -103,15 +103,15 @@ public class QueueInfoProcessor {
 	}
 	
 	private void createArchiveData(final AfyaStatQueueData queueData, final String message) {
-		ArchiveInfo archiveData = new ArchiveInfo(queueData);
-		archiveData.setMessage(message);
-		archiveData.setDateArchived(new Date());
-		Context.getService(AfyaStatDataService.class).saveArchiveData(archiveData);
+		ArchiveInfo archiveInfo = new ArchiveInfo(queueData);
+		archiveInfo.setMessage(message);
+		archiveInfo.setDateArchived(new Date());
+		Context.getService(InfoService.class).saveArchiveData(archiveInfo);
 	}
 	
 	private void createErrorData(final AfyaStatQueueData queueData, StreamProcessorException exception) {
-		ErrorInfo errorData = new ErrorInfo(queueData);
-		errorData.setDateProcessed(new Date());
+		ErrorInfo errorInfo = new ErrorInfo(queueData);
+		errorInfo.setDateProcessed(new Date());
 		Set errorMessage = new HashSet();
 		for (Exception e : exception.getAllException()) {
 			ErrorMessagesInfo error = new ErrorMessagesInfo();
@@ -123,9 +123,9 @@ public class QueueInfoProcessor {
 			error.setMessage(message);
 			errorMessage.add(error);
 		}
-		errorData.setMessage("Unable to process queue data");
-		errorData.setErrorMessages(errorMessage);
-		Context.getService(AfyaStatDataService.class).saveErrorData(errorData);
+		errorInfo.setMessage("Unable to process queue data");
+		errorInfo.setErrorMessages(errorMessage);
+		Context.getService(InfoService.class).saveErrorData(errorInfo);
 	}
 	
 	private Provider extractProviderFromPayload(String payload) {

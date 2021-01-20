@@ -34,7 +34,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 
 import org.openmrs.module.afyastat.api.AfyastatService;
-import org.openmrs.module.afyastat.api.service.AfyaStatDataService;
+import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.MedicQueData;
 import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.afyastat.model.AfyaDataSource;
@@ -51,7 +51,7 @@ import java.util.*;
 public class MedicDataExchange {
 
 	AfyastatService afyastatService = Context.getService(AfyastatService.class);
-	AfyaStatDataService dataService = Context.getService(AfyaStatDataService.class);
+	InfoService dataService = Context.getService(InfoService.class);
 	
 	PersonService personService = Context.getPersonService();
 	

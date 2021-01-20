@@ -95,49 +95,49 @@
     <bean parent="serviceContext">
         <property name="moduleService">
             <list merge="true">
-                <value>org.openmrs.module.afyastat.api.service.AfyaStatDataService</value>
+                <value>org.openmrs.module.afyastat.api.service.InfoService</value>
                 <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
                     <property name="transactionManager">
                         <ref bean="transactionManager"/>
                     </property>
                     <property name="target">
-                        <bean class="org.openmrs.module.afyastat.api.service.impl.AfyaStatDataServiceImpl">
-                            <property name="errorDataDao">
+                        <bean class="org.openmrs.module.afyastat.api.service.impl.InfoServiceImpl">
+                            <property name="errorInfoDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorInfoDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
                                 </bean>
                             </property>
-                            <property name="queueDataDao">
+                            <property name="afyaStatQueueDataDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaStatQueueDataDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
                                 </bean>
                             </property>
-                            <property name="archiveDataDao">
+                            <property name="archiveInfoDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateArchiveInfoDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
                                 </bean>
                             </property>
-                            <property name="dataSourceDao">
+                            <property name="afyaDataSourceDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaDataSourceDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
                                 </bean>
                             </property>
-                            <property name="notificationDataDao">
+                            <property name="notificationInfoDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateNotificationInfoDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>
                                     </property>
                                 </bean>
                             </property>
-                            <property name="errorMessageDao">
+                            <property name="errorMessagesInfoDao">
                                 <bean class="org.openmrs.module.afyastat.api.db.hibernate.HibernateErrorMessagesInfoDao">
                                     <property name="sessionFactory">
                                         <ref bean="sessionFactory"/>

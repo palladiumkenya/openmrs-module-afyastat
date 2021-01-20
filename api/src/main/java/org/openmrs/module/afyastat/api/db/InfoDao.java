@@ -13,13 +13,13 @@
  */
 package org.openmrs.module.afyastat.api.db;
 
-import org.openmrs.module.afyastat.model.AfyaData;
+import org.openmrs.module.afyastat.model.Info;
 
 import java.util.List;
 
 /**
  */
-public interface AfyaDataDao<T extends AfyaData> extends SingleClassInfoDao<T> {
+public interface InfoDao<T extends Info> extends SingleClassInfoDao<T> {
 	
 	/**
 	 * Return the data with the given id.

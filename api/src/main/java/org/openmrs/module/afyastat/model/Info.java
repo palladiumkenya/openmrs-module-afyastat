@@ -15,7 +15,7 @@ package org.openmrs.module.afyastat.model;
 
 /**
  */
-public interface AfyaData {
+public interface Info {
 	
 	/**
 	 * Get the data payload of this data.

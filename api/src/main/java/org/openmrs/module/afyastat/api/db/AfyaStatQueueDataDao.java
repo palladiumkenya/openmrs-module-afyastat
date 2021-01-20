@@ -4,4 +4,4 @@ import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 
 /**
  */
-public interface AfyaStatQueueDataDao extends AfyaDataDao<AfyaStatQueueData> {}
+public interface AfyaStatQueueDataDao extends InfoDao<AfyaStatQueueData> {}

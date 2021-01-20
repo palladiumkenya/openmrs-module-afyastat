@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * TODO: Write brief description about the class here.
  */
-public class NotificationInfo extends BaseOpenmrsData implements AfyaData {
+public class NotificationInfo extends BaseOpenmrsData implements Info {
 	
 	private Integer id;
 	

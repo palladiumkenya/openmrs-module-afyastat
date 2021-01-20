@@ -20,7 +20,7 @@ import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 
 /**
  */
-public class HibernateAfyaStatQueueDataDao extends HibernateAfyaDataDao<AfyaStatQueueData> implements AfyaStatQueueDataDao {
+public class HibernateAfyaStatQueueDataDao extends HibernateInfoDao<AfyaStatQueueData> implements AfyaStatQueueDataDao {
 	
 	private final Log log = LogFactory.getLog(HibernateAfyaStatQueueDataDao.class);
 	

@@ -17,6 +17,6 @@ import org.openmrs.module.afyastat.model.ErrorInfo;
 
 /**
  */
-public interface ErrorInfoDao extends AfyaDataDao<ErrorInfo> {
+public interface ErrorInfoDao extends InfoDao<ErrorInfo> {
 	
 }
