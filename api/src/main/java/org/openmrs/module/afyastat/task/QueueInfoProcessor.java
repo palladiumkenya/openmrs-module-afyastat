@@ -17,6 +17,7 @@ import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Form;
 import org.openmrs.Location;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
@@ -141,15 +142,13 @@ public class QueueInfoProcessor {
 	
 	private String extractFormNameFromPayload(String payload) {
 		String formUuid = readAsString(payload, "$['encounter']['encounter.form_uuid']");
-		/* MuzimaFormService muzimaFormService = Context.getService(MuzimaFormService.class);
-		 MuzimaForm muzimaForm = muzimaFormService.getFormByUuid(formUuid);
-		 if(muzimaForm != null) {
-		     return muzimaForm.getName();
-		 } else {
-		     return null;
-		 }*/
-		
-		return null;
+        Form form = Context.getFormService().getFormByUuid(formUuid);
+        if (form != null && form.getName() != null) {
+            return form.getName();
+        } else {
+            return null;
+        }
+
 	}
 	
 	private String extractPatientUuidFromPayload(String payload) {
