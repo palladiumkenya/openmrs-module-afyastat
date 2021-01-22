@@ -142,13 +142,13 @@ public class QueueInfoProcessor {
 	
 	private String extractFormNameFromPayload(String payload) {
 		String formUuid = readAsString(payload, "$['encounter']['encounter.form_uuid']");
-        Form form = Context.getFormService().getFormByUuid(formUuid);
-        if (form != null && form.getName() != null) {
-            return form.getName();
-        } else {
-            return null;
-        }
-
+		Form form = Context.getFormService().getFormByUuid(formUuid);
+		if (form != null && form.getName() != null) {
+			return form.getName();
+		} else {
+			return null;
+		}
+		
 	}
 	
 	private String extractPatientUuidFromPayload(String payload) {
