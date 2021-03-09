@@ -107,7 +107,7 @@ public class MedicDataExchange {
 			e.printStackTrace();
 		}
 		if (jsonNode != null) {
-			ObjectNode registrationNode = processRegistrationPayload(jsonNode);
+			ObjectNode registrationNode = processRegistrationPayload(jsonNode,resultPayload);
 			String payload = registrationNode.toString();
 			String discriminator = registrationNode.path("discriminator").path("discriminator").getTextValue();
 			String formDataUuid = registrationNode.path("encounter").path("encounter.form_uuid").getTextValue();
@@ -196,7 +196,7 @@ public class MedicDataExchange {
 		afyastatService.saveQueData(medicQueData);
 	}
 	
-	private ObjectNode processRegistrationPayload(ObjectNode jNode) {
+	private ObjectNode processRegistrationPayload(ObjectNode jNode, String regPayload) {
 		ObjectNode jsonNode = (ObjectNode) jNode.get("registration");
 		ObjectNode patientNode = getJsonNodeFactory().objectNode();
 		ObjectNode obs = getJsonNodeFactory().objectNode();
@@ -310,6 +310,20 @@ public class MedicDataExchange {
 		registrationWrapper.put("tmp", tmp);
 		registrationWrapper.put("discriminator", discriminator);
 		registrationWrapper.put("encounter", encounter);
+
+		if(jsonNode.get("relation_uuid") != null && !jsonNode.get("relation_uuid").getTextValue().equalsIgnoreCase("")){
+			// we want to establish relationship
+			String patientRelatedTo = jsonNode.get("relation_uuid").getTextValue();
+			String relationshipTypeName = jsonNode.get("relation_type") != null ? jsonNode.get("relation_type").getTextValue():"";
+			String relationshipUuid = UUID.randomUUID().toString();
+			String patientUuid = jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue(): "";
+			addRelationshipToDataQueue(patientRelatedTo,relationshipTypeName,relationshipUuid,providerId,systemId,patientUuid);
+			if(!relationshipTypeName.equalsIgnoreCase("spouse") && !relationshipTypeName.equalsIgnoreCase("")) {
+				createPatientContactFromRelationship(regPayload,providerId,systemId, patientUuid);
+
+			}
+		}
+
 		return registrationWrapper;
 	}
 	
@@ -534,6 +548,43 @@ public class MedicDataExchange {
 			saveMedicDataQueue(payload, locationId, providerString, patientContactUuid, discriminator, "", userName);
 		}
 		return "Queue data for contact created successfully";
+	}
+
+
+	// add relationship
+	public String addRelationshipToDataQueue(String patientRelatedTo, String relationshipTypeName, String relationshipUuid,
+											 String providerId, String systemId,String patientUuid) {
+
+		ObjectNode encounter = JsonNodeFactory.instance.objectNode();
+		ObjectNode relationshipType = JsonNodeFactory.instance.objectNode();
+		ObjectNode relationUuid = JsonNodeFactory.instance.objectNode();
+		ObjectNode formNode = JsonNodeFactory.instance.objectNode();
+
+		relationshipType.put("uuid",relationshipTypeConverter(relationshipTypeName));
+		relationUuid.put("uuid",relationshipUuid);
+		encounter.put("encounter.provider_id_select",providerId != null ? providerId: " ");
+		encounter.put("encounter.provider_id",providerId != null ? providerId: " ");
+		formNode.put("encounter",encounter);
+		formNode.put("relationshipType",relationshipType);
+		formNode.put("relationUuid",relationUuid);
+		formNode.put("uuid",patientRelatedTo);
+		formNode.put("personBUuid",patientUuid);
+		String payload = formNode.toString();
+		String discriminator = "json-relationship";
+		Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
+		saveMedicDataQueue(payload,locationId,providerId,patientRelatedTo,discriminator,"", systemId);
+
+		return "Queue data for relationship created successfully";
+	}
+
+	public String createPatientContactFromRelationship(String payload, String providerId, String systemId,
+													   String patientUuid) {
+		String discriminator = "json-createpatientcontactusingrelatioship";
+		Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
+		saveMedicDataQueue(payload,locationId,providerId,patientUuid,discriminator,"", systemId);
+
+		return "Queue data for creating contact from relationship created successfully";
+
 	}
 	
 	public String addContactTraceToDataqueue(String resultPayload) {
@@ -1531,6 +1582,29 @@ public class MedicDataExchange {
 		addressNode.put("POSTAL_ADDRESS", postalAddress);
 		
 		return addressNode;
+	}
+
+	private String relationshipTypeConverter(String relType) {
+		String relTypeUuid = null;
+		if(relType.equalsIgnoreCase("partner")){
+			relTypeUuid ="007b765f-6725-4ae9-afee-9966302bace4";
+		}else if(relType.equalsIgnoreCase("parent") || relType.equalsIgnoreCase("mother") || relType.equalsIgnoreCase("father")){
+			relTypeUuid ="8d91a210-c2cc-11de-8d13-0010c6dffd0f";
+		}else if(relType.equalsIgnoreCase("sibling")){
+			relTypeUuid ="8d91a01c-c2cc-11de-8d13-0010c6dffd0f";
+		}else if(relType.equalsIgnoreCase("child")){
+			relTypeUuid ="8d91a210-c2cc-11de-8d13-0010c6dffd0f";
+		}else if(relType.equalsIgnoreCase("spouse")){
+			relTypeUuid ="d6895098-5d8d-11e3-94ee-b35a4132a5e3";
+		}else if(relType.equalsIgnoreCase("co-wife")){
+			relTypeUuid ="2ac0d501-eadc-4624-b982-563c70035d46";
+		}else if(relType.equalsIgnoreCase("Injectable drug user")){
+			relTypeUuid ="58da0d1e-9c89-42e9-9412-275cef1e0429";
+		} else if(relType.equalsIgnoreCase("guardian") ) {
+			relTypeUuid ="5f115f62-68b7-11e3-94ee-6bef9086de92";
+
+		}
+		return relTypeUuid;
 	}
 	
 	/**
