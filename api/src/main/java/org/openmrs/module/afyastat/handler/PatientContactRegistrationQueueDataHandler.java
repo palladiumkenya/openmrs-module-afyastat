@@ -118,7 +118,6 @@ public class PatientContactRegistrationQueueDataHandler implements QueueInfoHand
 		String kemrRef = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']"); // exists if the parent was listed in afyastat, pushed to the emr for full registration, and pushed back to afyastat
 		patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(afyaStatRelationUuid) ? getPatientRelatedToContact(afyaStatRelationUuid)
 		        : getPatientRelatedToContact(org.apache.commons.lang3.StringUtils.isNotBlank(kemrRef) ? kemrRef : parentId);
-		
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
 		patient = org.apache.commons.lang3.StringUtils.isNotBlank(uuid) ? getPatientAsContact(uuid)
 		        : getPatientAsContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));

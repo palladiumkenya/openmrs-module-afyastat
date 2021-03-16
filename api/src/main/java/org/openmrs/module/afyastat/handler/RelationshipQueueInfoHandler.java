@@ -75,6 +75,7 @@ public class RelationshipQueueInfoHandler implements QueueInfoHandler {
 		personService = Context.getPersonService();
 		payload = queueData.getPayload();
 		createRelationship();
+
 	}
 	
 	@Override
