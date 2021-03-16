@@ -43,10 +43,6 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 		Context.openSession();
 		try {
 			
-			if (!Context.isAuthenticated()) {
-				authenticate();
-			}
-			
 			GlobalProperty lastPatientEntry = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_ENTRY);
 			String lastContactRegistrationIdsql = "select max(patient_id) last_id from kenyaemr_hiv_testing_patient_contact where voided=0 and patient_id is not null and contact_listing_decline_reason='CHT';";

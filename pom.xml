@@ -29,29 +29,29 @@
 	</modules>
 
 	<properties>
-		<openMRSVersion>1.12.0</openMRSVersion>
+		<openMRSVersion>2.1.2</openMRSVersion>
 		<!-- Module dependencies -->
-		<appframeworkVersion>2.2.1</appframeworkVersion>
-		<calculationVersion>1.0</calculationVersion>
-		<htmlformentryVersion>2.3</htmlformentryVersion>
-		<htmlwidgetsVersion>1.6.6</htmlwidgetsVersion>
-		<idgenVersion>2.6</idgenVersion>
-		<metadatadeployVersion>1.2</metadatadeployVersion>
-		<metadatasharingVersion>1.1.8</metadatasharingVersion>
-		<reportingVersion>0.9.8.1</reportingVersion>
-		<serializationxstreamVersion>0.2.7</serializationxstreamVersion>
-		<uiframeworkVersion>3.3.1</uiframeworkVersion>
+		<appframeworkVersion>2.13.0</appframeworkVersion>
+		<calculationVersion>1.2</calculationVersion>
+		<htmlformentryVersion>3.9.2</htmlformentryVersion>
+		<htmlwidgetsVersion>1.10.0</htmlwidgetsVersion>
+		<legacyUiVersion>1.5.0</legacyUiVersion>
+		<idgenVersion>4.5.0</idgenVersion>
+		<metadatadeployVersion>1.11.0</metadatadeployVersion>
+		<metadatasharingVersion>1.5.0</metadatasharingVersion>
+		<reportingVersion>1.18.0</reportingVersion>
+		<serializationxstreamVersion>0.2.14</serializationxstreamVersion>
+		<uiframeworkVersion>3.15.0</uiframeworkVersion>
 		<kenyaemrVersion>17.2.0</kenyaemrVersion>
 		<kenyacoreVersion>2.2</kenyacoreVersion>
 		<kenyauiVersion>2.0.3</kenyauiVersion>
 		<hivtestingservicesVersion>1.1.4</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
-		<idgenVersion>2.6</idgenVersion>
 		<jacksonVersion>2.10.1</jacksonVersion>
 		<jsonPathVersion>0.8.1</jsonPathVersion>
 		<apacheHttpClientVersion>4.5.10</apacheHttpClientVersion>
-		<webservicesRestVersion>2.1</webservicesRestVersion>
+		<webservicesRestVersion>2.26.0</webservicesRestVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 	</properties>
@@ -71,6 +71,18 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>calculation-api</artifactId>
 				<version>${calculationVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>legacyui-api</artifactId>
+				<version>${legacyUiVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>legacyui-omod</artifactId>
+				<version>${legacyUiVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 
