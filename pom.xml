@@ -29,7 +29,7 @@
 	</modules>
 
 	<properties>
-		<openMRSVersion>2.1.2</openMRSVersion>
+		<openMRSVersion>2.4.0</openMRSVersion>
 		<!-- Module dependencies -->
 		<appframeworkVersion>2.13.0</appframeworkVersion>
 		<calculationVersion>1.2</calculationVersion>
@@ -42,10 +42,10 @@
 		<reportingVersion>1.18.0</reportingVersion>
 		<serializationxstreamVersion>0.2.14</serializationxstreamVersion>
 		<uiframeworkVersion>3.15.0</uiframeworkVersion>
-		<kenyaemrVersion>17.2.0</kenyaemrVersion>
+		<kenyaemrVersion>17.3.2</kenyaemrVersion>
 		<kenyacoreVersion>2.2</kenyacoreVersion>
 		<kenyauiVersion>2.0.3</kenyauiVersion>
-		<hivtestingservicesVersion>1.1.4</hivtestingservicesVersion>
+		<hivtestingservicesVersion>1.1.5</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
 		<jacksonVersion>2.10.1</jacksonVersion>
