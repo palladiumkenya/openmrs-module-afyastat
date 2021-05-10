@@ -42,6 +42,9 @@ import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.module.hivtestingservices.api.PatientContact;
+import org.openmrs.module.hivtestingservices.api.HTSService;
+
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -52,7 +55,7 @@ public class MedicDataExchange {
 
 	AfyastatService afyastatService = Context.getService(AfyastatService.class);
 	InfoService dataService = Context.getService(InfoService.class);
-	
+	HTSService htsService = Context.getService(HTSService.class);
 	PersonService personService = Context.getPersonService();
 	
 	PersonAttributeType phoneNumberAttrType = personService.getPersonAttributeTypeByUuid(AfyaStatMetadata.TELEPHONE_CONTACT);
@@ -1138,6 +1141,10 @@ public class MedicDataExchange {
 		    AfyaStatMetadata._PatientIdentifierType.CHT_RECORD_UUID);
 		//PatientIdentifier nationalId = patient.getPatientIdentifier(Utils.NATIONAL_ID);
 		PatientIdentifier chtReference = patient.getPatientIdentifier(chtRefType);
+
+		PatientIdentifier parentChtRef = null;
+		String relType = null;
+		String parentName = "";
 		
 		// get address
 		
@@ -1153,6 +1160,32 @@ public class MedicDataExchange {
 		fields.put("needs_sign_off", false);
 		fields.put("case_id", patient.getUuid());
 		fields.put("cht_ref_uuid", chtReference != null ? chtReference.getIdentifier() : "");
+
+		// add information about the client this contact was listed under
+		PatientContact originalContactRecord = htsService.getPatientContactEntryForPatient(patient);
+		if (originalContactRecord != null) {
+			Patient relatedPatient = originalContactRecord.getPatientRelatedTo(); // we want the cht ref for this client for use in cht/afyastat
+			parentChtRef = relatedPatient.getPatientIdentifier(chtRefType);
+			if (originalContactRecord.getRelationType() != null) {
+				relType = getContactRelation(originalContactRecord.getRelationType());
+			}
+
+			if (relatedPatient.getGivenName() != null) {
+				parentName += relatedPatient.getGivenName();
+			}
+
+			if (relatedPatient.getMiddleName() != null) {
+				parentName += " " + relatedPatient.getMiddleName();
+			}
+
+			if (relatedPatient.getFamilyName() != null) {
+				parentName += " " + relatedPatient.getFamilyName();
+			}
+		}
+
+		fields.put("relation_uuid", parentChtRef != null ? parentChtRef.getIdentifier() : "");
+		fields.put("relation_type", relType != null ? relType : "");
+		fields.put("relation_name", StringUtils.isNotBlank(parentName) ? parentName : "");
 		
 		fields.put("patient_familyName", patient.getFamilyName() != null ? patient.getFamilyName() : "");
 		fields.put("patient_firstName", patient.getGivenName() != null ? patient.getGivenName() : "");
@@ -1184,10 +1217,8 @@ public class MedicDataExchange {
 			return "";
 		}
 		Map<Integer, String> options = new HashMap<Integer, String>();
-		options.put(160237, "Co-worker");
-		options.put(165656, "Traveled together");
-		options.put(970, "Mother");
-		options.put(971, "Father");
+		options.put(157351,"Injectable drug user");
+		options.put(970, "Parent");
 		options.put(972, "Sibling");
 		options.put(1528, "Child");
 		options.put(5617, "Spouse");
