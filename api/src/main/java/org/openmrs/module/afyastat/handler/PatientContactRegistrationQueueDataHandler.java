@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hivtestingservices.api.HTSService;
@@ -107,8 +108,11 @@ public class PatientContactRegistrationQueueDataHandler implements QueueInfoHand
 
         Integer patientRelatedTo = null;
         Integer patient = null;
-        String indexKemrUuid = JsonFormatUtils.readAsString(payload, "$['relation_uuid']");
-        patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(indexKemrUuid) ? getPatientRelatedToContact(indexKemrUuid) : getPatientRelatedToContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
+        String afyaStatRelationUuid = JsonFormatUtils.readAsString(payload, "$['relation_uuid']");
+        String parentId = JsonFormatUtils.readAsString(payload, "$['parent']['_id']"); // the default patient contact parent's uuid
+        String kemrRef = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']"); // exists if the parent was listed in afyastat, pushed to the emr for full registration, and pushed back to afyastat
+        patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(afyaStatRelationUuid) ? getPatientRelatedToContact(afyaStatRelationUuid) : getPatientRelatedToContact(org.apache.commons.lang3.StringUtils.isNotBlank(kemrRef) ? kemrRef : parentId);
+
         String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
         patient = org.apache.commons.lang3.StringUtils.isNotBlank(uuid) ? getPatientAsContact(uuid) : getPatientAsContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
 
@@ -124,7 +128,9 @@ public class PatientContactRegistrationQueueDataHandler implements QueueInfoHand
         unsavedPatientContact.setMaritalStatus(maritalStatus);
         unsavedPatientContact.setPhysicalAddress(physicalAddress);
         unsavedPatientContact.setPatientRelatedTo(Context.getPatientService().getPatient(patientRelatedTo));
-        unsavedPatientContact.setPatient(Context.getPatientService().getPatient(patient));
+        if(patient != null) {
+            unsavedPatientContact.setPatient(Context.getPatientService().getPatient(patient));
+        }
         unsavedPatientContact.setUuid(uuid);
         unsavedPatientContact.setVoided(voided);
     }
@@ -158,6 +164,13 @@ public class PatientContactRegistrationQueueDataHandler implements QueueInfoHand
             Patient p = Context.getPatientService().getPatientByUuid(regData.getAssignedUuid());
             if (p !=null){
                  patientId= p.getPatientId();
+            }
+        }
+        if (patientId == null) {
+            // check to see if the uuid is for patient
+            Person person = Context.getPersonService().getPersonByUuid(uuid);
+            if (person != null) {
+                patientId = person.getPersonId();
             }
         }
         return patientId;
@@ -241,14 +254,14 @@ public class PatientContactRegistrationQueueDataHandler implements QueueInfoHand
     }
 
     private String gender(String gender) {
-        String abbriviateGender = null;
+        String abbreviateGender = null;
         if(gender.equalsIgnoreCase("male")){
-            abbriviateGender ="M";
+            abbreviateGender ="M";
         }
         if(gender.equalsIgnoreCase("female")) {
-            abbriviateGender ="F";
+            abbreviateGender ="F";
         }
-        return abbriviateGender;
+        return abbreviateGender;
     }
 
 
