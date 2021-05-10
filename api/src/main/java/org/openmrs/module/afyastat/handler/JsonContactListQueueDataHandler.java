@@ -119,8 +119,6 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(kemrRef) ? getPatientRelatedToContact(kemrRef) : getPatientRelatedToContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
 		Boolean voided = false;
-		System.out.println(", kemr_uuid: " + kemrRef + ", patient related to: " + patientRelatedTo );
-		log.info( ", kemr_uuid: " + kemrRef + ", patient related to: " + patientRelatedTo );
 		
 		if (org.apache.commons.lang3.StringUtils.isNotBlank(baselineStatus)) {
 			
