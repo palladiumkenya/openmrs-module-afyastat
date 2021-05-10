@@ -31,7 +31,7 @@ public class JsonFormatUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JsonFormatUtils.class.getSimpleName());
 	
-	private static final String DATE_PATTERN = "dd-MM-yyyy";
+	private static final String DD_MM_YYYY_DATE_PATTERN = "dd-MM-yyyy";
 	
 	public static final String YYYY_MM_DD_DATE_PATTERN = "yyyy-MM-dd";
 	
@@ -301,7 +301,7 @@ public class JsonFormatUtils {
 	public static void writeAsDate(final Object object, final String path, final Date date) {
 		if (object instanceof JSONObject && date != null) {
 			JSONObject jsonObject = (JSONObject) object;
-			jsonObject.put(path, new SimpleDateFormat(DATE_PATTERN).format(date));
+			jsonObject.put(path, new SimpleDateFormat(DD_MM_YYYY_DATE_PATTERN).format(date));
 		}
 	}
 	
@@ -321,8 +321,8 @@ public class JsonFormatUtils {
 		}
 		try {
 			if (dateAsString.contains("/"))
-				return new SimpleDateFormat(DATE_PATTERN).parse(dateAsString.replace("/", "-"));
-			return new SimpleDateFormat(DATE_PATTERN).parse(dateAsString);
+				return new SimpleDateFormat(DD_MM_YYYY_DATE_PATTERN).parse(dateAsString.replace("/", "-"));
+			return new SimpleDateFormat(DD_MM_YYYY_DATE_PATTERN).parse(dateAsString);
 		}
 		catch (ParseException e) {
 			logger.error("Unable to convert string value from path: " + path + " from: " + String.valueOf(serialized));

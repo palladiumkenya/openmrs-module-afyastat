@@ -406,10 +406,10 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		} else {
 			encounter.setLocation(location);
 		}
-
-
+		
 		//String jsonPayloadTimezone = JsonUtils.readAsString(encounterPayload, "$['encounter']['encounter.device_time_zone']"); // still not used
-		Date encounterDatetime = JsonFormatUtils.readAsDate(encounterPayload, "$['encounter']['encounter.encounter_datetime']");
+		Date encounterDatetime = JsonFormatUtils.readAsDate(encounterPayload,
+		    "$['encounter']['encounter.encounter_datetime']");
 		encounter.setEncounterDatetime(encounterDatetime);
 	}
 	

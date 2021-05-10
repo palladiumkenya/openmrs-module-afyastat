@@ -47,7 +47,6 @@
 		<hivtestingservicesVersion>1.1.4</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
-		<idgenVersion>2.6</idgenVersion>
 		<jacksonVersion>2.10.1</jacksonVersion>
 		<jsonPathVersion>0.8.1</jsonPathVersion>
 		<apacheHttpClientVersion>4.5.10</apacheHttpClientVersion>
