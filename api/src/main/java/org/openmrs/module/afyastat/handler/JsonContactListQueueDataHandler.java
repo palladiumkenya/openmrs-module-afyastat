@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.annotation.Handler;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
@@ -114,11 +115,12 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		String physicalAddress = JsonFormatUtils.readAsString(payload, "$['physical_address']");
 		
 		Integer patientRelatedTo = null;
-		String indexKemrUuid = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']");
-		patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(indexKemrUuid) ? getPatientRelatedToContact(indexKemrUuid)
-		        : getPatientRelatedToContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
+		String kemrRef = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']");
+		patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(kemrRef) ? getPatientRelatedToContact(kemrRef) : getPatientRelatedToContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
 		Boolean voided = false;
+		System.out.println(", kemr_uuid: " + kemrRef + ", patient related to: " + patientRelatedTo );
+		log.info( ", kemr_uuid: " + kemrRef + ", patient related to: " + patientRelatedTo );
 		
 		if (org.apache.commons.lang3.StringUtils.isNotBlank(baselineStatus)) {
 			
@@ -138,11 +140,16 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		unsavedPatientContact.setLastName(familyName);
 		unsavedPatientContact.setRelationType(relType);
 		unsavedPatientContact.setBaselineHivStatus(baselineStatus);
-		unsavedPatientContact.setAppointmentDate(nextTestDate);
+		if (nextTestDate != null) {
+			unsavedPatientContact.setAppointmentDate(nextTestDate);
+		}
+
 		unsavedPatientContact.setBirthDate(birthDate);
 		unsavedPatientContact.setSex(sex);
 		unsavedPatientContact.setPhoneContact(phoneNumber);
-		unsavedPatientContact.setMaritalStatus(maritalStatus);
+		if (maritalStatus != null) {
+			unsavedPatientContact.setMaritalStatus(maritalStatus);
+		}
 		unsavedPatientContact.setLivingWithPatient(livingWithPatient);
 		unsavedPatientContact.setPnsApproach(pnsApproach);
 		unsavedPatientContact.setContactListingDeclineReason("CHT");// using this to identify contact pushed from CHT
@@ -182,10 +189,21 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		Integer patientId = null;
 		RegistrationInfoService regDataService = Context.getService(RegistrationInfoService.class);
 		RegistrationInfo regData = regDataService.getRegistrationDataByTemporaryUuid(uuid);
-		if (regData != null) {
+		if(regData != null) {
 			Patient p = Context.getPatientService().getPatientByUuid(regData.getAssignedUuid());
-			if (p != null) {
-				patientId = p.getPatientId();
+			if (p !=null){
+				patientId= p.getPatientId();
+				System.out.println("Patient not null");
+			}
+		}
+
+		if (patientId == null) {
+			System.out.println("Patient was null. Looking to get a person");
+			// check to see if the uuid is for patient
+			Person person = Context.getPersonService().getPersonByUuid(uuid);
+			if (person != null) {
+				patientId = person.getPersonId();
+				System.out.println("");
 			}
 		}
 		return patientId;
