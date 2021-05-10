@@ -104,8 +104,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		String familyName = JsonFormatUtils.readAsString(payload, "$['s_name']");
 		Integer relType = relationshipTypeConverter(JsonFormatUtils.readAsString(payload, "$['contact_relationship']"));
 		String baselineStatus = JsonFormatUtils.readAsString(payload, "$['baseline_hiv_status']");
-		Date nextTestDate = JsonFormatUtils.readAsDate(payload, "$['booking_date']", JsonFormatUtils.DATE_PATTERN_MEDIC);
-		Date birthDate = JsonFormatUtils.readAsDate(payload, "$['date_of_birth']", JsonFormatUtils.DATE_PATTERN_MEDIC);
+		Date nextTestDate = JsonFormatUtils
+		        .readAsDate(payload, "$['booking_date']", JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
+		Date birthDate = JsonFormatUtils.readAsDate(payload, "$['date_of_birth']", JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		String sex = gender(JsonFormatUtils.readAsString(payload, "$['sex']"));
 		String phoneNumber = JsonFormatUtils.readAsString(payload, "$['phone']");
 		Integer maritalStatus = maritalStatusConverter(JsonFormatUtils.readAsString(payload, "$['marital_status']"));
@@ -116,7 +117,8 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		
 		Integer patientRelatedTo = null;
 		String kemrRef = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']");
-		patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(kemrRef) ? getPatientRelatedToContact(kemrRef) : getPatientRelatedToContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
+		patientRelatedTo = org.apache.commons.lang3.StringUtils.isNotBlank(kemrRef) ? getPatientRelatedToContact(kemrRef)
+		        : getPatientRelatedToContact(JsonFormatUtils.readAsString(payload, "$['parent']['_id']"));
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
 		Boolean voided = false;
 		
@@ -141,7 +143,7 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		if (nextTestDate != null) {
 			unsavedPatientContact.setAppointmentDate(nextTestDate);
 		}
-
+		
 		unsavedPatientContact.setBirthDate(birthDate);
 		unsavedPatientContact.setSex(sex);
 		unsavedPatientContact.setPhoneContact(phoneNumber);
@@ -187,14 +189,14 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		Integer patientId = null;
 		RegistrationInfoService regDataService = Context.getService(RegistrationInfoService.class);
 		RegistrationInfo regData = regDataService.getRegistrationDataByTemporaryUuid(uuid);
-		if(regData != null) {
+		if (regData != null) {
 			Patient p = Context.getPatientService().getPatientByUuid(regData.getAssignedUuid());
-			if (p !=null){
-				patientId= p.getPatientId();
+			if (p != null) {
+				patientId = p.getPatientId();
 				System.out.println("Patient not null");
 			}
 		}
-
+		
 		if (patientId == null) {
 			System.out.println("Patient was null. Looking to get a person");
 			// check to see if the uuid is for patient
