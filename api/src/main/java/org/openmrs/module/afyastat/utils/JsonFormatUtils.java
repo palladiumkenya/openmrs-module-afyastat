@@ -133,7 +133,9 @@ public class JsonFormatUtils {
 			returnedString = JsonPath.read(jsonObject, path);
 		}
 		catch (Exception e) {
-			logger.error("Unable to read string value with path: " + path + " from: " + String.valueOf(jsonObject));
+			//logger.error("Unable to read string value with path: " + path + " from: " + String.valueOf(jsonObject)); TODO: enable this for debugging
+			logger.error("Unable to read string value with path: " + path + " from Afyastat payload"); // trying to reduce log size
+
 		}
 		return returnedString;
 	}
