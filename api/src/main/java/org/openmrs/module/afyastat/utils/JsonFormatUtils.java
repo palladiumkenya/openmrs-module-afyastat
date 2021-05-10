@@ -33,7 +33,7 @@ public class JsonFormatUtils {
 	
 	private static final String DATE_PATTERN = "dd-MM-yyyy";
 	
-	public static final String DATE_PATTERN_MEDIC = "yyyy-MM-dd";
+	public static final String YYYY_MM_DD_DATE_PATTERN = "yyyy-MM-dd";
 	
 	/**
 	 * Write boolean value into the json object. The method will only write the boolean value if the
@@ -135,7 +135,7 @@ public class JsonFormatUtils {
 		catch (Exception e) {
 			//logger.error("Unable to read string value with path: " + path + " from: " + String.valueOf(jsonObject)); TODO: enable this for debugging
 			logger.error("Unable to read string value with path: " + path + " from Afyastat payload"); // trying to reduce log size
-
+			
 		}
 		return returnedString;
 	}

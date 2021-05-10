@@ -377,10 +377,9 @@ public class JsonRegistrationQueueInfoHandler implements QueueInfoHandler {
 	private void setPersonAttributesFromPayload() {
 		personAttributes = new TreeSet<PersonAttribute>();
 		PersonService personService = Context.getPersonService();
-
-
+		
 		//String mothersName = JsonUtils.readAsString(payload, "$['patient']['patient.mothers_name']"); // not currently implemented in Afyastat
-		setAsAttribute("Mother's Name","");
+		setAsAttribute("Mother's Name", "");
 		
 		String phoneNumber = JsonFormatUtils.readAsString(payload, "$['patient']['patient.phone_number']");
 		setAsAttribute("Telephone contact", phoneNumber);

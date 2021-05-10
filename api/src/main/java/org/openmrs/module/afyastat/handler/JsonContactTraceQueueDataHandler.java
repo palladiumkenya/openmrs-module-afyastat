@@ -101,12 +101,16 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 	
 	private void setContactTraceFromPayload() {
 		HTSService contact = Context.getService(HTSService.class);
-		Date traceDate = JsonFormatUtils.readAsDate(payload, "$['fields']['encounter_date']", JsonFormatUtils.DATE_PATTERN_MEDIC);
+		Date traceDate = JsonFormatUtils.readAsDate(payload, "$['fields']['encounter_date']",
+		    JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		String contactType = contactTypeConverter(JsonFormatUtils.readAsString(payload,
 		    "$['fields']['group_follow_up']['follow_up_type']"));
-		String status = contactStatusConverter(JsonFormatUtils.readAsString(payload, "$['fields']['group_follow_up']['contact_status']"));
-		String reasonUncontacted = reasonUncontactedConverter(JsonFormatUtils.readAsString(payload, "$['fields']['group_follow_up']['reasonUncontacted']"));
-		String reasonUncontactedOther = reasonUncontactedConverter(JsonFormatUtils.readAsString(payload, "$['fields']['group_follow_up']['reasonUncontactedOther']"));
+		String status = contactStatusConverter(JsonFormatUtils.readAsString(payload,
+		    "$['fields']['group_follow_up']['contact_status']"));
+		String reasonUncontacted = reasonUncontactedConverter(JsonFormatUtils.readAsString(payload,
+		    "$['fields']['group_follow_up']['reasonUncontacted']"));
+		String reasonUncontactedOther = reasonUncontactedConverter(JsonFormatUtils.readAsString(payload,
+		    "$['fields']['group_follow_up']['reasonUncontactedOther']"));
 		String uniquePatientNo = JsonFormatUtils.readAsString(payload,
 		    "$['fields']['group_follow_up']['unique_patient_number']");
 		String facilityLinkedTo = JsonFormatUtils.readAsString(payload,
@@ -188,14 +192,14 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 			reasonConverter = "Migrated";
 		} else if (is_not_available_reason_other.equalsIgnoreCase("not_found_at_home")) {
 			reasonConverter = "Not found at home";
-		}else if(is_not_available_reason_other.equalsIgnoreCase("no_locator_information")){
-			reasonConverter ="No locator information";
-		}else if(is_not_available_reason_other.equalsIgnoreCase("incorrect_location")){
-			reasonConverter ="Incorrect locator information";
-		}else if(is_not_available_reason_other.equalsIgnoreCase("died")){
-			reasonConverter ="Died";
-		}else if(is_not_available_reason_other.equalsIgnoreCase("other")){
-			reasonConverter ="Other";
+		} else if (is_not_available_reason_other.equalsIgnoreCase("no_locator_information")) {
+			reasonConverter = "No locator information";
+		} else if (is_not_available_reason_other.equalsIgnoreCase("incorrect_location")) {
+			reasonConverter = "Incorrect locator information";
+		} else if (is_not_available_reason_other.equalsIgnoreCase("died")) {
+			reasonConverter = "Died";
+		} else if (is_not_available_reason_other.equalsIgnoreCase("other")) {
+			reasonConverter = "Other";
 		}
 		
 		return reasonConverter;

@@ -406,11 +406,10 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		} else {
 			encounter.setLocation(location);
 		}
-		
-		String jsonPayloadTimezone = JsonFormatUtils.readAsString(encounterPayload,
-		    "$['encounter']['encounter.device_time_zone']");
-		Date encounterDatetime = JsonFormatUtils.readAsDateTime(encounterPayload,
-		    "$['encounter']['encounter.encounter_datetime']", dateTimeFormat, jsonPayloadTimezone);
+
+
+		//String jsonPayloadTimezone = JsonUtils.readAsString(encounterPayload, "$['encounter']['encounter.device_time_zone']"); // still not used
+		Date encounterDatetime = JsonFormatUtils.readAsDate(encounterPayload, "$['encounter']['encounter.encounter_datetime']");
 		encounter.setEncounterDatetime(encounterDatetime);
 	}
 	
@@ -438,7 +437,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		String VISIT_SOURCE_FORM = "8bfab185-6947-4958-b7ab-dfafae1a3e3d";
 		Visit visit = new Visit();
 		visit.setStartDatetime(OpenmrsUtil.firstSecondOfDay(encounter.getEncounterDatetime()));
-		visit.setStopDatetime(OpenmrsUtil.getLastMomentOfDay(encounter.getEncounterDatetime()));
+		visit.setStopDatetime(getLastMomentOfDay(encounter.getEncounterDatetime()));
 		visit.setLocation(encounter.getLocation());
 		visit.setPatient(encounter.getPatient());
 		visit.setVisitType(Context.getVisitService().getVisitTypeByUuid("3371a4d4-f66f-4454-a86d-92c7b3da990c"));
@@ -534,5 +533,24 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 			useNewVisit(encounter);
 			
 		}
+	}
+	
+	/**
+	 * Adapted from openmrs core. the method return start of next day Gets the date having the last
+	 * millisecond of a given day. Meaning that the hours, seconds, and milliseconds are the latest
+	 * possible for that day.
+	 * 
+	 * @param day the day.
+	 * @return the date with the last millisecond of the day.
+	 */
+	public static Date getLastMomentOfDay(Date day) {
+		Calendar calender = Calendar.getInstance();
+		calender.setTime(day);
+		calender.set(Calendar.HOUR_OF_DAY, 23);
+		calender.set(Calendar.MINUTE, 59);
+		calender.set(Calendar.SECOND, 59);
+		//calender.set(Calendar.MILLISECOND, 999);
+		
+		return calender.getTime();
 	}
 }
