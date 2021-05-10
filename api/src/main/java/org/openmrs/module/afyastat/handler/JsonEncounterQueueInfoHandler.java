@@ -361,9 +361,8 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 			encounter.setForm(form);
 			encounter.setEncounterType(form.getEncounterType());
 		}
-		
-		String encounterRoleString = JsonFormatUtils.readAsString(encounterPayload,
-		    "$['encounter']['encounter.provider_role_uuid']");
+		//String encounterRoleString = JsonUtils.readAsString(encounterPayload, "$['encounter']['encounter.provider_role_uuid']");
+		String encounterRoleString = null; // Not currently implemented in Afyastat
 		EncounterRole encounterRole = null;
 		
 		if (StringUtils.isBlank(encounterRoleString)) {
