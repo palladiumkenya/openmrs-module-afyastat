@@ -1,7 +1,15 @@
 package org.openmrs.module.afyastat.util;
 
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Form;
+import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 public class Utils {
 	
@@ -48,6 +56,12 @@ public class Utils {
 	
 	public static final String NATIONAL_UNIQUE_PATIENT_IDENTIFIER = "f85081e2-b4be-4e48-b3a4-7994b69bb101";
 	
+	public static final String HTS = "9c0a7a57-62ff-4f75-babe-5835b0e921b7";
+	
+	public static final String HTS_INITIAL_TEST = "402dc5d7-46da-42d4-b2be-f43ea4ad87b0";
+	
+	public static final String HTS_CONFIRMATORY_TEST = "b08471f6-0892-4bf7-ab2b-bf79797b8ea4";
+	
 	public static String fetchRequestBody(BufferedReader reader) {
 		String requestBodyJsonStr = "";
 		try {
@@ -65,6 +79,18 @@ public class Utils {
 			
 		}
 		return requestBodyJsonStr;
+	}
+	
+	/**
+	 * Finds the last encounter during the program enrollment with the given encounter type
+	 * 
+	 * @param type the encounter type
+	 * @return the encounter
+	 */
+	public static Encounter lastEncounter(Patient patient, EncounterType type, List<Form> forms) {
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, null, null, forms,
+		    Collections.singleton(type), null, null, null, false);
+		return encounters.size() > 0 ? encounters.get(encounters.size() - 1) : null;
 	}
 	
 }
