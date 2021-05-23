@@ -30,9 +30,9 @@ import org.openmrs.scheduler.tasks.AbstractTask;
 import java.util.List;
 
 /**
- * Periodically pushes registered contacts to Afyastat
+ * Periodically pushes clients who turned positive but haven't been linked to care
  */
-public class PushContactsToMedicMobileTask extends AbstractTask {
+public class PushLinkageListToMedicMobileTask extends AbstractTask {
 	
 	private Log log = LogFactory.getLog(getClass());
 	
@@ -92,19 +92,19 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 			MedicDataExchange e = new MedicDataExchange();
 			
 			// check if there are item(s) to post
-			ObjectNode contactWrapper = e.getContacts(gpLastContactId, lastId, gpLastPatientId, lastPatientId);
-			ArrayNode docs = (ArrayNode) contactWrapper.get("docs");
-			System.out.println("Data: " + contactWrapper.toString());
+			ObjectNode positiveNotLinkedWrapper = e.getLinkageList(0, 0);
+			ArrayNode docs = (ArrayNode) positiveNotLinkedWrapper.get("docs");
+			System.out.println("Linkage data: " + docs.toString());
 			
-			if (contactWrapper != null && docs.size() > 0) {
+			if (positiveNotLinkedWrapper != null && docs.size() > 0) {
 				hasData = true;
 			}
 			
-			System.out.println("CHT Post request. Records found: " + docs.size());
+			System.out.println("Afyastat linkage list. Records found: " + docs.size());
 			//System.out.println("CHT Post request : " + docs.toString());
 			
 			if (serverUrl != null && username != null && pwd != null && hasData) {
-				String payload = contactWrapper.toString();
+				String payload = positiveNotLinkedWrapper.toString();
 				CloseableHttpClient httpClient = HttpClients.createDefault();
 				
 				try {
@@ -135,13 +135,13 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 					
 					// save this at the end just so that we take care of instances when there is no connectivity
 					//lastContactEntry.setPropertyValue(lastId.toString());
-					lastPatientEntry.setPropertyValue(lastPatientId.toString());
+					//lastPatientEntry.setPropertyValue(lastPatientId.toString());
 					
 					//Context.getAdministrationService().saveGlobalProperty(lastContactEntry);
-					Context.getAdministrationService().saveGlobalProperty(lastPatientEntry);
+					//Context.getAdministrationService().saveGlobalProperty(lastPatientEntry);
 					
-					System.out.println("Successfully pushed contacts to Medic Mobile CHT");
-					log.info("Successfully pushed contacts to Medic Mobile CHT");
+					System.out.println("Successfully pushed list of clients for linkage to Medic Mobile CHT");
+					log.info("Successfully pushed list of clients for linkage to Medic Mobile CHT");
 				}
 				finally {
 					//Important: Close the connect
@@ -150,7 +150,7 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 			}
 		}
 		catch (Exception e) {
-			throw new IllegalArgumentException("Medic Mobile contact list POST task could not be executed!", e);
+			throw new IllegalArgumentException("Afyastat linkage list task could not be executed!", e);
 		}
 	}
 	

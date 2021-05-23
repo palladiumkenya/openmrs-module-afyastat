@@ -9,6 +9,7 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
+import org.openmrs.EncounterType;
 import org.openmrs.Person;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -57,6 +58,12 @@ public class MedicDataExchange {
 	InfoService dataService = Context.getService(InfoService.class);
 	HTSService htsService = Context.getService(HTSService.class);
 	PersonService personService = Context.getPersonService();
+
+	EncounterService encService = Context.getEncounterService();
+	FormService formService = Context.getFormService();
+	EncounterType et = encService.getEncounterTypeByUuid(Utils.HTS);
+	Form initial = formService.getFormByUuid(Utils.HTS_INITIAL_TEST);
+	Form retest = formService.getFormByUuid(Utils.HTS_CONFIRMATORY_TEST);
 
 	PersonAttributeType phoneNumberAttrType = personService.getPersonAttributeTypeByUuid(AfyaStatMetadata.TELEPHONE_CONTACT);
 
@@ -1277,6 +1284,13 @@ public class MedicDataExchange {
 		fields.put("patient_landmark", landMark);
 		fields.put("patient_residence", postalAddress);
 		fields.put("patient_nearesthealthcentre", "");
+
+		if(!newRegistration) {
+			Encounter encounter = Utils.lastEncounter(patient, et, Arrays.asList(initial, retest));
+			if (encounter != null) {
+				fields.put("date_tested_positive", getSimpleDateFormat(dateFormat).format(encounter.getEncounterDatetime()));
+			}
+		}
 		fields.put("assignee", assignee);
 		objectWrapper.put("fields", fields);
 		return objectWrapper;
@@ -1432,46 +1446,48 @@ public class MedicDataExchange {
 	protected Set<Integer> getClientsTestedPositiveNotLinked(Integer lastPatientEntry, Integer lastId) {
 
 		Set<Integer> eligibleList = new HashSet<Integer>();
-		String sql = "select person_id from person where person_id in (7,8,9,10)";
-		/*if (lastPatientEntry != null && lastId > 0) {
-		    sql = " select t.patient_id\n" +
-		            "from kenyaemr_etl.etl_hts_test t\n" +
-		            "  left join\n" +
-		            "((SELECT l.patient_id\n" +
-		            " from kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-		            "   inner join kenyaemr_etl.etl_patient_demographics pt on pt.patient_id=l.patient_id and pt.voided=0\n" +
-		            "   inner join kenyaemr_etl.etl_hts_test t on t.patient_id=l.patient_id and t.test_type in(1,2) and t.final_test_result='Positive' and t.visit_date <=l.visit_date and t.voided=0\n" +
-		            " where (l.ccc_number is not null or facility_linked_to is not null)\n" +
-		            ")\n" +
-		            "union\n" +
-		            "( SELECT t.patient_id\n" +
-		            "  FROM kenyaemr_etl.etl_hts_test t\n" +
-		            "    INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0\n" +
-		            "    INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0\n" +
-		            "  WHERE t.test_type IN (1, 2) AND t.final_test_result='Positive' AND t.voided=0\n" +
-		            ")) l on l.patient_id = t.patient_id\n" +
-		            "where t.final_test_result = 'Positive' and t.voided = 0 and t.test_type=2 and l.patient_id is null\n" +
+		String sql = "";
+		if (lastPatientEntry != null && lastId > 0) {
+		    sql = " select t.patient_id from kenyaemr_etl.etl_hts_test t\n" +
+					"left join patient_identifier pi on pi.patient_id = t.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n" +
+					"left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = t.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n" +
+					"  left join\n" +
+					"((SELECT l.patient_id\n" +
+					" from kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
+					"   inner join kenyaemr_etl.etl_patient_demographics pt on pt.patient_id=l.patient_id and pt.voided=0\n" +
+					"   inner join kenyaemr_etl.etl_hts_test t on t.patient_id=l.patient_id and t.test_type in(1,2) and t.final_test_result='Positive' and t.visit_date <=l.visit_date and t.voided=0\n" +
+					" where (l.ccc_number is not null or facility_linked_to is not null)\n" +
+					")\n" +
+					"union\n" +
+					"( SELECT t.patient_id\n" +
+					"  FROM kenyaemr_etl.etl_hts_test t\n" +
+					"    INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0\n" +
+					"    INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0\n" +
+					"  WHERE t.test_type IN (1, 2) AND t.final_test_result='Positive' AND t.voided=0\n" +
+					")) l on l.patient_id = t.patient_id\n" +
+					"where t.final_test_result = 'Positive' and t.voided = 0 and l.patient_id is null and c.patient_id is null and pi.patient_id is null\n" +
 		            ";";
 		} else {
-		    sql = " select t.patient_id\n" +
-		            "from kenyaemr_etl.etl_hts_test t\n" +
-		            "  left join\n" +
-		            "((SELECT l.patient_id\n" +
-		            " from kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-		            "   inner join kenyaemr_etl.etl_patient_demographics pt on pt.patient_id=l.patient_id and pt.voided=0\n" +
-		            "   inner join kenyaemr_etl.etl_hts_test t on t.patient_id=l.patient_id and t.test_type in(1,2) and t.final_test_result='Positive' and t.visit_date <=l.visit_date and t.voided=0\n" +
-		            " where (l.ccc_number is not null or facility_linked_to is not null)\n" +
-		            ")\n" +
-		            "union\n" +
-		            "( SELECT t.patient_id\n" +
-		            "  FROM kenyaemr_etl.etl_hts_test t\n" +
-		            "    INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0\n" +
-		            "    INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0\n" +
-		            "  WHERE t.test_type IN (1, 2) AND t.final_test_result='Positive' AND t.voided=0\n" +
-		            ")) l on l.patient_id = t.patient_id\n" +
-		            "where t.final_test_result = 'Positive' and t.voided = 0 and t.test_type=2 and l.patient_id is null\n" +
+		    sql = " select t.patient_id from kenyaemr_etl.etl_hts_test t\n" +
+					"left join patient_identifier pi on pi.patient_id = t.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n" +
+					"left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = t.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n" +
+					"  left join\n" +
+					"((SELECT l.patient_id\n" +
+					" from kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
+					"   inner join kenyaemr_etl.etl_patient_demographics pt on pt.patient_id=l.patient_id and pt.voided=0\n" +
+					"   inner join kenyaemr_etl.etl_hts_test t on t.patient_id=l.patient_id and t.test_type in(1,2) and t.final_test_result='Positive' and t.visit_date <=l.visit_date and t.voided=0\n" +
+					" where (l.ccc_number is not null or facility_linked_to is not null)\n" +
+					")\n" +
+					"union\n" +
+					"( SELECT t.patient_id\n" +
+					"  FROM kenyaemr_etl.etl_hts_test t\n" +
+					"    INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0\n" +
+					"    INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0\n" +
+					"  WHERE t.test_type IN (1, 2) AND t.final_test_result='Positive' AND t.voided=0\n" +
+					")) l on l.patient_id = t.patient_id\n" +
+					"where t.final_test_result = 'Positive' and t.voided = 0 and l.patient_id is null and c.patient_id is null and pi.patient_id is null\n" +
 		            ";";
-		}*/
+		}
 
 		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(sql, true);
 		if (!activeList.isEmpty()) {
@@ -1717,5 +1733,7 @@ public class MedicDataExchange {
 	public String getPersonAttributeByType(Patient patient, PersonAttributeType phoneNumberAttrType) {
 		return patient.getAttribute(phoneNumberAttrType) != null ? patient.getAttribute(phoneNumberAttrType).getValue() : "";
 	}
+
+
 
 }
