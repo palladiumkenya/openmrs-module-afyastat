@@ -40,6 +40,10 @@ public class AfyaStatMetadata extends AbstractMetadataBundle {
 	
 	public static final String TELEPHONE_CONTACT = "b2c38640-2603-4629-aebd-3b54f33f1e3a";
 	
+	public static final String AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP = "afyastatLinkageListTask.lastFetchDateAndTime";
+	
+	public static final String AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP = "afyastatContactListTask.lastFetchDateAndTime";
+	
 	public static final class _PatientIdentifierType {
 		
 		public static final String CHT_RECORD_UUID = "c6552b22-f191-4557-a432-1f4df872d473";
@@ -47,14 +51,14 @@ public class AfyaStatMetadata extends AbstractMetadataBundle {
 	
 	@Override
 	public void install() throws Exception {
-		// doing this in the scheduled task so that previous value set is preserved
-		//install(globalProperty(MODULE_ID +".contactListingMigrationChore", "Migrates contact previously listed using family history form", "false"));
 		
 		install(globalProperty(MEDIC_MOBILE_LAST_PATIENT_CONTACT_ENTRY, "Id for the last case contact entry for CHT", null));
 		install(globalProperty(MEDIC_MOBILE_LAST_PATIENT_ENTRY, "Medic last patient entry ID", null));
 		install(globalProperty(MEDIC_MOBILE_SERVER_URL, "Server URL for Medic Mobile CHT", null));
 		install(globalProperty(MEDIC_MOBILE_USER, "Medic Mobile CHT user", null));
 		install(globalProperty(MEDIC_MOBILE_PWD, "Medic Mobile CHT pwd", null));
+		install(globalProperty(AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP, "The last time contact list was fetched", null));
+		install(globalProperty(AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP, "The last time linkage list was fetched", null));
 		
 		install(patientIdentifierType("CHT Record Reference UUID", "Record reference UUID from CHT", null, null, null,
 		    PatientIdentifierType.LocationBehavior.NOT_USED, false, _PatientIdentifierType.CHT_RECORD_UUID));

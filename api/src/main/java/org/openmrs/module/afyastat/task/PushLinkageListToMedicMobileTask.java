@@ -10,7 +10,6 @@
 package org.openmrs.module.afyastat.task;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
@@ -27,7 +26,8 @@ import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.afyastat.util.MedicDataExchange;
 import org.openmrs.scheduler.tasks.AbstractTask;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Periodically pushes clients who turned positive but haven't been linked to care
@@ -47,35 +47,12 @@ public class PushLinkageListToMedicMobileTask extends AbstractTask {
 				authenticate();
 			}
 			
-			GlobalProperty lastPatientEntry = Context.getAdministrationService().getGlobalPropertyObject(
-			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_ENTRY);
-			String lastContactRegistrationIdsql = "select max(patient_id) last_id from kenyaemr_hiv_testing_patient_contact where voided=0 and patient_id is not null and contact_listing_decline_reason='CHT';";
-			List<List<Object>> lastContactRegistrationRs = Context.getAdministrationService().executeSQL(
-			    lastContactRegistrationIdsql, true);
-			Integer lastPatientId = (Integer) lastContactRegistrationRs.get(0).get(0);
-			lastPatientId = lastPatientId != null ? lastPatientId : 0;
-			
-			GlobalProperty lastContactEntry = Context.getAdministrationService().getGlobalPropertyObject(
-			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_CONTACT_ENTRY);
 			GlobalProperty chtServerName = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_SERVER_URL);
 			GlobalProperty chtUser = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_USER);
 			GlobalProperty chtPwd = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_PWD);
-			String lastContactSql = "select max(id) last_id from kenyaemr_hiv_testing_patient_contact where voided=0;";
-			List<List<Object>> maxOrderId = Context.getAdministrationService().executeSQL(lastContactSql, true);
-			
-			Integer lastId = (Integer) maxOrderId.get(0).get(0);
-			lastId = lastId != null ? lastId : 0;
-			
-			String lastContactIdStr = lastContactEntry != null && lastContactEntry.getValue() != null ? lastContactEntry
-			        .getValue().toString() : "";
-			Integer gpLastContactId = StringUtils.isNotBlank(lastContactIdStr) ? Integer.parseInt(lastContactIdStr) : 0;
-			
-			String lastPatientIdStr = lastPatientEntry != null && lastPatientEntry.getValue() != null ? lastPatientEntry
-			        .getValue().toString() : "";
-			Integer gpLastPatientId = StringUtils.isNotBlank(lastPatientIdStr) ? Integer.parseInt(lastPatientIdStr) : 0;
 			
 			boolean hasData = false;
 			
@@ -86,22 +63,28 @@ public class PushLinkageListToMedicMobileTask extends AbstractTask {
 			if (serverUrl == null || username == null || pwd == null) {
 				System.out.println("Please set credentials for pushing contacts to Medic Mobile CHT");
 				return;
-				
 			}
 			
 			MedicDataExchange e = new MedicDataExchange();
 			
+			GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
+			    AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
+			if (globalPropertyObject == null) {
+				System.out.println("Missing required global property: "
+				        + AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
+				return;
+			}
+			
 			// check if there are item(s) to post
-			ObjectNode positiveNotLinkedWrapper = e.getLinkageList(0, 0);
+			ObjectNode positiveNotLinkedWrapper = e.getLinkageList();
 			ArrayNode docs = (ArrayNode) positiveNotLinkedWrapper.get("docs");
-			System.out.println("Linkage data: " + docs.toString());
+			String nextFetchTimestamp = positiveNotLinkedWrapper.get("timestamp").getTextValue();
 			
 			if (positiveNotLinkedWrapper != null && docs.size() > 0) {
 				hasData = true;
 			}
 			
 			System.out.println("Afyastat linkage list. Records found: " + docs.size());
-			//System.out.println("CHT Post request : " + docs.toString());
 			
 			if (serverUrl != null && username != null && pwd != null && hasData) {
 				String payload = positiveNotLinkedWrapper.toString();
@@ -134,14 +117,11 @@ public class PushLinkageListToMedicMobileTask extends AbstractTask {
 					}
 					
 					// save this at the end just so that we take care of instances when there is no connectivity
-					//lastContactEntry.setPropertyValue(lastId.toString());
-					//lastPatientEntry.setPropertyValue(lastPatientId.toString());
+					globalPropertyObject.setPropertyValue(nextFetchTimestamp);
+					Context.getAdministrationService().saveGlobalProperty(globalPropertyObject);
 					
-					//Context.getAdministrationService().saveGlobalProperty(lastContactEntry);
-					//Context.getAdministrationService().saveGlobalProperty(lastPatientEntry);
-					
-					System.out.println("Successfully pushed list of clients for linkage to Medic Mobile CHT");
-					log.info("Successfully pushed list of clients for linkage to Medic Mobile CHT");
+					System.out.println("Successfully pushed list of clients for linkage to Afyastat");
+					log.info("Successfully pushed list of clients for linkage to Afyastat");
 				}
 				finally {
 					//Important: Close the connect
