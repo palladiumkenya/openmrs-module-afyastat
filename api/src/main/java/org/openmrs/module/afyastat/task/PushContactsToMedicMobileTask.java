@@ -10,7 +10,6 @@
 package org.openmrs.module.afyastat.task;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
@@ -26,8 +25,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.afyastat.util.MedicDataExchange;
 import org.openmrs.scheduler.tasks.AbstractTask;
-
-import java.util.List;
 
 /**
  * Periodically pushes registered contacts to Afyastat
@@ -47,35 +44,12 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 				authenticate();
 			}
 			
-			GlobalProperty lastPatientEntry = Context.getAdministrationService().getGlobalPropertyObject(
-			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_ENTRY);
-			String lastContactRegistrationIdsql = "select max(patient_id) last_id from kenyaemr_hiv_testing_patient_contact where voided=0 and patient_id is not null and contact_listing_decline_reason='CHT';";
-			List<List<Object>> lastContactRegistrationRs = Context.getAdministrationService().executeSQL(
-			    lastContactRegistrationIdsql, true);
-			Integer lastPatientId = (Integer) lastContactRegistrationRs.get(0).get(0);
-			lastPatientId = lastPatientId != null ? lastPatientId : 0;
-			
-			GlobalProperty lastContactEntry = Context.getAdministrationService().getGlobalPropertyObject(
-			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_CONTACT_ENTRY);
 			GlobalProperty chtServerName = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_SERVER_URL);
 			GlobalProperty chtUser = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_USER);
 			GlobalProperty chtPwd = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_PWD);
-			String lastContactSql = "select max(id) last_id from kenyaemr_hiv_testing_patient_contact where voided=0;";
-			List<List<Object>> maxOrderId = Context.getAdministrationService().executeSQL(lastContactSql, true);
-			
-			Integer lastId = (Integer) maxOrderId.get(0).get(0);
-			lastId = lastId != null ? lastId : 0;
-			
-			String lastContactIdStr = lastContactEntry != null && lastContactEntry.getValue() != null ? lastContactEntry
-			        .getValue().toString() : "";
-			Integer gpLastContactId = StringUtils.isNotBlank(lastContactIdStr) ? Integer.parseInt(lastContactIdStr) : 0;
-			
-			String lastPatientIdStr = lastPatientEntry != null && lastPatientEntry.getValue() != null ? lastPatientEntry
-			        .getValue().toString() : "";
-			Integer gpLastPatientId = StringUtils.isNotBlank(lastPatientIdStr) ? Integer.parseInt(lastPatientIdStr) : 0;
 			
 			boolean hasData = false;
 			
@@ -86,22 +60,28 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 			if (serverUrl == null || username == null || pwd == null) {
 				System.out.println("Please set credentials for pushing contacts to Medic Mobile CHT");
 				return;
-				
+			}
+			
+			GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
+			    AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
+			if (globalPropertyObject == null) {
+				System.out.println("Missing required global property: "
+				        + AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
+				return;
 			}
 			
 			MedicDataExchange e = new MedicDataExchange();
 			
 			// check if there are item(s) to post
-			ObjectNode contactWrapper = e.getContacts(gpLastContactId, lastId, gpLastPatientId, lastPatientId);
+			ObjectNode contactWrapper = e.getContacts();
 			ArrayNode docs = (ArrayNode) contactWrapper.get("docs");
-			System.out.println("Data: " + contactWrapper.toString());
+			String nextFetchTimestamp = contactWrapper.get("timestamp").getTextValue();
 			
 			if (contactWrapper != null && docs.size() > 0) {
 				hasData = true;
 			}
 			
 			System.out.println("CHT Post request. Records found: " + docs.size());
-			//System.out.println("CHT Post request : " + docs.toString());
 			
 			if (serverUrl != null && username != null && pwd != null && hasData) {
 				String payload = contactWrapper.toString();
@@ -134,14 +114,11 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 					}
 					
 					// save this at the end just so that we take care of instances when there is no connectivity
-					//lastContactEntry.setPropertyValue(lastId.toString());
-					lastPatientEntry.setPropertyValue(lastPatientId.toString());
+					globalPropertyObject.setPropertyValue(nextFetchTimestamp);
+					Context.getAdministrationService().saveGlobalProperty(globalPropertyObject);
 					
-					//Context.getAdministrationService().saveGlobalProperty(lastContactEntry);
-					Context.getAdministrationService().saveGlobalProperty(lastPatientEntry);
-					
-					System.out.println("Successfully pushed contacts to Medic Mobile CHT");
-					log.info("Successfully pushed contacts to Medic Mobile CHT");
+					System.out.println("Successfully pushed contacts to Afyastat");
+					log.info("Successfully pushed contacts to Afyastat");
 				}
 				finally {
 					//Important: Close the connect
@@ -150,7 +127,7 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 			}
 		}
 		catch (Exception e) {
-			throw new IllegalArgumentException("Medic Mobile contact list POST task could not be executed!", e);
+			throw new IllegalArgumentException("Afyastat POST contact list task could not be executed!", e);
 		}
 	}
 	

@@ -10,6 +10,7 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import org.openmrs.EncounterType;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Person;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -844,13 +845,8 @@ public class MedicDataExchange {
 	 * Get a list of contacts for tracing
 	 *
 	 * @return
-	 * @param lastContactEntry
-	 * @param lastContactId
-	 * @param gpLastPatient
-	 * @param lastPatientId
 	 */
-	public ObjectNode getContacts(Integer lastContactEntry, Integer lastContactId, Integer gpLastPatient,
-	        Integer lastPatientId) {
+	public ObjectNode getContacts() {
 
 		JsonNodeFactory factory = getJsonNodeFactory();
 		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
@@ -941,7 +937,8 @@ public class MedicDataExchange {
 
 		// Get registered contacts in the EMR. These will potentially have no contacts
 		ArrayNode emptyContactNode = factory.arrayNode();
-		Set<Integer> patientList = getRegisteredCHTContacts(gpLastPatient, lastPatientId);
+		DataResponseObject responseObject = getRegisteredCHTContacts();
+		Set<Integer> patientList = responseObject.getPatientList();
 		if (patientList.size() > 0) {
 			for (Integer ptId : patientList) {
 				if (!contactMap.keySet().contains(ptId)) {
@@ -956,6 +953,7 @@ public class MedicDataExchange {
 		// add peers list
 		patientContactNode.addAll(getKpPeerPeerEductorList());
 		responseWrapper.put("docs", patientContactNode);
+		responseWrapper.put("timestamp", responseObject.getTimestamp());
 		return responseWrapper;
 	}
 
@@ -963,10 +961,8 @@ public class MedicDataExchange {
 	 * Get a list of contacts for tracing
 	 *
 	 * @return
-	 * @param gpLastPatient
-	 * @param lastPatientId
 	 */
-	public ObjectNode getLinkageList(Integer gpLastPatient, Integer lastPatientId) {
+	public ObjectNode getLinkageList() {
 
 		JsonNodeFactory factory = getJsonNodeFactory();
 		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
@@ -976,7 +972,8 @@ public class MedicDataExchange {
 
 		// Get registered contacts in the EMR. These will potentially have no contacts
 		ArrayNode emptyContactNode = factory.arrayNode();
-		Set<Integer> patientList = getClientsTestedPositiveNotLinked(gpLastPatient, lastPatientId);
+		DataResponseObject dataResponseObject = getClientsTestedPositiveNotLinked();
+		Set<Integer> patientList = dataResponseObject.getPatientList();
 		if (patientList.size() > 0) {
 			for (Integer ptId : patientList) {
 				if (!contactMap.keySet().contains(ptId)) {
@@ -988,6 +985,7 @@ public class MedicDataExchange {
 		}
 
 		responseWrapper.put("docs", patientContactNode);
+		responseWrapper.put("timestamp", dataResponseObject.getTimestamp());
 		return responseWrapper;
 	}
 
@@ -1134,10 +1132,14 @@ public class MedicDataExchange {
 
 		}
 
-		//responseWrapper.put("docs", peersNode);
 		return peersNode;
 	}
 
+	/**
+	 *
+	 * @param patientId
+	 * @return
+	 */
 	private String getClientHIVStatusCapturedOnKpClinicalEnrollment(Integer patientId) {
 		EncounterService encounterService = Context.getEncounterService();
 		FormService formService = Context.getFormService();
@@ -1390,27 +1392,59 @@ public class MedicDataExchange {
 		return eligibleList;
 	}
 
-	protected Set<Integer> getRegisteredCHTContacts(Integer lastPatientEntry, Integer lastId) {
+	/**
+	 * prepares a list of contacts from Afyastat registered in KenyaEMR
+	 * @return
+	 */
+	protected DataResponseObject getRegisteredCHTContacts() {
 
-		Set<Integer> eligibleList = new HashSet<Integer>();
-		String sql = "";
-		if (lastPatientEntry != null && lastPatientEntry > 0) {
-			sql = "select patient_id from kenyaemr_hiv_testing_patient_contact where patient_id >" + lastPatientEntry
-			        + " and patient_id is not null and voided=0 and contact_listing_decline_reason='CHT';"; // get from CHT that have been registered in the EMR
-		} else {
-			sql = "select patient_id from kenyaemr_hiv_testing_patient_contact where patient_id <= " + lastId
-			        + " and patient_id is not null and voided=0 and contact_listing_decline_reason='CHT';";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
+
+		Date fetchDate = null;
+		String effectiveDate = null;
+		GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
+				AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
+		if (globalPropertyObject == null) {
+			System.out.println("Missing required global property: "
+					+ AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
+			return null ;
 		}
 
-		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(sql, true);
+		if (globalPropertyObject.getValue() != null) {
+			try {
+				String ts = globalPropertyObject.getValue().toString();
+				fetchDate = formatter.parse(ts);
+				effectiveDate = sd.format(fetchDate);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+
+		Set<Integer> eligibleList = new HashSet<Integer>();
+		StringBuilder q = new StringBuilder();
+
+		q.append("select p.patient_id from patient p inner join kenyaemr_hiv_testing_patient_contact pc on pc.patient_id = p.patient_id");
+		q.append(" where pc.voided = 0 and pc.contact_listing_decline_reason='CHT'"); // we temporarily use CHT to mark contacts from Afystat
+
+		if (effectiveDate != null) {
+			q.append(" and p.date_created >= '" + effectiveDate + "' or p.date_changed >= '" + effectiveDate + "'");
+		}
+
+		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(q.toString(), true);
+		Date nextFetchDate = new Date();
+
 		if (!activeList.isEmpty()) {
 			for (List<Object> res : activeList) {
 				Integer patientId = (Integer) res.get(0);
 				eligibleList.add(patientId);
 			}
 		}
-		return eligibleList;
+		DataResponseObject responseObject = new DataResponseObject(eligibleList, formatter.format(nextFetchDate));
+		return responseObject;
 	}
 
 	/**
@@ -1436,67 +1470,91 @@ public class MedicDataExchange {
 	}
 
 	/**
-	 * TODO: this logic is temporarily implemented in CHT. Should be completed once the workflow is
-	 * clear
-	 *
-	 * @param lastPatientEntry
-	 * @param lastId
+	 * Gets clients who tested positive and have not been linked to care
 	 * @return
 	 */
-	protected Set<Integer> getClientsTestedPositiveNotLinked(Integer lastPatientEntry, Integer lastId) {
+	protected DataResponseObject getClientsTestedPositiveNotLinked() {
 
-		Set<Integer> eligibleList = new HashSet<Integer>();
-		String sql = "";
-		if (lastPatientEntry != null && lastId > 0) {
-		    sql = " select t.patient_id from kenyaemr_etl.etl_hts_test t\n" +
-					"left join patient_identifier pi on pi.patient_id = t.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n" +
-					"left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = t.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n" +
-					"  left join\n" +
-					"((SELECT l.patient_id\n" +
-					" from kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-					"   inner join kenyaemr_etl.etl_patient_demographics pt on pt.patient_id=l.patient_id and pt.voided=0\n" +
-					"   inner join kenyaemr_etl.etl_hts_test t on t.patient_id=l.patient_id and t.test_type in(1,2) and t.final_test_result='Positive' and t.visit_date <=l.visit_date and t.voided=0\n" +
-					" where (l.ccc_number is not null or facility_linked_to is not null)\n" +
-					")\n" +
-					"union\n" +
-					"( SELECT t.patient_id\n" +
-					"  FROM kenyaemr_etl.etl_hts_test t\n" +
-					"    INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0\n" +
-					"    INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0\n" +
-					"  WHERE t.test_type IN (1, 2) AND t.final_test_result='Positive' AND t.voided=0\n" +
-					")) l on l.patient_id = t.patient_id\n" +
-					"where t.final_test_result = 'Positive' and t.voided = 0 and l.patient_id is null and c.patient_id is null and pi.patient_id is null\n" +
-		            ";";
-		} else {
-		    sql = " select t.patient_id from kenyaemr_etl.etl_hts_test t\n" +
-					"left join patient_identifier pi on pi.patient_id = t.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n" +
-					"left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = t.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n" +
-					"  left join\n" +
-					"((SELECT l.patient_id\n" +
-					" from kenyaemr_etl.etl_hts_referral_and_linkage l\n" +
-					"   inner join kenyaemr_etl.etl_patient_demographics pt on pt.patient_id=l.patient_id and pt.voided=0\n" +
-					"   inner join kenyaemr_etl.etl_hts_test t on t.patient_id=l.patient_id and t.test_type in(1,2) and t.final_test_result='Positive' and t.visit_date <=l.visit_date and t.voided=0\n" +
-					" where (l.ccc_number is not null or facility_linked_to is not null)\n" +
-					")\n" +
-					"union\n" +
-					"( SELECT t.patient_id\n" +
-					"  FROM kenyaemr_etl.etl_hts_test t\n" +
-					"    INNER JOIN kenyaemr_etl.etl_patient_demographics pt ON pt.patient_id=t.patient_id AND pt.voided=0\n" +
-					"    INNER JOIN kenyaemr_etl.etl_hiv_enrollment e ON e.patient_id=t.patient_id AND e.voided=0\n" +
-					"  WHERE t.test_type IN (1, 2) AND t.final_test_result='Positive' AND t.voided=0\n" +
-					")) l on l.patient_id = t.patient_id\n" +
-					"where t.final_test_result = 'Positive' and t.voided = 0 and l.patient_id is null and c.patient_id is null and pi.patient_id is null\n" +
-		            ";";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+
+		Date fetchDate = null;
+		String effectiveDate = null;
+		GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
+				AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
+		if (globalPropertyObject == null) {
+			System.out.println("Missing required global property: "
+					+ AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
+			return null ;
 		}
 
-		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(sql, true);
+		if (globalPropertyObject.getValue() != null) {
+			try {
+				String ts = globalPropertyObject.getValue().toString();
+				fetchDate = formatter.parse(ts);
+				effectiveDate = sd.format(fetchDate);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+
+		Set<Integer> eligibleList = new HashSet<Integer>();
+
+		StringBuilder q = new StringBuilder();
+
+		String sql = "select\n" +
+				"e.patient_id\n" +
+				"from encounter e\n" +
+				"inner join person p on p.person_id=e.patient_id and p.voided=0\n" +
+				"inner join form f on f.form_id=e.form_id and f.uuid in ('402dc5d7-46da-42d4-b2be-f43ea4ad87b0','b08471f6-0892-4bf7-ab2b-bf79797b8ea4')\n" +
+				"inner join obs o on o.encounter_id = e.encounter_id and o.voided=0 and o.concept_id in (159427) and o.value_coded = 703\n" +
+				"left join patient_identifier pi on pi.patient_id = e.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n" +
+				"left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = e.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n" +
+				"left join (\n" +
+				"(\n" +
+				"select\n" +
+				"e.patient_id\n" +
+				"from encounter e\n" +
+				"inner join person p on p.person_id=e.patient_id and p.voided=0\n" +
+				"inner join form f on f.form_id = e.form_id and f.uuid = '050a7f12-5c52-4cad-8834-863695af335d'\n" +
+				"inner join obs o on o.encounter_id = e.encounter_id and o.concept_id in (162053) and o.voided=0 and o.value_numeric is not null\n" +
+				")\n" +
+				"union \n" +
+				"(\n" +
+				"select\n" +
+				"e.patient_id\n" +
+				"from encounter e\n" +
+				"inner join person p on p.person_id=e.patient_id and p.voided=0\n" +
+				"inner join form f on f.form_id=e.form_id and f.uuid in ('402dc5d7-46da-42d4-b2be-f43ea4ad87b0','b08471f6-0892-4bf7-ab2b-bf79797b8ea4')\n" +
+				"inner join obs o on o.encounter_id = e.encounter_id and o.voided=0 and o.concept_id in (159427) and o.value_coded = 703\n" +
+				"inner join patient_identifier pi on pi.patient_id = e.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='05ee9cf4-7242-4a17-b4d4-00f707265c8a')\n" +
+				")\n" +
+				") l on l.patient_id = e.patient_id\n" +
+				"where l.patient_id is null and c.patient_id is null and pi.patient_id is null";
+
+		q.append(sql);
+
+		if (effectiveDate != null) {
+			q.append(" and e.date_created >= '" + effectiveDate + "'");
+		}
+
+		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(q.toString(), true);
+
+		Date nextFetchDate = new Date();
+		globalPropertyObject.setPropertyValue(formatter.format(nextFetchDate));
+		Context.getAdministrationService().saveGlobalProperty(globalPropertyObject);
+
 		if (!activeList.isEmpty()) {
 			for (List<Object> res : activeList) {
 				Integer patientId = (Integer) res.get(0);
 				eligibleList.add(patientId);
 			}
 		}
-		return eligibleList;
+		DataResponseObject responseObject = new DataResponseObject(eligibleList, formatter.format(nextFetchDate));
+		return responseObject;
 	}
 
 	private JsonNodeFactory getJsonNodeFactory() {
@@ -1504,6 +1562,11 @@ public class MedicDataExchange {
 		return factory;
 	}
 
+	/**
+	 * Processes demographics data from registration
+	 * @param jNode
+	 * @return
+	 */
 	private ObjectNode processDemographicUpdatePayload(ObjectNode jNode) {
 
 		ObjectNode jsonNode = (ObjectNode) jNode.get("demographicUpdate");
@@ -1735,5 +1798,34 @@ public class MedicDataExchange {
 	}
 
 
+	/**
+	 * A class used to hold data from a query process.
+	 * The global property is set to the current time and should only be saved at the end of the process
+	 */
+	public class DataResponseObject {
+		private Set<Integer> patientList;
+		private String timestamp;
+
+		public DataResponseObject(Set<Integer> patientList, String timestamp) {
+			this.patientList = patientList;
+			this.timestamp = timestamp;
+		}
+
+		public Set<Integer> getPatientList() {
+			return patientList;
+		}
+
+		public void setPatientList(Set<Integer> patientList) {
+			this.patientList = patientList;
+		}
+
+		public String getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(String timestamp) {
+			this.timestamp = timestamp;
+		}
+	}
 
 }
