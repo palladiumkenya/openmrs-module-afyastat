@@ -117,7 +117,7 @@ public class QueueInfoProcessor {
 		for (Exception e : exception.getAllException()) {
 			ErrorMessagesInfo error = new ErrorMessagesInfo();
 			String message = e.getMessage();
-			System.out.println("message=================" + message);
+			System.out.println("Error while validating payload: " + message);
 			if (message == null) {
 				message = "Queue data was processed but the processor unable to determine the cause of the error.";
 			}

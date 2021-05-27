@@ -79,6 +79,7 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 			return true;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			queueProcessorException.addException(new Exception("Exception while validating payload ", e));
 			return false;
 		}
@@ -103,17 +104,19 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		String middleName = JsonFormatUtils.readAsString(payload, "$['o_name']");
 		String familyName = JsonFormatUtils.readAsString(payload, "$['s_name']");
 		Integer relType = relationshipTypeConverter(JsonFormatUtils.readAsString(payload, "$['contact_relationship']"));
-		String baselineStatus = JsonFormatUtils.readAsString(payload, "$['baseline_hiv_status']");
+		String baselineStatus = JsonFormatUtils.readAsString(payload, "$['baseline_hiv_status']");// nm
+		String ipvOutcome = JsonFormatUtils.readAsString(payload, "$['ipv_outcome']");// nm
+		
 		Date nextTestDate = JsonFormatUtils
 		        .readAsDate(payload, "$['booking_date']", JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		Date birthDate = JsonFormatUtils.readAsDate(payload, "$['date_of_birth']", JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		String sex = gender(JsonFormatUtils.readAsString(payload, "$['sex']"));
-		String phoneNumber = JsonFormatUtils.readAsString(payload, "$['phone']");
-		Integer maritalStatus = maritalStatusConverter(JsonFormatUtils.readAsString(payload, "$['marital_status']"));
+		String phoneNumber = JsonFormatUtils.readAsString(payload, "$['phone']");//nm
+		Integer maritalStatus = maritalStatusConverter(JsonFormatUtils.readAsString(payload, "$['marital_status']"));//nm
 		Integer livingWithPatient = livingWithPartnerConverter(JsonFormatUtils.readAsString(payload,
-		    "$['living_with_client']"));
-		Integer pnsApproach = pnsApproachConverter(JsonFormatUtils.readAsString(payload, "$['pns_approach']"));
-		String physicalAddress = JsonFormatUtils.readAsString(payload, "$['physical_address']");
+		    "$['living_with_client']"));//nm
+		Integer pnsApproach = pnsApproachConverter(JsonFormatUtils.readAsString(payload, "$['pns_approach']"));//nm
+		String physicalAddress = JsonFormatUtils.readAsString(payload, "$['physical_address']");//nm
 		
 		Integer patientRelatedTo = null;
 		String kemrRef = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']");
@@ -146,14 +149,26 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		
 		unsavedPatientContact.setBirthDate(birthDate);
 		unsavedPatientContact.setSex(sex);
-		unsavedPatientContact.setPhoneContact(phoneNumber);
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(phoneNumber)) {
+			unsavedPatientContact.setPhoneContact(phoneNumber);
+		}
 		if (maritalStatus != null) {
 			unsavedPatientContact.setMaritalStatus(maritalStatus);
 		}
-		unsavedPatientContact.setLivingWithPatient(livingWithPatient);
-		unsavedPatientContact.setPnsApproach(pnsApproach);
+		
+		if (livingWithPatient != null) {
+			unsavedPatientContact.setLivingWithPatient(livingWithPatient);
+		}
+		if (pnsApproach != null) {
+			unsavedPatientContact.setPnsApproach(pnsApproach);
+		}
 		unsavedPatientContact.setContactListingDeclineReason("CHT");// using this to identify contact pushed from CHT
-		unsavedPatientContact.setPhysicalAddress(physicalAddress);
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(physicalAddress)) {
+			unsavedPatientContact.setPhysicalAddress(physicalAddress);
+		}
+		if (ipvOutcome != null) {
+			unsavedPatientContact.setIpvOutcome(ipvOutcome);
+		}
 		unsavedPatientContact.setPatientRelatedTo(Context.getPatientService().getPatient(patientRelatedTo));
 		unsavedPatientContact.setUuid(uuid);
 		unsavedPatientContact.setVoided(voided);
@@ -186,6 +201,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private Integer getPatientRelatedToContact(String uuid) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(uuid)) {
+			return null;
+		}
 		Integer patientId = null;
 		RegistrationInfoService regDataService = Context.getService(RegistrationInfoService.class);
 		RegistrationInfo regData = regDataService.getRegistrationDataByTemporaryUuid(uuid);
@@ -210,6 +228,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private Integer relationshipTypeConverter(String relType) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(relType)) {
+			return null;
+		}
 		Integer relTypeConverter = null;
 		if (relType.equalsIgnoreCase("partner")) {
 			relTypeConverter = 163565;
@@ -231,6 +252,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private Integer maritalStatusConverter(String marital_status) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(marital_status)) {
+			return null;
+		}
 		Integer civilStatusConverter = null;
 		if (marital_status.equalsIgnoreCase("Single")) {
 			civilStatusConverter = 1057;
@@ -249,6 +273,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private Integer livingWithPartnerConverter(String livingWithPatient) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(livingWithPatient)) {
+			return null;
+		}
 		Integer livingWithPatientConverter = null;
 		if (livingWithPatient.equalsIgnoreCase("no")) {
 			livingWithPatientConverter = 1066;
@@ -261,6 +288,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private Integer pnsApproachConverter(String pns_approach) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(pns_approach)) {
+			return null;
+		}
 		Integer pnsApproach = null;
 		if (pns_approach.equalsIgnoreCase("dual_referral")) {
 			pnsApproach = 162284;
@@ -275,6 +305,9 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private String gender(String gender) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(gender)) {
+			return null;
+		}
 		String abbriviateGender = null;
 		if (gender.equalsIgnoreCase("male")) {
 			abbriviateGender = "M";

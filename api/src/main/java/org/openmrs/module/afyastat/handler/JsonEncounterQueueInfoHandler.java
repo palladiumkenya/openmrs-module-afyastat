@@ -132,45 +132,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		
 		String uuid = JsonFormatUtils.readAsString(patientPayload, "$['patient']['patient.uuid']");
 		unsavedPatient.setUuid(uuid);
-		
-		PatientService patientService = Context.getPatientService();
-		LocationService locationService = Context.getLocationService();
-		PatientIdentifierType defaultIdentifierType = patientService.getPatientIdentifierType(1);
-		
-		// String identifier = JsonUtils.readAsString(patientPayload, "$['patient']['patient.medical_record_number']");
-		/*String identifierTypeUuid = JsonUtils.readAsString(patientPayload, "$['patient']['patient.identifier_type']");
-		String locationUuid = JsonUtils.readAsString(patientPayload, "$['patient']['patient.identifier_location']");
 
-		PatientIdentifier patientIdentifier = new PatientIdentifier();
-		Location location = StringUtils.isNotBlank(locationUuid) ?
-		        locationService.getLocationByUuid(locationUuid) : encounter.getLocation();
-		patientIdentifier.setLocation(location);
-		PatientIdentifierType patientIdentifierType = StringUtils.isNotBlank(identifierTypeUuid) ?
-		        patientService.getPatientIdentifierTypeByUuid(identifierTypeUuid) : defaultIdentifierType;
-		patientIdentifier.setIdentifierType(patientIdentifierType);
-		//  patientIdentifier.setIdentifier(identifier);
-		unsavedPatient.addIdentifier(patientIdentifier);*/
-		
-		//  Date birthdate = JsonUtils.readAsDate(patientPayload, "$['patient']['patient.birth_date']");
-		//  boolean birthdateEstimated = JsonUtils.readAsBoolean(patientPayload, "$['patient']['patient.birthdate_estimated']");
-		//  String gender = JsonUtils.readAsString(patientPayload, "$['patient']['patient.sex']");
-		
-		//  unsavedPatient.setBirthdate(birthdate);
-		//  unsavedPatient.setBirthdateEstimated(birthdateEstimated);
-		//  unsavedPatient.setGender(gender);
-		
-		//  String givenName = JsonUtils.readAsString(patientPayload, "$['patient']['patient.given_name']");
-		//  String middleName = JsonUtils.readAsString(patientPayload, "$['patient']['patient.middle_name']");
-		//  String familyName = JsonUtils.readAsString(patientPayload, "$['patient']['patient.family_name']");
-		
-		// PersonName personName = new PersonName();
-		//  personName.setGivenName(givenName);
-		//  personName.setMiddleName(middleName);
-		//  personName.setFamilyName(familyName);
-		
-		//  unsavedPatient.addName(personName);
-		// unsavedPatient.addIdentifier(patientIdentifier);
-		
 		Patient candidatePatient;
 		if (StringUtils.isNotEmpty(unsavedPatient.getUuid())) {
 			candidatePatient = Context.getPatientService().getPatientByUuid(unsavedPatient.getUuid());
@@ -185,10 +147,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 					
 				}
 			}
-		} /*else if (!StringUtils.isBlank(patientIdentifier.getIdentifier())) {
-		    List<Patient> patients = Context.getPatientService().getPatients(patientIdentifier.getIdentifier());
-		    candidatePatient = PatientSearchUtils.findSimilarPatientByNameAndGender(patients, unsavedPatient);
-		  } */
+		}
 		
 		else {
 			List<Patient> patients = Context.getPatientService().getPatients(unsavedPatient.getPersonName().getFullName());
@@ -198,7 +157,6 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		if (candidatePatient == null) {
 			queueProcessorException.addException(new Exception(
 			        "Unable to uniquely identify patient for this encounter form data. "));
-			//+ ToStringBuilder.reflectionToString(unsavedPatient)));
 		} else {
 			encounter.setPatient(candidatePatient);
 		}
