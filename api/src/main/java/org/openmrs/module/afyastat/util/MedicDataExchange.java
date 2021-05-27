@@ -1427,11 +1427,11 @@ public class MedicDataExchange {
 		Set<Integer> eligibleList = new HashSet<Integer>();
 		StringBuilder q = new StringBuilder();
 
-		q.append("select p.patient_id from patient p inner join kenyaemr_hiv_testing_patient_contact pc on pc.patient_id = p.patient_id");
-		q.append(" where pc.voided = 0 and pc.contact_listing_decline_reason='CHT'"); // we temporarily use CHT to mark contacts from Afystat
+		q.append("select p.patient_id from patient p inner join kenyaemr_hiv_testing_patient_contact pc on pc.patient_id = p.patient_id and pc.voided = 0"); // we want to cover all contacts
+		//q.append(" where pc.voided = 0 and pc.contact_listing_decline_reason='CHT'"); // we temporarily use CHT to mark contacts from Afystat
 
 		if (effectiveDate != null) {
-			q.append(" and p.date_created >= '" + effectiveDate + "' or p.date_changed >= '" + effectiveDate + "'");
+			q.append(" where p.date_created >= '" + effectiveDate + "'");
 		}
 
 		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(q.toString(), true);

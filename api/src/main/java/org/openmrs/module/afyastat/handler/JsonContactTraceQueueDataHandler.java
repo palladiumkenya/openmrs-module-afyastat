@@ -115,6 +115,9 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		    "$['fields']['group_follow_up']['unique_patient_number']");
 		String facilityLinkedTo = JsonFormatUtils.readAsString(payload,
 		    "$['fields']['group_follow_up']['facility_linked_to']");
+		
+		Date bookingDate = JsonFormatUtils.readAsDate(payload, "$['fields']['group_follow_up']['booking_date']",
+		    JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		//String healthWorkerHandedTo = JsonFormatUtils.readAsString(payload,"$['fields']['group_follow_up']['health_care_worker_handed_to']");
 		String remarks = JsonFormatUtils.readAsString(payload, "$['fields']['group_follow_up']['remarks']");
 		String uuid = JsonFormatUtils.readAsString(payload, "$['_id']");
@@ -127,11 +130,22 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 		if (reasonUncontacted != null) {
 			unsavedContactTrace.setReasonUncontacted(reasonUncontacted);
 		}
-		unsavedContactTrace.setReasonUncontacted(reasonUncontacted);
-		unsavedContactTrace.setUniquePatientNo(uniquePatientNo);
-		unsavedContactTrace.setFacilityLinkedTo(facilityLinkedTo);
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(reasonUncontacted)) {
+			unsavedContactTrace.setReasonUncontacted(reasonUncontacted);
+		}
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(uniquePatientNo)) {
+			unsavedContactTrace.setUniquePatientNo(uniquePatientNo);
+		}
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(facilityLinkedTo)) {
+			unsavedContactTrace.setFacilityLinkedTo(facilityLinkedTo);
+		}
+		if (bookingDate != null) {
+			unsavedContactTrace.setAppointmentDate(bookingDate);
+		}
 		// unsavedContactTrace.setHealthWorkerHandedTo(healthWorkerHandedTo);
-		unsavedContactTrace.setRemarks(remarks);
+		if (remarks != null) {
+			unsavedContactTrace.setRemarks(remarks);
+		}
 		unsavedContactTrace.setPatientContact(contact.getPatientContactByID(contactId));
 		unsavedContactTrace.setUuid(uuid);
 		unsavedContactTrace.setVoided(voided);
@@ -149,6 +163,9 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private Integer getContactId(String uuid) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(uuid)) {
+			return null;
+		}
 		Integer contactId = null;
 		HTSService htsService = Context.getService(HTSService.class);
 		PatientContact patientContact = htsService.getPatientContactByUuid(uuid);
@@ -160,6 +177,9 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private String contactTypeConverter(String follow_up_type) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(follow_up_type)) {
+			return null;
+		}
 		String contactType = null;
 		if (follow_up_type.equalsIgnoreCase("physical")) {
 			contactType = "Physical";
@@ -170,6 +190,9 @@ public class JsonContactTraceQueueDataHandler implements QueueInfoHandler {
 	}
 	
 	private String contactStatusConverter(String status_visit) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(status_visit)) {
+			return null;
+		}
 		String contactStatus = null;
 		if (status_visit.equalsIgnoreCase("contactedAndLinked")) {
 			contactStatus = "Contacted and Linked";
