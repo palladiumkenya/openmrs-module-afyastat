@@ -104,19 +104,19 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		String middleName = JsonFormatUtils.readAsString(payload, "$['o_name']");
 		String familyName = JsonFormatUtils.readAsString(payload, "$['s_name']");
 		Integer relType = relationshipTypeConverter(JsonFormatUtils.readAsString(payload, "$['contact_relationship']"));
-		String baselineStatus = JsonFormatUtils.readAsString(payload, "$['baseline_hiv_status']");// nm
-		String ipvOutcome = JsonFormatUtils.readAsString(payload, "$['ipv_outcome']");// nm
+		String baselineStatus = JsonFormatUtils.readAsString(payload, "$['baseline_hiv_status']");
+		String ipvOutcome = JsonFormatUtils.readAsString(payload, "$['ipv_outcome']");
 		
 		Date nextTestDate = JsonFormatUtils
 		        .readAsDate(payload, "$['booking_date']", JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		Date birthDate = JsonFormatUtils.readAsDate(payload, "$['date_of_birth']", JsonFormatUtils.YYYY_MM_DD_DATE_PATTERN);
 		String sex = gender(JsonFormatUtils.readAsString(payload, "$['sex']"));
-		String phoneNumber = JsonFormatUtils.readAsString(payload, "$['phone']");//nm
-		Integer maritalStatus = maritalStatusConverter(JsonFormatUtils.readAsString(payload, "$['marital_status']"));//nm
+		String phoneNumber = JsonFormatUtils.readAsString(payload, "$['phone']");
+		Integer maritalStatus = maritalStatusConverter(JsonFormatUtils.readAsString(payload, "$['marital_status']"));
 		Integer livingWithPatient = livingWithPartnerConverter(JsonFormatUtils.readAsString(payload,
-		    "$['living_with_client']"));//nm
-		Integer pnsApproach = pnsApproachConverter(JsonFormatUtils.readAsString(payload, "$['pns_approach']"));//nm
-		String physicalAddress = JsonFormatUtils.readAsString(payload, "$['physical_address']");//nm
+		    "$['living_with_client']"));
+		Integer pnsApproach = pnsApproachConverter(JsonFormatUtils.readAsString(payload, "$['pns_approach']"));
+		String physicalAddress = JsonFormatUtils.readAsString(payload, "$['physical_address']");
 		
 		Integer patientRelatedTo = null;
 		String kemrRef = JsonFormatUtils.readAsString(payload, "$['parent']['kemr_uuid']");
@@ -162,7 +162,7 @@ public class JsonContactListQueueDataHandler implements QueueInfoHandler {
 		if (pnsApproach != null) {
 			unsavedPatientContact.setPnsApproach(pnsApproach);
 		}
-		unsavedPatientContact.setContactListingDeclineReason("CHT");// using this to identify contact pushed from CHT
+		unsavedPatientContact.setContactListingDeclineReason("CHT");// the field has temporarily been used to identify contact pushed from CHT
 		if (org.apache.commons.lang3.StringUtils.isNotBlank(physicalAddress)) {
 			unsavedPatientContact.setPhysicalAddress(physicalAddress);
 		}
