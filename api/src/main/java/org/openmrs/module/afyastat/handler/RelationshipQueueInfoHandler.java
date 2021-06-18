@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * This handler has been adopted from openmrs-module-muzimacore
  * This Handler processes relationships received from
  * {@link org.openmrs.module.afyastat.model.AfyaDataSource} = "mobile" The handler will: <b>Create a
  * new relationship between two persons based on their uuid</b> <b>Update a relationship between to
@@ -49,6 +50,8 @@ import java.util.TreeSet;
  * of this fails</b>
  * 
  * @author sthaiya
+ *
+ * Please see https://github.com/muzima/openmrs-module-muzimacore/blob/master/api/src/main/java/org/openmrs/module/muzima/handler/RelationshipQueueDataHandler.java
  */
 
 @Handler(supports = AfyaStatQueueData.class, order = 8)
@@ -73,22 +76,6 @@ public class RelationshipQueueInfoHandler implements QueueInfoHandler {
 		personService = Context.getPersonService();
 		payload = queueData.getPayload();
 		createRelationship();
-		/*try {
-		   // if (validate(queueData)) {
-		        createRelationship();
-		   // }
-		} catch (Exception e) {
-		    *//*Custom exception thrown by the validate function should not be added again into @queueProcessorException.
-		      It should add the runtime dao Exception while saving the data into @queueProcessorException collection *//*
-		                                                                                                               if (!e.getClass().equals(QueueProcessorException.class)) {
-		                                                                                                               queueProcessorException.addException(new Exception("Exception while processing relationship payload ",e));
-		                                                                                                               log.error(e);
-		                                                                                                               }
-		                                                                                                               } finally {
-		                                                                                                               if (queueProcessorException.anyExceptions()) {
-		                                                                                                               throw queueProcessorException;
-		                                                                                                               }
-		                                                                                                               }*/
 	}
 	
 	@Override

@@ -41,7 +41,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * TODO brief class desceription.
+ * Processes encounter payload data
+ * Adapted from Adapted from openmrs-module-muzimacore.
+ * See https://github.com/muzima/openmrs-module-muzimacore/blob/master/api/src/main/java/org/openmrs/module/muzima/handler/JsonEncounterQueueDataHandler.java
  */
 @Component
 @Handler(supports = AfyaStatQueueData.class, order = 5)
@@ -132,7 +134,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		
 		String uuid = JsonFormatUtils.readAsString(patientPayload, "$['patient']['patient.uuid']");
 		unsavedPatient.setUuid(uuid);
-
+		
 		Patient candidatePatient;
 		if (StringUtils.isNotEmpty(unsavedPatient.getUuid())) {
 			candidatePatient = Context.getPatientService().getPatientByUuid(unsavedPatient.getUuid());

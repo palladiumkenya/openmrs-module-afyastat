@@ -3,7 +3,7 @@ ${moduleName}
 
 Description
 -----------
-This is a very basic module which can be used as a starting point in creating a new module.
+This module handles data exchange between CHT powered Afyastat and KenyaEMR.
 
 Building from Source
 --------------------
@@ -28,3 +28,7 @@ If uploads are not allowed from the web (changable via a runtime property), you 
 into the ~/.OpenMRS/modules folder.  (Where ~/.OpenMRS is assumed to be the Application 
 Data Directory that the running openmrs is currently using.)  After putting the file in there 
 simply restart OpenMRS/tomcat and the module will be loaded and started.
+
+Accreditation
+-------------
+* Data exchange processing logic adapted from the OpenMRS muzima core module, and used under MPL 2.0 (https://github.com/muzima/openmrs-module-muzimacore)

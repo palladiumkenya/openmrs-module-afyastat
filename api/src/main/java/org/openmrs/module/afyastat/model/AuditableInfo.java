@@ -18,6 +18,7 @@ import org.openmrs.Location;
 import org.openmrs.Provider;
 
 /**
+ * This class has been adapted from https://github.com/muzima/openmrs-module-muzimacore/blob/master/api/src/main/java/org/openmrs/module/muzima/model/AuditableData.java
  */
 public abstract class AuditableInfo extends BaseOpenmrsData implements Info {
 	
