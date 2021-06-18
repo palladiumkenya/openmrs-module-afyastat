@@ -1,4 +1,4 @@
-${moduleName}
+openmrs-module-afyastat
 ==========================
 
 Description
