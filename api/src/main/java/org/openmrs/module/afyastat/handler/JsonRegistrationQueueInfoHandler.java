@@ -46,9 +46,10 @@ import java.util.*;
 import static org.openmrs.module.afyastat.utils.JsonFormatUtils.getElementFromJsonObject;
 
 /**
- * Handles processing of registration data in KenyaEMR
- * Adapted from openmrs-module-muzimacore
- * See https://github.com/muzima/openmrs-module-muzimacore/blob/master/api/src/main/java/org/openmrs/module/muzima/handler/JsonRegistrationQueueDataHandler.java
+ * Handles processing of registration data in KenyaEMR Adapted from openmrs-module-muzimacore See
+ * https
+ * ://github.com/muzima/openmrs-module-muzimacore/blob/master/api/src/main/java/org/openmrs/module
+ * /muzima/handler/JsonRegistrationQueueDataHandler.java
  */
 @Handler(supports = AfyaStatQueueData.class, order = 1)
 public class JsonRegistrationQueueInfoHandler implements QueueInfoHandler {
