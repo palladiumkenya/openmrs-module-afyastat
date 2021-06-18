@@ -221,7 +221,7 @@ public class JsonFormatUtils {
 			object = JsonPath.read(jsonObject, path);
 		}
 		catch (Exception e) {
-			logger.error("Unable to read object value with path: " + path + " from: " + String.valueOf(jsonObject));
+			logger.error("Unable to read object value with path: " + path + " from: Afyastat");// + String.valueOf(jsonObject));
 		}
 		return object;
 	}
@@ -282,7 +282,7 @@ public class JsonFormatUtils {
 			objects = JsonPath.read(jsonObject, path);
 		}
 		catch (Exception e) {
-			logger.error("Unable to read object value with path: " + path + " from: " + String.valueOf(jsonObject));
+			logger.error("Unable to read object value with path: " + path + " from: Afyastat");// + String.valueOf(jsonObject));
 		}
 		return objects;
 	}

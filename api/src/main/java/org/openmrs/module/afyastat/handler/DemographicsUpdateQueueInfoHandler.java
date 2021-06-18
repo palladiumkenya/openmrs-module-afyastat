@@ -43,6 +43,7 @@ import static org.openmrs.module.afyastat.utils.PersonCreationsUtils.getPersonAd
 import static org.openmrs.module.afyastat.utils.PersonCreationsUtils.getPersonAttributeFromJsonObject;
 
 /**
+ * Adapted from openmrs-module-muzimacore
  */
 @Component
 @Handler(supports = AfyaStatQueueData.class, order = 6)
@@ -133,16 +134,38 @@ public class DemographicsUpdateQueueInfoHandler implements QueueInfoHandler {
 			savedPatient.setBirthdateEstimated(unsavedPatient.getBirthdateEstimated());
 		}
 		if (unsavedPatient.getPersonAddress() != null) {
-			savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getStateProvince());
-			savedPatient.getPersonAddress().setCountyDistrict(unsavedPatient.getPersonAddress().getCountyDistrict());
-			savedPatient.getPersonAddress().setAddress4(unsavedPatient.getPersonAddress().getAddress4());
-			savedPatient.getPersonAddress().setAddress2(unsavedPatient.getPersonAddress().getAddress2());
-			savedPatient.getPersonAddress().setAddress1(unsavedPatient.getPersonAddress().getAddress1());
-			savedPatient.getPersonAddress().setAddress6(unsavedPatient.getPersonAddress().getAddress6());
-			savedPatient.getPersonAddress().setAddress5(unsavedPatient.getPersonAddress().getAddress5());
-			savedPatient.getPersonAddress().setCityVillage(unsavedPatient.getPersonAddress().getCityVillage());
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getStateProvince())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getStateProvince());
+			}
 			
-			//savedPatient.addAddress(unsavedPatient.getPersonAddress());
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getCountyDistrict())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getCountyDistrict());
+			}
+			
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getAddress4())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getAddress4());
+			}
+			
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getAddress2())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getAddress2());
+			}
+			
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getAddress1())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getAddress1());
+			}
+			
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getAddress6())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getAddress6());
+			}
+			
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getAddress5())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getAddress5());
+			}
+			
+			if (org.apache.commons.lang3.StringUtils.isNotBlank(unsavedPatient.getPersonAddress().getCityVillage())) {
+				savedPatient.getPersonAddress().setStateProvince(unsavedPatient.getPersonAddress().getCityVillage());
+			}
+			
 		}
 		if (unsavedPatient.getAttributes() != null) {
 			Set<PersonAttribute> attributes = unsavedPatient.getAttributes();

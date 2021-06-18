@@ -26,7 +26,8 @@ import java.util.List;
  * <code>
  * Context.getService(RegistrationDataService.class).someMethod();
  * </code>
- * 
+ *
+ * The design has been adapted from https://github.com/muzima/openmrs-module-muzimacore/blob/master/api/src/main/java/org/openmrs/module/muzima/api/service/impl/RegistrationDataServiceImpl.java
  * @see org.openmrs.api.context.Context
  */
 public interface RegistrationInfoService extends OpenmrsService {
