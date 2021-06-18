@@ -39,9 +39,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Handles processing of observation data
- * Adapted from openmrs-module-muzimacore
- * This class has been adapted from https://github.com/palladiumkenya/openmrs-module-afyastat/blob/master/api/src/main/java/org/openmrs/module/afyastat/handler/ObsQueueInfoHandler.java
+ * Handles processing of observation data Adapted from openmrs-module-muzimacore This class has been
+ * adapted from
+ * https://github.com/palladiumkenya/openmrs-module-afyastat/blob/master/api/src/main/java
+ * /org/openmrs/module/afyastat/handler/ObsQueueInfoHandler.java
  */
 @Component
 @Handler(supports = AfyaStatQueueData.class, order = 3)

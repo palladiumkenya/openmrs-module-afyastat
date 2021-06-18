@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>afyastat</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>afyastat-omod</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>afyastat-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 		<!--<dependency>
 			<groupId>org.openmrs.web</groupId>
