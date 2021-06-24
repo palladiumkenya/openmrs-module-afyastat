@@ -28,4 +28,10 @@
 
 
 	<context:component-scan base-package="org.openmrs.module.afyastat.web.controller" />
+
+
+<!--	<bean class="org.openmrs.module.kenyaemrorderentry.converter.IntegerToLabManifestConverter"/>
+	<bean class="org.openmrs.module.kenyaemrorderentry.converter.IntegerToLabManifestOrderConverter"/>
+	<bean class="org.openmrs.module.kenyaemrorderentry.converter.StringToLabManifestConverter"/>
+	<bean class="org.openmrs.module.kenyaemrorderentry.converter.StringToLabManifestOrderConverter"/>-->
 </beans>
