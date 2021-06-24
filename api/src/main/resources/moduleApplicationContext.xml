@@ -187,4 +187,12 @@
             </list>
         </property>
     </bean>
+
+    <bean id="kenyaemr.app.afyastat" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
+        <constructor-arg value="kenyaemr.afyastat.home" />
+        <constructor-arg value="Afyastat" />
+        <constructor-arg value="afyastat/afyastatHome.page" />
+        <constructor-arg value="kenyaemrorderentry:drug_prescriptions.png" />
+        <constructor-arg value="360" />
+    </bean>
 </beans>
