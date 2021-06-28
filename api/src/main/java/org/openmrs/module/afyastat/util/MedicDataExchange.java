@@ -8,75 +8,89 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
-
-import org.openmrs.EncounterType;
-import org.openmrs.GlobalProperty;
-import org.openmrs.Person;
-import org.openmrs.Patient;
-import org.openmrs.Provider;
-import org.openmrs.User;
-import org.openmrs.Location;
 import org.openmrs.Concept;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.Program;
-import org.openmrs.Relationship;
-import org.openmrs.PatientProgram;
-import org.openmrs.Obs;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.Form;
+import org.openmrs.GlobalProperty;
+import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
+import org.openmrs.PatientProgram;
+import org.openmrs.Person;
+import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonAddress;;
-
-import org.openmrs.api.PatientService;
-import org.openmrs.api.ProgramWorkflowService;
-import org.openmrs.api.PersonService;
-import org.openmrs.api.FormService;
+import org.openmrs.Program;
+import org.openmrs.Provider;
+import org.openmrs.Relationship;
+import org.openmrs.User;
 import org.openmrs.api.EncounterService;
+import org.openmrs.api.FormService;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.PersonService;
+import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
-
 import org.openmrs.module.afyastat.api.AfyastatService;
 import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.MedicQueData;
 import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.afyastat.model.AfyaDataSource;
+import org.openmrs.module.hivtestingservices.api.HTSService;
+import org.openmrs.module.hivtestingservices.api.PatientContact;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.hivtestingservices.api.PatientContact;
-import org.openmrs.module.hivtestingservices.api.HTSService;
-
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+;
 
 public class MedicDataExchange {
-
+	
 	AfyastatService afyastatService = Context.getService(AfyastatService.class);
+	
 	InfoService dataService = Context.getService(InfoService.class);
+	
 	HTSService htsService = Context.getService(HTSService.class);
+	
 	PersonService personService = Context.getPersonService();
-
+	
 	EncounterService encService = Context.getEncounterService();
+	
 	FormService formService = Context.getFormService();
+	
 	EncounterType et = encService.getEncounterTypeByUuid(Utils.HTS);
+	
 	Form initial = formService.getFormByUuid(Utils.HTS_INITIAL_TEST);
+	
 	Form retest = formService.getFormByUuid(Utils.HTS_CONFIRMATORY_TEST);
-
+	
 	PersonAttributeType phoneNumberAttrType = personService.getPersonAttributeTypeByUuid(AfyaStatMetadata.TELEPHONE_CONTACT);
-
+	
 	static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
-
+	
 	private Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
-
+	
 	private final Log log = LogFactory.getLog(MedicDataExchange.class);
-
+	
 	/**
 	 * processes results from cht *
-	 *
+	 * 
 	 * @param resultPayload this should be an object
 	 * @return
 	 */
@@ -87,15 +101,20 @@ public class MedicDataExchange {
 		ObjectNode jsonNode = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(resultPayload);
-
+			
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 		if (jsonNode != null) {
-
+			
 			ObjectNode formNode = processFormPayload(jsonNode);
 			String documentUUID = formNode.get("documentUUID").getTextValue();
+			if (Utils.afyastatFormAlreadyExists(documentUUID)) {
+				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentUUID
+				        + ". The payload will be ignored");
+				return "Afyastat sent a duplicate registration to KenyaEMR. This has been ignored";
+			}
 			String payload = formNode.toString();
 			String discriminator = formNode.path("discriminator").path("discriminator").getTextValue();
 			String formDataUuid = formNode.path("encounter").path("encounter.form_uuid").getTextValue();
@@ -103,75 +122,85 @@ public class MedicDataExchange {
 			Integer locationId = Integer.parseInt(formNode.path("encounter").path("encounter.location_id").getTextValue());
 			String providerString = formNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = formNode.path("encounter").path("encounter.user_system_id").getTextValue();
-			saveMedicDataQueue(payload,locationId,providerString,patientUuid,discriminator,formDataUuid, userName, documentUUID);		}
+			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
+			    documentUUID);
+		}
 		return "Data queue form created successfully";
 	}
-
+	
 	/**
 	 * Process registration payload from Afyastat - handles universal_client contact type
-	 *
+	 * 
 	 * @param resultPayload
 	 * @return
 	 */
-
+	
 	public String processIncomingRegistration(String resultPayload) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(resultPayload);
-
-		} catch (IOException e) {
+			
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		// Afyastat has a tendency of pushing multiple registrations.
 		// first check that a document _id is not in the queue data before processing
-
+		
 		if (jsonNode != null) {
 			ObjectNode regNode = (ObjectNode) jsonNode.get("registration");
 			String documentId = regNode.get("_id").getTextValue();
-			if (dataService.getQueueDataByUuid(documentId) != null) {
-				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentId + ". The payload will be ignored");
+			if (Utils.afyastatFormAlreadyExists(documentId)) {
+				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentId
+				        + ". The payload will be ignored");
 				return "Afyastat sent a duplicate registration to KenyaEMR. This has been ignored";
 			} else {
-
+				
 				ObjectNode outputNode = processRegistrationPayload(jsonNode, resultPayload);
-
+				
 				ObjectNode registrationNode = (ObjectNode) outputNode.get("clientRegistration");
-				ObjectNode relationshipNode = outputNode.has("relationship") ? (ObjectNode) outputNode.get("relationship") : null;
-				ObjectNode patientContactNode = outputNode.has("patientContact") ? (ObjectNode) outputNode.get("patientContact") : null;
-
+				ObjectNode relationshipNode = outputNode.has("relationship") ? (ObjectNode) outputNode.get("relationship")
+				        : null;
+				ObjectNode patientContactNode = outputNode.has("patientContact") ? (ObjectNode) outputNode
+				        .get("patientContact") : null;
+				
 				String payload = registrationNode.toString();
 				String discriminator = registrationNode.path("discriminator").path("discriminator").getTextValue();
 				String formDataUuid = registrationNode.path("encounter").path("encounter.form_uuid").getTextValue();
 				String patientUuid = registrationNode.path("patient").path("patient.uuid").getTextValue();
-				Integer locationId = Integer.parseInt(registrationNode.path("encounter").path("encounter.location_id").getTextValue());
+				Integer locationId = Integer.parseInt(registrationNode.path("encounter").path("encounter.location_id")
+				        .getTextValue());
 				String providerString = registrationNode.path("encounter").path("encounter.provider_id").getTextValue();
 				String userName = registrationNode.path("encounter").path("encounter.user_system_id").getTextValue();
-
+				
 				// add registration queue data
-				saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName, patientUuid);
+				saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
+				    patientUuid);
 				if (relationshipNode != null) {
 					String relationshipDiscriminator = "json-relationship";
-					saveMedicDataQueue(relationshipNode.toString(), locationId, providerString, patientUuid, relationshipDiscriminator, "", userName);
+					saveMedicDataQueue(relationshipNode.toString(), locationId, providerString, patientUuid,
+					    relationshipDiscriminator, "", userName);
 				}
-
+				
 				if (patientContactNode != null) {
 					String patientContactDiscriminator = "json-createpatientcontactusingrelatioship";
-					saveMedicDataQueue(patientContactNode.toString(), locationId, providerString, patientUuid, patientContactDiscriminator, "", userName);
-
+					saveMedicDataQueue(patientContactNode.toString(), locationId, providerString, patientUuid,
+					    patientContactDiscriminator, "", userName);
+					
 				}
 			}
 		}
 		return "Data queue registration created successfully";
 	}
-
+	
 	public String processDemographicsUpdate(String resultPayload) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(resultPayload);
-
+			
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -186,22 +215,24 @@ public class MedicDataExchange {
 			        .getTextValue());
 			String providerString = demographicUpdateNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = demographicUpdateNode.path("encounter").path("encounter.user_system_id").getTextValue();
-			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName, patientUuid);		}
+			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
+			    patientUuid);
+		}
 		return "Data queue demographics updates created successfully";
 	}
-
+	
 	public String processPeerCalenderFormData(String resultPayload) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(resultPayload);
-
+			
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 		if (jsonNode != null) {
-
+			
 			ObjectNode formNode = processPeerCalenderPayload(jsonNode);
 			String payload = formNode.toString();
 			String discriminator = formNode.path("discriminator").path("discriminator").getTextValue();
@@ -210,10 +241,11 @@ public class MedicDataExchange {
 			Integer locationId = Integer.parseInt(formNode.path("encounter").path("encounter.location_id").getTextValue());
 			String providerString = formNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = formNode.path("encounter").path("encounter.user_system_id").getTextValue();
-			saveMedicDataQueue(payload,locationId,providerString,patientUuid,discriminator,formDataUuid,userName);		}
+			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName);
+		}
 		return "Data queue form created successfully";
 	}
-
+	
 	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
 	        String discriminator, String formUuid, String userString) {
 		AfyaDataSource dataSource = dataService.getDataSource(1);
@@ -221,7 +253,7 @@ public class MedicDataExchange {
 		User user = Context.getUserService().getUserByUsername(userString);
 		Location location = Context.getLocationService().getLocation(locationId);
 		Form form = Context.getFormService().getFormByUuid(formUuid);
-
+		
 		MedicQueData medicQueData = new MedicQueData();
 		if (form != null && form.getName() != null) {
 			medicQueData.setFormName(form.getName());
@@ -238,17 +270,18 @@ public class MedicDataExchange {
 		medicQueData.setCreator(user);
 		afyastatService.saveQueData(medicQueData);
 	}
-
-	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid, String discriminator,
-									String formUuid, String userString, String queueUUID) {
+	
+	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
+	        String discriminator, String formUuid, String userString, String queueUUID) {
 		AfyaDataSource dataSource = dataService.getDataSource(1);
 		Provider provider = Context.getProviderService().getProviderByIdentifier(providerString);
 		User user = Context.getUserService().getUserByUsername(userString);
 		Location location = Context.getLocationService().getLocation(locationId);
 		Form form = Context.getFormService().getFormByUuid(formUuid);
-
-		if (dataService.getQueueDataByUuid(queueUUID) != null) {
-			System.out.println("Afyastat attempted to send a duplicate record with uuid = " + queueUUID + ". The payload will be ignored");
+		
+		if (Utils.afyastatFormAlreadyExists(queueUUID)) {
+			System.out.println("Afyastat attempted to send a duplicate record with uuid = " + queueUUID
+			        + ". The payload will be ignored");
 			return;
 		}
 		MedicQueData medicQueData = new MedicQueData();
@@ -268,18 +301,18 @@ public class MedicDataExchange {
 		medicQueData.setCreator(user);
 		afyastatService.saveQueData(medicQueData);
 	}
-
+	
 	/**
-	 * Extracts registration data from Afyastat payload into a registration json and queues it for processing
-	 *
+	 * Extracts registration data from Afyastat payload into a registration json and queues it for
+	 * processing
+	 * 
 	 * @param jNode
 	 * @param regPayload
 	 * @return
 	 */
-
+	
 	private ObjectNode processRegistrationPayload(ObjectNode jNode, String regPayload) {
-
-
+		
 		ObjectNode jsonNode = (ObjectNode) jNode.get("registration");
 		ObjectNode outputNode = getJsonNodeFactory().objectNode();
 		ObjectNode patientNode = getJsonNodeFactory().objectNode();
@@ -290,57 +323,96 @@ public class MedicDataExchange {
 		ObjectNode identifier = getJsonNodeFactory().objectNode();
 		ObjectNode registrationWrapper = getJsonNodeFactory().objectNode();
 		Date date = new Date();
-
-		String patientDobKnown = jsonNode.get("patient_dobKnown") != null ? jsonNode.get("patient_dobKnown").getTextValue() : "";
+		
+		String patientDobKnown = jsonNode.get("patient_dobKnown") != null ? jsonNode.get("patient_dobKnown").getTextValue()
+		        : "";
 		String dateOfBirth = null;
-		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1066_No_99DCT") && jsonNode.get("patient_birthDate") != null) {
+		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1066_No_99DCT")
+		        && jsonNode.get("patient_birthDate") != null) {
 			dateOfBirth = jsonNode.get("patient_birthDate").getTextValue();
 			patientNode.put("patient.birthdate_estimated", "true");
 			patientNode.put("patient.birth_date", formatStringDate(dateOfBirth));
-
+			
 		}
-
-		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1065_Yes_99DCT") && jsonNode.get("patient_dateOfBirth") != null) {
+		
+		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1065_Yes_99DCT")
+		        && jsonNode.get("patient_dateOfBirth") != null) {
 			dateOfBirth = jsonNode.get("patient_dateOfBirth").getTextValue();
 			patientNode.put("patient.birth_date", formatStringDate(dateOfBirth));
 		}
 		String patientGender = jsonNode.get("patient_sex") != null ? jsonNode.get("patient_sex").getTextValue() : "";
-
+		
 		patientNode.put("patient.uuid", jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "");
-		patientNode.put("patient.family_name", jsonNode.get("patient_familyName") != null ? jsonNode.get("patient_familyName").getTextValue() : "");
-		patientNode.put("patient.given_name", jsonNode.get("patient_firstName") != null ? jsonNode.get("patient_firstName").getTextValue() : "");
-		patientNode.put("patient.middle_name", jsonNode.get("patient_middleName") != null ? jsonNode.get("patient_middleName").getTextValue() : "");
+		patientNode.put("patient.family_name",
+		    jsonNode.get("patient_familyName") != null ? jsonNode.get("patient_familyName").getTextValue() : "");
+		patientNode.put("patient.given_name", jsonNode.get("patient_firstName") != null ? jsonNode.get("patient_firstName")
+		        .getTextValue() : "");
+		patientNode.put("patient.middle_name",
+		    jsonNode.get("patient_middleName") != null ? jsonNode.get("patient_middleName").getTextValue() : "");
 		patientNode.put("patient.sex", gender(patientGender));
-		patientNode.put("patient.county", jsonNode.get("patient_county") != null ? jsonNode.get("patient_county").getTextValue() : "");
-		patientNode.put("patient.sub_county", jsonNode.get("patient_subcounty") != null ? jsonNode.get("patient_subcounty").getTextValue() : "");
-		patientNode.put("patient.ward", jsonNode.get("patient_ward") != null ? jsonNode.get("patient_ward").getTextValue() : "");
-		patientNode.put("patient.sub_location", jsonNode.get("patient_sublocation") != null ? jsonNode.get("patient_sublocation").getTextValue() : "");
-		patientNode.put("patient.location", jsonNode.get("patient_location") != null ? jsonNode.get("patient_location").getTextValue() : "");
-		patientNode.put("patient.village", jsonNode.get("patient_village") != null ? jsonNode.get("patient_village").getTextValue() : "");
-		patientNode.put("patient.landmark", jsonNode.get("patient_landmark") != null ? jsonNode.get("patient_landmark").getTextValue() : "");
-		patientNode.put("patient.phone_number", jsonNode.get("patient_telephone") != null ? jsonNode.get("patient_telephone").getTextValue() : "");
-		patientNode.put("patient.alternate_phone_contact", jsonNode.get("patient_alternatePhone") != null ? jsonNode.get("patient_alternatePhone").getTextValue() : "");
-		patientNode.put("patient.postal_address", jsonNode.get("patient_postalAddress") != null ? jsonNode.get("patient_postalAddress").getTextValue() : "");
-		patientNode.put("patient.email_address", jsonNode.get("patient_emailAddress") != null ? jsonNode.get("patient_emailAddress").getTextValue() : "");
-		patientNode.put("patient.nearest_health_center", jsonNode.get("patient_nearesthealthcentre") != null ? jsonNode.get("patient_nearesthealthcentre").getTextValue() : "");
-		patientNode.put("patient.next_of_kin_name", jsonNode.get("patient_nextofkin") != null ? jsonNode.get("patient_nextofkin").getTextValue() : "");
-		patientNode.put("patient.next_of_kin_relationship", jsonNode.get("patient_nextofkinRelationship") != null ? jsonNode.get("patient_nextofkinRelationship").getTextValue() : "");
-		patientNode.put("patient.next_of_kin_contact", jsonNode.get("patient_nextOfKinPhonenumber") != null ? jsonNode.get("patient_nextOfKinPhonenumber").getTextValue() : "");
-		patientNode.put("patient.next_of_kin_address", jsonNode.get("patient_nextOfKinPostaladdress") != null ? jsonNode.get("patient_nextOfKinPostaladdress").getTextValue() : "");
+		patientNode.put("patient.county", jsonNode.get("patient_county") != null ? jsonNode.get("patient_county")
+		        .getTextValue() : "");
+		patientNode.put("patient.sub_county", jsonNode.get("patient_subcounty") != null ? jsonNode.get("patient_subcounty")
+		        .getTextValue() : "");
+		patientNode.put("patient.ward", jsonNode.get("patient_ward") != null ? jsonNode.get("patient_ward").getTextValue()
+		        : "");
+		patientNode.put("patient.sub_location",
+		    jsonNode.get("patient_sublocation") != null ? jsonNode.get("patient_sublocation").getTextValue() : "");
+		patientNode.put("patient.location", jsonNode.get("patient_location") != null ? jsonNode.get("patient_location")
+		        .getTextValue() : "");
+		patientNode.put("patient.village", jsonNode.get("patient_village") != null ? jsonNode.get("patient_village")
+		        .getTextValue() : "");
+		patientNode.put("patient.landmark", jsonNode.get("patient_landmark") != null ? jsonNode.get("patient_landmark")
+		        .getTextValue() : "");
+		patientNode.put("patient.phone_number", jsonNode.get("patient_telephone") != null ? jsonNode
+		        .get("patient_telephone").getTextValue() : "");
+		patientNode.put("patient.alternate_phone_contact",
+		    jsonNode.get("patient_alternatePhone") != null ? jsonNode.get("patient_alternatePhone").getTextValue() : "");
+		patientNode.put("patient.postal_address",
+		    jsonNode.get("patient_postalAddress") != null ? jsonNode.get("patient_postalAddress").getTextValue() : "");
+		patientNode.put("patient.email_address",
+		    jsonNode.get("patient_emailAddress") != null ? jsonNode.get("patient_emailAddress").getTextValue() : "");
+		patientNode.put("patient.nearest_health_center",
+		    jsonNode.get("patient_nearesthealthcentre") != null ? jsonNode.get("patient_nearesthealthcentre").getTextValue()
+		            : "");
+		patientNode.put("patient.next_of_kin_name",
+		    jsonNode.get("patient_nextofkin") != null ? jsonNode.get("patient_nextofkin").getTextValue() : "");
+		patientNode.put("patient.next_of_kin_relationship", jsonNode.get("patient_nextofkinRelationship") != null ? jsonNode
+		        .get("patient_nextofkinRelationship").getTextValue() : "");
+		patientNode.put("patient.next_of_kin_contact",
+		    jsonNode.get("patient_nextOfKinPhonenumber") != null ? jsonNode.get("patient_nextOfKinPhonenumber")
+		            .getTextValue() : "");
+		patientNode.put("patient.next_of_kin_address", jsonNode.get("patient_nextOfKinPostaladdress") != null ? jsonNode
+		        .get("patient_nextOfKinPostaladdress").getTextValue() : "");
 		patientNode.put("patient.otheridentifier", getIdentifierTypes(jsonNode));
-
-		obs.put("1054^CIVIL STATUS^99DCT", jsonNode.get("patient_marital_status") != null && !jsonNode.get("patient_marital_status").getTextValue().equalsIgnoreCase("") ? jsonNode.get("patient_marital_status").getTextValue().replace("_", "^").substring(1) : "");
-		obs.put("1542^OCCUPATION^99DCT", jsonNode.get("patient_occupation") != null && !jsonNode.get("patient_occupation").getTextValue().equalsIgnoreCase("") ? jsonNode.get("patient_occupation").getTextValue().replace("_", "^").substring(1) : "");
-		obs.put("1712^HIGHEST EDUCATION LEVEL^99DCT", jsonNode.get("patient_education_level") != null && !jsonNode.get("patient_education_level").getTextValue().equalsIgnoreCase("") ? jsonNode.get("patient_education_level").getTextValue().replace("_", "^").substring(1) : "");
-
+		
+		obs.put(
+		    "1054^CIVIL STATUS^99DCT",
+		    jsonNode.get("patient_marital_status") != null
+		            && !jsonNode.get("patient_marital_status").getTextValue().equalsIgnoreCase("") ? jsonNode
+		            .get("patient_marital_status").getTextValue().replace("_", "^").substring(1) : "");
+		obs.put(
+		    "1542^OCCUPATION^99DCT",
+		    jsonNode.get("patient_occupation") != null
+		            && !jsonNode.get("patient_occupation").getTextValue().equalsIgnoreCase("") ? jsonNode
+		            .get("patient_occupation").getTextValue().replace("_", "^").substring(1) : "");
+		obs.put(
+		    "1712^HIGHEST EDUCATION LEVEL^99DCT",
+		    jsonNode.get("patient_education_level") != null
+		            && !jsonNode.get("patient_education_level").getTextValue().equalsIgnoreCase("") ? jsonNode
+		            .get("patient_education_level").getTextValue().replace("_", "^").substring(1) : "");
+		
 		tmp.put("tmp.birthdate_type", "age");
-		tmp.put("tmp.age_in_years", jsonNode.get("patient_ageYears") != null ? jsonNode.get("patient_ageYears").getTextValue() : "");
+		tmp.put("tmp.age_in_years", jsonNode.get("patient_ageYears") != null ? jsonNode.get("patient_ageYears")
+		        .getTextValue() : "");
 		discriminator.put("discriminator", "json-registration");
-		String creator = jsonNode.path("meta").path("created_by") != null ? jsonNode.path("meta").path("created_by").getTextValue() : "";
+		String creator = jsonNode.path("meta").path("created_by") != null ? jsonNode.path("meta").path("created_by")
+		        .getTextValue() : "";
 		String providerId = checkProviderNameExists(creator);
 		String systemId = confirmUserNameExists(creator);
-		Long longDate = jsonNode.get("reported_date") != null ? jsonNode.get("reported_date").getLongValue() : date.getTime();
-
+		Long longDate = jsonNode.get("reported_date") != null ? jsonNode.get("reported_date").getLongValue() : date
+		        .getTime();
+		
 		encounter.put("encounter.location_id", locationId != null ? locationId.toString() : null);
 		encounter.put("encounter.provider_id_select", providerId != null ? providerId : " ");
 		encounter.put("encounter.provider_id", providerId != null ? providerId : " ");
@@ -349,31 +421,38 @@ public class MedicDataExchange {
 		encounter.put("encounter.user_system_id", systemId);
 		encounter.put("encounter.device_time_zone", "Africa\\/Nairobi");
 		encounter.put("encounter.setup_config_uuid", "2107eab5-5b3a-4de8-9e02-9d97bce635d2");
-
+		
 		registrationWrapper.put("patient", patientNode);
 		registrationWrapper.put("observation", obs);
 		registrationWrapper.put("tmp", tmp);
 		registrationWrapper.put("discriminator", discriminator);
 		registrationWrapper.put("encounter", encounter);
-
+		
 		outputNode.put("clientRegistration", registrationWrapper);
-
-
+		
 		//TODO: investigate why this block is duplicating rows.
 		// The duplicates are due to duplicate data pushed from afyastat
 		if (jsonNode.get("relation_uuid") != null && !jsonNode.get("relation_uuid").getTextValue().equalsIgnoreCase("")) {
 			// we want to establish relationship
 			String patientRelatedTo = jsonNode.get("relation_uuid").getTextValue();
-			String relationshipTypeName = jsonNode.get("relation_type") != null ? jsonNode.get("relation_type").getTextValue() : "";
+			String relationshipTypeName = jsonNode.get("relation_type") != null ? jsonNode.get("relation_type")
+			        .getTextValue() : "";
 			String relationshipUuid = UUID.randomUUID().toString();
 			String patientUuid = jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "";
-			ObjectNode relationshipPayload = generateRelationshipPayload(patientRelatedTo, relationshipTypeName, relationshipUuid, providerId, systemId, patientUuid);
+			ObjectNode relationshipPayload = generateRelationshipPayload(patientRelatedTo, relationshipTypeName,
+			    relationshipUuid, providerId, systemId, patientUuid);
 			outputNode.put("relationship", relationshipPayload);
 			outputNode.put("patientContact", jsonNode);
 		}
 		return outputNode;
 	}
-
+	
+	/**
+	 * Process encounter data payload
+	 * 
+	 * @param jNode
+	 * @return
+	 */
 	private ObjectNode processFormPayload(ObjectNode jNode) {
 		ObjectNode jsonNode = (ObjectNode) jNode.get("encData");
 		ObjectNode formsNode = JsonNodeFactory.instance.objectNode();
@@ -395,8 +474,7 @@ public class MedicDataExchange {
 			e.printStackTrace();
 		}
 		String documentUUID = jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "";
-
-
+		
 		String encounterDate = jsonNode.path("fields").path("encounter_date").getTextValue() != null
 		        && !jsonNode.path("fields").path("encounter_date").getTextValue().equalsIgnoreCase("") ? formatStringDate(jsonNode
 		        .path("fields").path("encounter_date").getTextValue())
@@ -416,10 +494,10 @@ public class MedicDataExchange {
 		encounter.put("encounter.device_time_zone", "Africa\\/Nairobi");
 		encounter.put("encounter.setup_config_uuid", jsonNode.path("fields").path("encounter_type_uuid").getTextValue());
 		String kemrUuid = jsonNode.path("fields").path("inputs").path("contact").path("kemr_uuid").getTextValue();
-
+		
 		patientNode.put("patient.uuid", StringUtils.isNotBlank(kemrUuid) ? kemrUuid : jsonNode.path("fields").path("inputs")
 		        .path("contact").path("_id").getTextValue());
-
+		
 		List<String> keysToRemove = new ArrayList<String>();
 		if (obsNodes != null) {
 			Iterator<Map.Entry<String, JsonNode>> iterator = obsNodes.getFields();
@@ -436,7 +514,7 @@ public class MedicDataExchange {
 				}
 			}
 		}
-
+		
 		if (keysToRemove.size() > 0) {
 			for (String key : keysToRemove) {
 				obsNodes.remove(key);
@@ -449,7 +527,13 @@ public class MedicDataExchange {
 		formsNode.put("documentUUID", documentUUID);
 		return formsNode;
 	}
-
+	
+	/**
+	 * Process peer calendar form payload
+	 * 
+	 * @param jNode
+	 * @return
+	 */
 	private ObjectNode processPeerCalenderPayload(ObjectNode jNode) {
 		ObjectNode jsonNode = (ObjectNode) jNode.get("peerCalendarData");
 		ObjectNode formsNode = JsonNodeFactory.instance.objectNode();
@@ -470,7 +554,7 @@ public class MedicDataExchange {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		String encounterDate = jsonNode.path("fields").path("encounter_date").getTextValue() != null
 		        && !jsonNode.path("fields").path("encounter_date").getTextValue().equalsIgnoreCase("") ? formatStringDate(jsonNode
 		        .path("fields").path("encounter_date").getTextValue())
@@ -490,24 +574,24 @@ public class MedicDataExchange {
 		encounter.put("encounter.device_time_zone", "Africa\\/Nairobi");
 		encounter.put("encounter.setup_config_uuid", jsonNode.path("fields").path("encounter_type_uuid").getTextValue());
 		String kemrUuid = jsonNode.path("fields").path("inputs").path("contact").path("kemr_uuid").getTextValue();
-
+		
 		patientNode.put("patient.uuid", StringUtils.isNotBlank(kemrUuid) ? kemrUuid : jsonNode.path("fields").path("inputs")
 		        .path("contact").path("_id").getTextValue());
-
+		
 		List<String> keysToRemove = new ArrayList<String>();
 		ObjectNode jsonObsNodes = null;
 		ObjectNode obsGroupNode = null;
 		String jsonObsGroup = null;
 		if (obsNodes != null) {
-
+			
 			Iterator<Map.Entry<String, JsonNode>> iterator = obsNodes.getFields();
 			while (iterator.hasNext()) {
 				Map.Entry<String, JsonNode> entry = iterator.next();
-
+				
 				if (entry.getValue() == null || "".equals(entry.getValue().toString())) {
 					keysToRemove.add(entry.getKey());
 				}
-
+				
 				if (entry.getKey().contains("MULTISELECT")) {
 					if (entry.getValue() != null && !"".equals(entry.getValue().toString())
 					        && !"".equals(entry.getValue().toString())) {
@@ -516,18 +600,18 @@ public class MedicDataExchange {
 						keysToRemove.add(entry.getKey());
 					}
 				}
-
+				
 				String[] conceptElements = org.apache.commons.lang.StringUtils.split(entry.getKey(), "\\^");
 				int conceptId = Integer.parseInt(conceptElements[0]);
 				Concept concept = Context.getConceptService().getConcept(conceptId);
-
+				
 				if (concept == null) {
 					log.info("Unable to find Concept for Question with ID:: " + conceptId);
-
+					
 				} else {
-
+					
 					if (concept.isSet()) {
-
+						
 						try {
 							if (entry.getValue().isObject()) {
 								jsonObsNodes = (ObjectNode) mapper.readTree(entry.getValue().toString());
@@ -540,12 +624,12 @@ public class MedicDataExchange {
 						catch (IOException e) {
 							e.printStackTrace();
 						}
-
+						
 						if (obsGroupNode != null) {
 							Iterator<Map.Entry<String, JsonNode>> obsGroupIterator = obsGroupNode.getFields();
 							while (obsGroupIterator.hasNext()) {
 								Map.Entry<String, JsonNode> obsGroupEntry = obsGroupIterator.next();
-
+								
 								if (obsGroupEntry.getKey().contains("MULTISELECT")) {
 									if (obsGroupEntry.getValue() != null && !"".equals(obsGroupEntry.getValue().toString())
 									        && !"".equals(obsGroupEntry.getValue().toString())) {
@@ -556,14 +640,14 @@ public class MedicDataExchange {
 								}
 							}
 						}
-
+						
 					}
-
+					
 				}
-
+				
 			}
 		}
-
+		
 		if (keysToRemove.size() > 0) {
 			for (String key : keysToRemove) {
 				obsNodes.remove(key);
@@ -575,7 +659,13 @@ public class MedicDataExchange {
 		formsNode.put("encounter", encounter);
 		return formsNode;
 	}
-
+	
+	/**
+	 * Add contact list to queue data
+	 * 
+	 * @param resultPayload
+	 * @return
+	 */
 	public String addContactListToDataqueue(String resultPayload) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
@@ -599,17 +689,16 @@ public class MedicDataExchange {
 		}
 		return "Queue data for contact created successfully";
 	}
-
-
+	
 	// add relationship
-	public ObjectNode generateRelationshipPayload(String patientRelatedTo, String relationshipTypeName, String relationshipUuid,
-												  String providerId, String systemId, String patientUuid) {
-
+	public ObjectNode generateRelationshipPayload(String patientRelatedTo, String relationshipTypeName,
+	        String relationshipUuid, String providerId, String systemId, String patientUuid) {
+		
 		ObjectNode encounter = JsonNodeFactory.instance.objectNode();
 		ObjectNode relationshipType = JsonNodeFactory.instance.objectNode();
 		ObjectNode relationUuid = JsonNodeFactory.instance.objectNode();
 		ObjectNode formNode = JsonNodeFactory.instance.objectNode();
-
+		
 		relationshipType.put("uuid", relationshipTypeConverter(relationshipTypeName));
 		relationUuid.put("uuid", relationshipUuid);
 		encounter.put("encounter.provider_id_select", providerId != null ? providerId : " ");
@@ -619,55 +708,55 @@ public class MedicDataExchange {
 		formNode.put("relationUuid", relationUuid);
 		formNode.put("uuid", patientRelatedTo);
 		formNode.put("personBUuid", patientUuid);
-
+		
 		return formNode;
-        /*String discriminator = "json-relationship";
-        Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
-        saveMedicDataQueue(payload,locationId,providerId,patientRelatedTo,discriminator,"", systemId);
+		/*String discriminator = "json-relationship";
+		Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
+		saveMedicDataQueue(payload,locationId,providerId,patientRelatedTo,discriminator,"", systemId);
 
-        return "Queue data for relationship created successfully";*/
+		return "Queue data for relationship created successfully";*/
 	}
-
+	
 	/**
 	 * Creates patientContact from registration feature in Afyastat registration
-	 *
+	 * 
 	 * @param payload
 	 * @param providerId
 	 * @param systemId
 	 * @param patientUuid
 	 * @return
 	 */
-	public String createPatientContactFromRelationship(String payload, String providerId, String systemId,
-													   String patientUuid) {
-
+	public String createPatientContactFromRelationship(String payload, String providerId, String systemId, String patientUuid) {
+		
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(payload);
-
-		} catch (IOException e) {
+			
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		if (jsonNode != null) {
 			ObjectNode registrationNode = (ObjectNode) jsonNode.get("registration");
 			return registrationNode.toString();
-            /*String discriminator = "json-createpatientcontactusingrelatioship";
-            Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
-            saveMedicDataQueue(registrationNode.toString(),locationId,providerId,patientUuid,discriminator,"", systemId);
-            return "Queue data for creating contact from relationship created successfully";*/
+			/*String discriminator = "json-createpatientcontactusingrelatioship";
+			Integer locationId = Context.getService(KenyaEmrService.class).getDefaultLocation().getLocationId();
+			saveMedicDataQueue(registrationNode.toString(),locationId,providerId,patientUuid,discriminator,"", systemId);
+			return "Queue data for creating contact from relationship created successfully";*/
 		}
 		return "Could process contact from registration relationship";
-
+		
 	}
-
+	
 	/**
 	 * Adds contact trace to the queue data for processing
-	 *
+	 * 
 	 * @param resultPayload
 	 * @return
 	 */
-
+	
 	public String addContactTraceToDataqueue(String resultPayload) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
@@ -692,7 +781,7 @@ public class MedicDataExchange {
 		}
 		return "Queue data for contact trace created successfully";
 	}
-
+	
 	private ArrayNode handleMultiSelectFields(String listOfItems) {
 		ArrayNode arrNode = JsonNodeFactory.instance.arrayNode();
 		if (listOfItems != null && StringUtils.isNotBlank(listOfItems)) {
@@ -702,10 +791,10 @@ public class MedicDataExchange {
 		}
 		return arrNode;
 	}
-
+	
 	private ArrayNode getIdentifierTypes(ObjectNode jsonNode) {
 		ArrayNode identifierTypes = JsonNodeFactory.instance.arrayNode();
-
+		
 		String chtContactUuid = jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "";
 		ObjectNode assignedCHTReference = assignCHTReferenceUUID(chtContactUuid);
 		identifierTypes.add(assignedCHTReference);
@@ -721,14 +810,14 @@ public class MedicDataExchange {
 			}
 		}
 		return identifierTypes;
-
+		
 	}
-
+	
 	private ObjectNode handleMultipleIdentifiers(String identifierName, String identifierValue) {
 		ArrayNode arrNodeName = JsonNodeFactory.instance.arrayNode();
 		ObjectNode identifiers = JsonNodeFactory.instance.objectNode();
 		if (identifierName != null) {
-
+			
 			for (String s : identifierName.split("_")) {
 				arrNodeName.add(s);
 			}
@@ -746,7 +835,7 @@ public class MedicDataExchange {
 		}
 		return identifiers;
 	}
-
+	
 	private ObjectNode assignCHTReferenceUUID(String chtContactUuid) {
 		ObjectNode identifiers = getJsonNodeFactory().objectNode();
 		identifiers.put("identifier_type_uuid", AfyaStatMetadata._PatientIdentifierType.CHT_RECORD_UUID);
@@ -754,7 +843,7 @@ public class MedicDataExchange {
 		identifiers.put("identifier_type_name", "CHT Record Reference UUID");
 		return identifiers;
 	}
-
+	
 	private String gender(String gender) {
 		String abbriviateGender = null;
 		if (gender.equalsIgnoreCase("male")) {
@@ -765,7 +854,7 @@ public class MedicDataExchange {
 		}
 		return abbriviateGender;
 	}
-
+	
 	private Integer sexConverter(String sex) {
 		Integer sexConcept = null;
 		if (sex.equalsIgnoreCase("male")) {
@@ -776,7 +865,7 @@ public class MedicDataExchange {
 		}
 		return sexConcept;
 	}
-
+	
 	private String formatStringDate(String dob) {
 		String date = null;
 		try {
@@ -789,19 +878,19 @@ public class MedicDataExchange {
 		}
 		return date;
 	}
-
+	
 	private String convertTime(long time) {
 		Date date = new Date(time);
 		return DATE_FORMAT.format(date);
 	}
-
+	
 	private String checkProviderNameExists(String username) {
 		String providerIdentifier = null;
 		User user = null;
 		if (username != null && !username.equalsIgnoreCase("")) {
 			user = Context.getUserService().getUserByUsername(username);
 		}
-
+		
 		Provider unknownProvider = Context.getProviderService().getAllProviders().get(0);
 		User superUser = Context.getUserService().getUser(1);
 		if (user != null) {
@@ -816,15 +905,15 @@ public class MedicDataExchange {
 			Provider p = EmrUtils.getProvider(superUser);
 			if (p != null) {
 				providerIdentifier = p.getIdentifier();
-
+				
 			} else {
 				providerIdentifier = unknownProvider.getIdentifier();
 			}
 		}
-
+		
 		return providerIdentifier;
 	}
-
+	
 	private String confirmUserNameExists(String username) {
 		String systemUserName = null;
 		User user = null;
@@ -834,28 +923,28 @@ public class MedicDataExchange {
 		}
 		if (user != null) {
 			systemUserName = user.getUsername();
-
+			
 		} else {
 			systemUserName = superUser.getUsername();
 		}
 		return systemUserName;
 	}
-
+	
 	/**
 	 * Get a list of contacts for tracing
-	 *
+	 * 
 	 * @return
 	 */
 	public ObjectNode getContacts() {
-
+		
 		JsonNodeFactory factory = getJsonNodeFactory();
 		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
 		ObjectNode responseWrapper = factory.objectNode();
-
+		
 		//AfyastatService afyastatService = Context.getService(AfyastatService.class);
 		//Set<Integer> listedContacts = getListedContacts(lastContactEntry, lastContactId);
 		Map<Integer, ArrayNode> contactMap = new HashMap<Integer, ArrayNode>();
-
+		
 		/**
 		 * commenting this block for now 26th Aug 2020. AO
 		 */
@@ -934,7 +1023,7 @@ public class MedicDataExchange {
 
 		    }
 		}*/
-
+		
 		// Get registered contacts in the EMR. These will potentially have no contacts
 		ArrayNode emptyContactNode = factory.arrayNode();
 		DataResponseObject responseObject = getRegisteredCHTContacts();
@@ -949,27 +1038,27 @@ public class MedicDataExchange {
 				}
 			}
 		}
-
+		
 		// add peers list
 		patientContactNode.addAll(getKpPeerPeerEductorList());
 		responseWrapper.put("docs", patientContactNode);
 		responseWrapper.put("timestamp", responseObject.getTimestamp());
 		return responseWrapper;
 	}
-
+	
 	/**
 	 * Get a list of contacts for tracing
-	 *
+	 * 
 	 * @return
 	 */
 	public ObjectNode getLinkageList() {
-
+		
 		JsonNodeFactory factory = getJsonNodeFactory();
 		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
 		ObjectNode responseWrapper = factory.objectNode();
-
+		
 		Map<Integer, ArrayNode> contactMap = new HashMap<Integer, ArrayNode>();
-
+		
 		// Get registered contacts in the EMR. These will potentially have no contacts
 		ArrayNode emptyContactNode = factory.arrayNode();
 		DataResponseObject dataResponseObject = getClientsTestedPositiveNotLinked();
@@ -983,12 +1072,12 @@ public class MedicDataExchange {
 				}
 			}
 		}
-
+		
 		responseWrapper.put("docs", patientContactNode);
 		responseWrapper.put("timestamp", dataResponseObject.getTimestamp());
 		return responseWrapper;
 	}
-
+	
 	public ArrayNode getKpPeerPeerEductorList() {
 		String PREP_PROGRAM_UUID = "214cad1c-bb62-4d8e-b927-810a046daf62";
 		String KP_PROGRAM_UUID = "7447305a-18a7-11e9-ab14-d663bd873d93";
@@ -999,23 +1088,23 @@ public class MedicDataExchange {
 		ProgramWorkflowService programWorkflowService = Context.getProgramWorkflowService();
 		PersonAttributeType chtPersonAttributeType = personService
 		        .getPersonAttributeTypeByUuid(CHTUSERNAME_ATTRIBUTETYPE_UUID);
-
+		
 		JsonNodeFactory factory = getJsonNodeFactory();
 		ArrayNode peersNode = getJsonNodeFactory().arrayNode();
 		ObjectNode responseWrapper = factory.objectNode();
-
+		
 		Set<Integer> peerEducatorList = getAllPeerEducatorsForKPProgram();
 		if (peerEducatorList.size() > 0) {
-
+			
 			for (Integer ptId : peerEducatorList) {
-
+				
 				ObjectNode peer = factory.objectNode();
 				ObjectNode peerEducator = factory.objectNode();
 				;
-
+				
 				List<PatientProgram> peerEducatorPrepPrograms = programWorkflowService.getPatientPrograms(Context
 				        .getPatientService().getPatient(ptId), prepProgram, null, null, null, null, true);
-
+				
 				List<PatientProgram> peerEducatorHivPrograms = programWorkflowService.getPatientPrograms(Context
 				        .getPatientService().getPatient(ptId), hivProgram, null, null, null, null, true);
 				List<PatientProgram> kpPrograms = programWorkflowService.getPatientPrograms(Context.getPatientService()
@@ -1023,58 +1112,58 @@ public class MedicDataExchange {
 				String peerEducatorHivStatus = getClientHIVStatusCapturedOnKpClinicalEnrollment(ptId);
 				Patient patient = Context.getPatientService().getPatient(ptId);
 				Person p = personService.getPerson(ptId);
-
+				
 				String fullPeerEducatorName = "";
 				String peerEducatorAssignee = "";
 				if (p.getGivenName() != null) {
 					fullPeerEducatorName += p.getGivenName();
 				}
-
+				
 				if (p.getMiddleName() != null) {
 					fullPeerEducatorName += " " + p.getMiddleName();
 				}
-
+				
 				if (p.getFamilyName() != null) {
 					fullPeerEducatorName += " " + p.getFamilyName();
 				}
-
+				
 				if (p.getAttribute(chtPersonAttributeType) != null
 				        && p.getAttribute(chtPersonAttributeType).getValue() != null) {
 					peerEducatorAssignee = p.getAttribute(chtPersonAttributeType).getValue();
-
+					
 				}
 				if (!peerEducatorAssignee.equalsIgnoreCase("")) {
 					peerEducator = buildPatientNode(patient, false, peerEducatorAssignee);
-
+					
 					if (peerEducatorHivPrograms.isEmpty() && peerEducatorPrepPrograms.isEmpty()
 					        && peerEducatorHivStatus.equalsIgnoreCase("NEGATIVE") && kpPrograms.size() > 0) {
 						peerEducator.put("record_purpose", "prep_verification");
 						peersNode.add(peerEducator);
-
+						
 					} else if (peerEducatorHivPrograms.isEmpty() && peerEducatorHivStatus.equalsIgnoreCase("POSITIVE")
 					        && kpPrograms.size() > 0) {
 						peerEducator.put("record_purpose", "treatment_verification");
 						peersNode.add(peerEducator);
-
+						
 					} else {
 						if (kpPrograms.size() > 0) {
 							peerEducator.put("record_purpose", "kp_followup");
-
+							
 							if (peerEducator.size() > 0) {
 								peersNode.add(peerEducator);
 							}
 						}
 					}
 				}
-
+				
 				for (Relationship relationship : Context.getPersonService().getRelationshipsByPerson(
 				    Context.getPatientService().getPatient(ptId))) {
-
+					
 					if (relationship.getRelationshipType().getbIsToA().equals("Peer") && relationship.getEndDate() == null) {
 						List<PatientProgram> peerPrepPrograms = programWorkflowService.getPatientPrograms(Context
 						        .getPatientService().getPatient(relationship.getPersonB().getId()), prepProgram, null, null,
 						    null, null, true);
-
+						
 						List<PatientProgram> peerHivPrograms = programWorkflowService.getPatientPrograms(Context
 						        .getPatientService().getPatient(relationship.getPersonB().getId()), hivProgram, null, null,
 						    null, null, true);
@@ -1084,26 +1173,26 @@ public class MedicDataExchange {
 						String peerHivStatus = getClientHIVStatusCapturedOnKpClinicalEnrollment(relationship.getPersonB()
 						        .getId());
 						Patient peerPatient = Context.getPatientService().getPatient(relationship.getPersonB().getId());
-
+						
 						String fullName = "";
 						String assignee = "";
 						if (relationship.getPersonA().getGivenName() != null) {
 							fullName += relationship.getPersonA().getGivenName();
 						}
-
+						
 						if (relationship.getPersonA().getMiddleName() != null) {
 							fullName += " " + relationship.getPersonA().getMiddleName();
 						}
-
+						
 						if (relationship.getPersonA().getFamilyName() != null) {
 							fullName += " " + relationship.getPersonA().getFamilyName();
 						}
 						if (relationship.getPersonA().getAttribute(chtPersonAttributeType) != null
 						        && relationship.getPersonA().getAttribute(chtPersonAttributeType).getValue() != null) {
 							assignee = relationship.getPersonA().getAttribute(chtPersonAttributeType).getValue();
-
+							
 						}
-
+						
 						if (peerPrepPrograms.isEmpty() && peerHivPrograms.isEmpty()
 						        && peerHivStatus.equalsIgnoreCase("NEGATIVE") && kpPeerPrograms.size() > 0
 						        && !assignee.equalsIgnoreCase("")) {
@@ -1119,24 +1208,23 @@ public class MedicDataExchange {
 								peer.put("record_purpose", "kp_followup");
 							}
 						}
-
+						
 					}
-
+					
 				}
-
+				
 				if (peer.size() > 0) {
 					peersNode.add(peer);
 				}
-
+				
 			}
-
+			
 		}
-
+		
 		return peersNode;
 	}
-
+	
 	/**
-	 *
 	 * @param patientId
 	 * @return
 	 */
@@ -1145,13 +1233,13 @@ public class MedicDataExchange {
 		FormService formService = Context.getFormService();
 		PatientService patientService = Context.getPatientService();
 		Patient patient = patientService.getPatient(patientId);
-
+		
 		String kpClinicalEnrolmentEncounterTypeUuid = "c7f47a56-207b-11e9-ab14-d663bd873d93";
 		String kpClinicalEnrolmentFormUuid = "c7f47cea-207b-11e9-ab14-d663bd873d93";
 		Encounter lastClinicalEnrolmentEncForPeers = EmrUtils.lastEncounter(patient,
 		    encounterService.getEncounterTypeByUuid(kpClinicalEnrolmentEncounterTypeUuid),
 		    formService.getFormByUuid(kpClinicalEnrolmentFormUuid));
-
+		
 		String hivStatus = "";
 		int positiveConcept = 703;
 		int negativeConcept = 664;
@@ -1162,41 +1250,41 @@ public class MedicDataExchange {
 				        && obs.getValueCoded().getConceptId() == positiveConcept) {
 					hivStatus = "POSITIVE";
 				}
-
+				
 				if (obs.getConcept().getConceptId() == hivStatusQuestionConcept
 				        && obs.getValueCoded().getConceptId() == negativeConcept) {
 					hivStatus = "NEGATIVE";
 				}
-
+				
 			}
 		}
-
+		
 		return hivStatus;
-
+		
 	}
-
+	
 	private ObjectNode buildPatientNode(Patient patient, boolean newRegistration, String assignee) {
 		JsonNodeFactory factory = getJsonNodeFactory();
 		ObjectNode objectWrapper = factory.objectNode();
 		ObjectNode fields = factory.objectNode();
-
+		
 		String sex = "";
 		String dateFormat = "yyyy-MM-dd";
-
+		
 		String fullName = "";
-
+		
 		if (patient.getGivenName() != null) {
 			fullName += patient.getGivenName();
 		}
-
+		
 		if (patient.getMiddleName() != null) {
 			fullName += " " + patient.getMiddleName();
 		}
-
+		
 		if (patient.getFamilyName() != null) {
 			fullName += " " + patient.getFamilyName();
 		}
-
+		
 		if (patient.getGender() != null) {
 			if (patient.getGender().equals("M")) {
 				sex = "male";
@@ -1204,7 +1292,7 @@ public class MedicDataExchange {
 				sex = "female";
 			}
 		}
-
+		
 		objectWrapper.put("_id", patient.getUuid());
 		objectWrapper.put("type", "data_record");
 		objectWrapper.put("form", "case_information");
@@ -1215,31 +1303,31 @@ public class MedicDataExchange {
 		}
 		objectWrapper.put("content_type", "xml");
 		objectWrapper.put("reported_date", patient.getDateCreated().getTime());
-
+		
 		PatientIdentifierType chtRefType = Context.getPatientService().getPatientIdentifierTypeByUuid(
 		    AfyaStatMetadata._PatientIdentifierType.CHT_RECORD_UUID);
 		//PatientIdentifier nationalId = patient.getPatientIdentifier(Utils.NATIONAL_ID);
 		PatientIdentifier chtReference = patient.getPatientIdentifier(chtRefType);
-
+		
 		PatientIdentifier parentChtRef = null;
 		String relType = null;
 		String parentName = "";
-
+		
 		// get address
-
+		
 		ObjectNode address = getPatientAddress(patient);
 		String nationality = address.get("NATIONALITY").getTextValue();
-
+		
 		String postalAddress = address.get("POSTAL_ADDRESS").getTextValue();
 		String county = address.get("COUNTY").getTextValue();
 		String subCounty = address.get("SUB_COUNTY").getTextValue();
 		String ward = address.get("WARD").getTextValue();
 		String landMark = address.get("NEAREST_LANDMARK").getTextValue();
-
+		
 		fields.put("needs_sign_off", false);
 		fields.put("case_id", patient.getUuid());
 		fields.put("cht_ref_uuid", chtReference != null ? chtReference.getIdentifier() : "");
-
+		
 		// add information about the client this contact was listed under
 		PatientContact originalContactRecord = htsService.getPatientContactEntryForPatient(patient);
 		if (originalContactRecord != null) {
@@ -1248,24 +1336,24 @@ public class MedicDataExchange {
 			if (originalContactRecord.getRelationType() != null) {
 				relType = getContactRelation(originalContactRecord.getRelationType());
 			}
-
+			
 			if (relatedPatient.getGivenName() != null) {
 				parentName += relatedPatient.getGivenName();
 			}
-
+			
 			if (relatedPatient.getMiddleName() != null) {
 				parentName += " " + relatedPatient.getMiddleName();
 			}
-
+			
 			if (relatedPatient.getFamilyName() != null) {
 				parentName += " " + relatedPatient.getFamilyName();
 			}
 		}
-
+		
 		fields.put("relation_uuid", parentChtRef != null ? parentChtRef.getIdentifier() : "");
 		fields.put("relation_type", relType != null ? relType : "");
 		fields.put("relation_name", StringUtils.isNotBlank(parentName) ? parentName : "");
-
+		
 		fields.put("patient_familyName", patient.getFamilyName() != null ? patient.getFamilyName() : "");
 		fields.put("patient_firstName", patient.getGivenName() != null ? patient.getGivenName() : "");
 		fields.put("patient_middleName", patient.getMiddleName() != null ? patient.getMiddleName() : "");
@@ -1286,8 +1374,8 @@ public class MedicDataExchange {
 		fields.put("patient_landmark", landMark);
 		fields.put("patient_residence", postalAddress);
 		fields.put("patient_nearesthealthcentre", "");
-
-		if(!newRegistration) {
+		
+		if (!newRegistration) {
 			Encounter encounter = Utils.lastEncounter(patient, et, Arrays.asList(initial, retest));
 			if (encounter != null) {
 				fields.put("date_tested_positive", getSimpleDateFormat(dateFormat).format(encounter.getEncounterDatetime()));
@@ -1297,26 +1385,26 @@ public class MedicDataExchange {
 		objectWrapper.put("fields", fields);
 		return objectWrapper;
 	}
-
+	
 	private String getContactRelation(Integer key) {
 		if (key == null) {
 			return "";
 		}
 		Map<Integer, String> options = new HashMap<Integer, String>();
-		options.put(157351,"Injectable drug user");
+		options.put(157351, "Injectable drug user");
 		options.put(970, "Parent");
 		options.put(972, "Sibling");
 		options.put(1528, "Child");
 		options.put(5617, "Spouse");
 		options.put(163565, "Sexual partner");
 		options.put(162221, "Co-wife");
-
+		
 		if (options.keySet().contains(key)) {
 			return options.get(key);
 		}
 		return "";
 	}
-
+	
 	private String getLivingWithPatientOptions(Integer key) {
 		if (key == null) {
 			return "";
@@ -1325,13 +1413,13 @@ public class MedicDataExchange {
 		options.put(1065, "Yes");
 		options.put(1066, "No");
 		options.put(162570, "Declined to Answer");
-
+		
 		if (options.keySet().contains(key)) {
 			return options.get(key);
 		}
 		return "";
 	}
-
+	
 	private String getPreferredPNSApproachOptions(Integer key) {
 		if (key == null) {
 			return "";
@@ -1346,7 +1434,7 @@ public class MedicDataExchange {
 		}
 		return "";
 	}
-
+	
 	private String getMaritalStatusOptions(Integer key) {
 		if (key == null) {
 			return "";
@@ -1362,15 +1450,15 @@ public class MedicDataExchange {
 		}
 		return "";
 	}
-
+	
 	/**
 	 * Retrieves contacts listed under a case and needs follow up Filters out contacts who have been
 	 * registered in the system as person/patient
-	 *
+	 * 
 	 * @return
 	 */
 	protected Set<Integer> getListedContacts(Integer lastContactEntry, Integer lastId) {
-
+		
 		Set<Integer> eligibleList = new HashSet<Integer>();
 		String sql = "";
 		if (lastContactEntry != null && lastContactEntry > 0) {
@@ -1379,9 +1467,9 @@ public class MedicDataExchange {
 		} else {
 			sql = "select id from kenyaemr_hiv_testing_patient_contact where id <= " + lastId
 			        + " and patient_id is null and voided=0 and appointment_date is null;";
-
+			
 		}
-
+		
 		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(sql, true);
 		if (!activeList.isEmpty()) {
 			for (List<Object> res : activeList) {
@@ -1391,27 +1479,27 @@ public class MedicDataExchange {
 		}
 		return eligibleList;
 	}
-
+	
 	/**
 	 * prepares a list of contacts from Afyastat registered in KenyaEMR
+	 * 
 	 * @return
 	 */
 	protected DataResponseObject getRegisteredCHTContacts() {
-
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
-
+		
 		Date fetchDate = null;
 		String effectiveDate = null;
 		GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
-				AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
+		    AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
 		if (globalPropertyObject == null) {
 			System.out.println("Missing required global property: "
-					+ AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
-			return null ;
+			        + AfyaStatMetadata.AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP);
+			return null;
 		}
-
+		
 		if (globalPropertyObject.getValue() != null) {
 			try {
 				String ts = globalPropertyObject.getValue().toString();
@@ -1423,20 +1511,20 @@ public class MedicDataExchange {
 				return null;
 			}
 		}
-
+		
 		Set<Integer> eligibleList = new HashSet<Integer>();
 		StringBuilder q = new StringBuilder();
-
+		
 		q.append("select p.patient_id from patient p inner join kenyaemr_hiv_testing_patient_contact pc on pc.patient_id = p.patient_id and pc.voided = 0"); // we want to cover all contacts
 		//q.append(" where pc.voided = 0 and pc.contact_listing_decline_reason='CHT'"); // we temporarily use CHT to mark contacts from Afystat
-
+		
 		if (effectiveDate != null) {
 			q.append(" where p.date_created >= '" + effectiveDate + "'");
 		}
-
+		
 		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(q.toString(), true);
 		Date nextFetchDate = new Date();
-
+		
 		if (!activeList.isEmpty()) {
 			for (List<Object> res : activeList) {
 				Integer patientId = (Integer) res.get(0);
@@ -1446,19 +1534,19 @@ public class MedicDataExchange {
 		DataResponseObject responseObject = new DataResponseObject(eligibleList, formatter.format(nextFetchDate));
 		return responseObject;
 	}
-
+	
 	/**
 	 * List of peer educators enrolled in Key population program
-	 *
+	 * 
 	 * @return
 	 */
 	protected Set<Integer> getAllPeerEducatorsForKPProgram() {
-
+		
 		Set<Integer> kpList = new HashSet<Integer>();
 		String sql = "select patient_id from patient_program pp\n" + "join program pr on pr.program_id = pp.program_id\n"
 		        + "join relationship r on r.person_a = pp.patient_id\n"
 		        + "where pr.uuid ='7447305a-18a7-11e9-ab14-d663bd873d93'";
-
+		
 		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(sql, true);
 		if (!activeList.isEmpty()) {
 			for (List<Object> res : activeList) {
@@ -1468,27 +1556,27 @@ public class MedicDataExchange {
 		}
 		return kpList;
 	}
-
+	
 	/**
 	 * Gets clients who tested positive and have not been linked to care
+	 * 
 	 * @return
 	 */
 	protected DataResponseObject getClientsTestedPositiveNotLinked() {
-
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
-
+		
 		Date fetchDate = null;
 		String effectiveDate = null;
 		GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
-				AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
+		    AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
 		if (globalPropertyObject == null) {
 			System.out.println("Missing required global property: "
-					+ AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
-			return null ;
+			        + AfyaStatMetadata.AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP);
+			return null;
 		}
-
+		
 		if (globalPropertyObject.getValue() != null) {
 			try {
 				String ts = globalPropertyObject.getValue().toString();
@@ -1500,53 +1588,52 @@ public class MedicDataExchange {
 				return null;
 			}
 		}
-
+		
 		Set<Integer> eligibleList = new HashSet<Integer>();
-
+		
 		StringBuilder q = new StringBuilder();
-
-		String sql = "select\n" +
-				"e.patient_id\n" +
-				"from encounter e\n" +
-				"inner join person p on p.person_id=e.patient_id and p.voided=0\n" +
-				"inner join form f on f.form_id=e.form_id and f.uuid in ('402dc5d7-46da-42d4-b2be-f43ea4ad87b0','b08471f6-0892-4bf7-ab2b-bf79797b8ea4')\n" +
-				"inner join obs o on o.encounter_id = e.encounter_id and o.voided=0 and o.concept_id in (159427) and o.value_coded = 703\n" +
-				"left join patient_identifier pi on pi.patient_id = e.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n" +
-				"left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = e.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n" +
-				"left join (\n" +
-				"(\n" +
-				"select\n" +
-				"e.patient_id\n" +
-				"from encounter e\n" +
-				"inner join person p on p.person_id=e.patient_id and p.voided=0\n" +
-				"inner join form f on f.form_id = e.form_id and f.uuid = '050a7f12-5c52-4cad-8834-863695af335d'\n" +
-				"inner join obs o on o.encounter_id = e.encounter_id and o.concept_id in (162053) and o.voided=0 and o.value_numeric is not null\n" +
-				")\n" +
-				"union \n" +
-				"(\n" +
-				"select\n" +
-				"e.patient_id\n" +
-				"from encounter e\n" +
-				"inner join person p on p.person_id=e.patient_id and p.voided=0\n" +
-				"inner join form f on f.form_id=e.form_id and f.uuid in ('402dc5d7-46da-42d4-b2be-f43ea4ad87b0','b08471f6-0892-4bf7-ab2b-bf79797b8ea4')\n" +
-				"inner join obs o on o.encounter_id = e.encounter_id and o.voided=0 and o.concept_id in (159427) and o.value_coded = 703\n" +
-				"inner join patient_identifier pi on pi.patient_id = e.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='05ee9cf4-7242-4a17-b4d4-00f707265c8a')\n" +
-				")\n" +
-				") l on l.patient_id = e.patient_id\n" +
-				"where l.patient_id is null and c.patient_id is null and pi.patient_id is null";
-
+		
+		String sql = "select\n"
+		        + "e.patient_id\n"
+		        + "from encounter e\n"
+		        + "inner join person p on p.person_id=e.patient_id and p.voided=0\n"
+		        + "inner join form f on f.form_id=e.form_id and f.uuid in ('402dc5d7-46da-42d4-b2be-f43ea4ad87b0','b08471f6-0892-4bf7-ab2b-bf79797b8ea4')\n"
+		        + "inner join obs o on o.encounter_id = e.encounter_id and o.voided=0 and o.concept_id in (159427) and o.value_coded = 703\n"
+		        + "left join patient_identifier pi on pi.patient_id = e.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='c6552b22-f191-4557-a432-1f4df872d473')\n"
+		        + "left join kenyaemr_hiv_testing_patient_contact c on c.patient_id = e.patient_id and c.voided = 0 and c.contact_listing_decline_reason='CHT'\n"
+		        + "left join (\n"
+		        + "(\n"
+		        + "select\n"
+		        + "e.patient_id\n"
+		        + "from encounter e\n"
+		        + "inner join person p on p.person_id=e.patient_id and p.voided=0\n"
+		        + "inner join form f on f.form_id = e.form_id and f.uuid = '050a7f12-5c52-4cad-8834-863695af335d'\n"
+		        + "inner join obs o on o.encounter_id = e.encounter_id and o.concept_id in (162053) and o.voided=0 and o.value_numeric is not null\n"
+		        + ")\n"
+		        + "union \n"
+		        + "(\n"
+		        + "select\n"
+		        + "e.patient_id\n"
+		        + "from encounter e\n"
+		        + "inner join person p on p.person_id=e.patient_id and p.voided=0\n"
+		        + "inner join form f on f.form_id=e.form_id and f.uuid in ('402dc5d7-46da-42d4-b2be-f43ea4ad87b0','b08471f6-0892-4bf7-ab2b-bf79797b8ea4')\n"
+		        + "inner join obs o on o.encounter_id = e.encounter_id and o.voided=0 and o.concept_id in (159427) and o.value_coded = 703\n"
+		        + "inner join patient_identifier pi on pi.patient_id = e.patient_id and pi.identifier_type in (select patient_identifier_type_id from patient_identifier_type where uuid='05ee9cf4-7242-4a17-b4d4-00f707265c8a')\n"
+		        + ")\n" + ") l on l.patient_id = e.patient_id\n"
+		        + "where l.patient_id is null and c.patient_id is null and pi.patient_id is null";
+		
 		q.append(sql);
-
+		
 		if (effectiveDate != null) {
 			q.append(" and e.date_created >= '" + effectiveDate + "'");
 		}
-
+		
 		List<List<Object>> activeList = Context.getAdministrationService().executeSQL(q.toString(), true);
-
+		
 		Date nextFetchDate = new Date();
 		globalPropertyObject.setPropertyValue(formatter.format(nextFetchDate));
 		Context.getAdministrationService().saveGlobalProperty(globalPropertyObject);
-
+		
 		if (!activeList.isEmpty()) {
 			for (List<Object> res : activeList) {
 				Integer patientId = (Integer) res.get(0);
@@ -1556,19 +1643,20 @@ public class MedicDataExchange {
 		DataResponseObject responseObject = new DataResponseObject(eligibleList, formatter.format(nextFetchDate));
 		return responseObject;
 	}
-
+	
 	private JsonNodeFactory getJsonNodeFactory() {
 		final JsonNodeFactory factory = JsonNodeFactory.instance;
 		return factory;
 	}
-
+	
 	/**
 	 * Processes demographics data from registration
+	 * 
 	 * @param jNode
 	 * @return
 	 */
 	private ObjectNode processDemographicUpdatePayload(ObjectNode jNode) {
-
+		
 		ObjectNode jsonNode = (ObjectNode) jNode.get("demographicUpdate");
 		ObjectNode patientNode = getJsonNodeFactory().objectNode();
 		ObjectNode demographicsUpdateNode = getJsonNodeFactory().objectNode();
@@ -1577,7 +1665,7 @@ public class MedicDataExchange {
 		ObjectNode discriminator = getJsonNodeFactory().objectNode();
 		ObjectNode encounter = getJsonNodeFactory().objectNode();
 		ObjectNode demographicUpdateWrapper = getJsonNodeFactory().objectNode();
-
+		
 		String patientDobKnown = jsonNode.get("patient_dobKnown") != null ? jsonNode.get("patient_dobKnown").getTextValue()
 		        : "";
 		String dateOfBirth = null;
@@ -1586,16 +1674,16 @@ public class MedicDataExchange {
 			dateOfBirth = jsonNode.get("patient_birthDate").getTextValue();
 			patientNode.put("patient.birthdate_estimated", "true");
 			patientNode.put("patient.birth_date", formatStringDate(dateOfBirth));
-
+			
 		}
-
+		
 		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1065_Yes_99DCT")
 		        && jsonNode.get("patient_dateOfBirth") != null) {
 			dateOfBirth = jsonNode.get("patient_dateOfBirth").getTextValue();
 			patientNode.put("patient.birth_date", formatStringDate(dateOfBirth));
 		}
 		String patientGender = jsonNode.get("patient_sex") != null ? jsonNode.get("patient_sex").getTextValue() : "";
-
+		
 		patientNode.put("patient.uuid", jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "");
 		patientNode.put("patient.family_name",
 		    jsonNode.get("patient_familyName") != null ? jsonNode.get("patient_familyName").getTextValue() : "");
@@ -1604,21 +1692,21 @@ public class MedicDataExchange {
 		patientNode.put("patient.middle_name",
 		    jsonNode.get("patient_middleName") != null ? jsonNode.get("patient_middleName").getTextValue() : "");
 		patientNode.put("patient.sex", gender(patientGender));
-
+		
 		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1066_No_99DCT")
 		        && jsonNode.get("patient_birthDate") != null) {
 			dateOfBirth = jsonNode.get("patient_birthDate").getTextValue();
 			demographicsUpdateNode.put("demographicsupdate.birthdate_estimated", "true");
 			demographicsUpdateNode.put("demographicsupdate.birth_date", formatStringDate(dateOfBirth));
-
+			
 		}
-
+		
 		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1065_Yes_99DCT")
 		        && jsonNode.get("patient_dateOfBirth") != null) {
 			dateOfBirth = jsonNode.get("patient_dateOfBirth").getTextValue();
 			demographicsUpdateNode.put("demographicsupdate.birth_date", formatStringDate(dateOfBirth));
 		}
-
+		
 		demographicsUpdateNode.put("demographicsupdate.temporal_patient_uuid",
 		    jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "");
 		demographicsUpdateNode.put("demographicsupdate.family_name", jsonNode.get("patient_familyName") != null ? jsonNode
@@ -1665,7 +1753,7 @@ public class MedicDataExchange {
 		    jsonNode.get("patient_nextOfKinPostaladdress") != null ? jsonNode.get("patient_nextOfKinPostaladdress")
 		            .getTextValue() : "");
 		demographicsUpdateNode.put("demographicsupdate.otheridentifier", getIdentifierTypes(jsonNode));
-
+		
 		obs.put(
 		    "1054^CIVIL STATUS^99DCT",
 		    jsonNode.get("patient_marital_status") != null
@@ -1681,7 +1769,7 @@ public class MedicDataExchange {
 		    jsonNode.get("patient_education_level") != null
 		            && !jsonNode.get("patient_education_level").getTextValue().equalsIgnoreCase("") ? jsonNode
 		            .get("patient_education_level").getTextValue().replace("_", "^").substring(1) : "");
-
+		
 		tmp.put("tmp.birthdate_type", "age");
 		tmp.put("tmp.age_in_years", jsonNode.get("patient_ageYears") != null ? jsonNode.get("patient_ageYears")
 		        .getTextValue() : "");
@@ -1690,7 +1778,7 @@ public class MedicDataExchange {
 		        .getTextValue() : "";
 		String providerId = checkProviderNameExists(creator);
 		String systemId = confirmUserNameExists(creator);
-
+		
 		encounter.put("encounter.location_id", locationId != null ? locationId.toString() : null);
 		encounter.put("encounter.provider_id_select", providerId != null ? providerId : " ");
 		encounter.put("encounter.provider_id", providerId != null ? providerId : " ");
@@ -1699,7 +1787,7 @@ public class MedicDataExchange {
 		encounter.put("encounter.user_system_id", systemId);
 		encounter.put("encounter.device_time_zone", "Africa\\/Nairobi");
 		encounter.put("encounter.setup_config_uuid", "2107eab5-5b3a-4de8-9e02-9d97bce635d2");
-
+		
 		demographicUpdateWrapper.put("patient", patientNode);
 		demographicUpdateWrapper.put("demographicsupdate", demographicsUpdateNode);
 		demographicUpdateWrapper.put("observation", obs);
@@ -1708,14 +1796,14 @@ public class MedicDataExchange {
 		demographicUpdateWrapper.put("encounter", encounter);
 		return demographicUpdateWrapper;
 	}
-
+	
 	public static SimpleDateFormat getSimpleDateFormat(String pattern) {
 		return new SimpleDateFormat(pattern);
 	}
-
+	
 	/**
 	 * Returns a patient's address
-	 *
+	 * 
 	 * @param patient
 	 * @return
 	 */
@@ -1729,7 +1817,7 @@ public class MedicDataExchange {
 		String sub_county = "";
 		String ward = "";
 		String landMark = "";
-
+		
 		for (PersonAddress address : addresses) {
 			if (address.getAddress1() != null) {
 				postalAddress = address.getAddress1();
@@ -1737,15 +1825,15 @@ public class MedicDataExchange {
 			if (address.getCountry() != null) {
 				nationality = address.getCountry() != null ? address.getCountry() : "";
 			}
-
+			
 			if (address.getCountyDistrict() != null) {
 				county = address.getCountyDistrict() != null ? address.getCountyDistrict() : "";
 			}
-
+			
 			if (address.getStateProvince() != null) {
 				sub_county = address.getStateProvince() != null ? address.getStateProvince() : "";
 			}
-
+			
 			if (address.getAddress4() != null) {
 				ward = address.getAddress4() != null ? address.getAddress4() : "";
 			}
@@ -1753,79 +1841,81 @@ public class MedicDataExchange {
 				landMark = address.getAddress2() != null ? address.getAddress2() : "";
 			}
 		}
-
+		
 		addressNode.put("NATIONALITY", nationality);
 		addressNode.put("COUNTY", county);
 		addressNode.put("SUB_COUNTY", sub_county);
 		addressNode.put("WARD", ward);
 		addressNode.put("NEAREST_LANDMARK", landMark);
 		addressNode.put("POSTAL_ADDRESS", postalAddress);
-
+		
 		return addressNode;
 	}
-
+	
 	private String relationshipTypeConverter(String relType) {
 		String relTypeUuid = null;
-		if(relType.equalsIgnoreCase("partner")){
-			relTypeUuid ="007b765f-6725-4ae9-afee-9966302bace4";
-		}else if(relType.equalsIgnoreCase("parent") || relType.equalsIgnoreCase("mother") || relType.equalsIgnoreCase("father")){
-			relTypeUuid ="8d91a210-c2cc-11de-8d13-0010c6dffd0f";
-		}else if(relType.equalsIgnoreCase("sibling")){
-			relTypeUuid ="8d91a01c-c2cc-11de-8d13-0010c6dffd0f";
-		}else if(relType.equalsIgnoreCase("child")){
-			relTypeUuid ="8d91a210-c2cc-11de-8d13-0010c6dffd0f";
-		}else if(relType.equalsIgnoreCase("spouse")){
-			relTypeUuid ="d6895098-5d8d-11e3-94ee-b35a4132a5e3";
-		}else if(relType.equalsIgnoreCase("co-wife")){
-			relTypeUuid ="2ac0d501-eadc-4624-b982-563c70035d46";
-		}else if(relType.equalsIgnoreCase("Injectable drug user")){
-			relTypeUuid ="58da0d1e-9c89-42e9-9412-275cef1e0429";
-		} else if(relType.equalsIgnoreCase("guardian") ) {
-			relTypeUuid ="5f115f62-68b7-11e3-94ee-6bef9086de92";
-
+		if (relType.equalsIgnoreCase("partner")) {
+			relTypeUuid = "007b765f-6725-4ae9-afee-9966302bace4";
+		} else if (relType.equalsIgnoreCase("parent") || relType.equalsIgnoreCase("mother")
+		        || relType.equalsIgnoreCase("father")) {
+			relTypeUuid = "8d91a210-c2cc-11de-8d13-0010c6dffd0f";
+		} else if (relType.equalsIgnoreCase("sibling")) {
+			relTypeUuid = "8d91a01c-c2cc-11de-8d13-0010c6dffd0f";
+		} else if (relType.equalsIgnoreCase("child")) {
+			relTypeUuid = "8d91a210-c2cc-11de-8d13-0010c6dffd0f";
+		} else if (relType.equalsIgnoreCase("spouse")) {
+			relTypeUuid = "d6895098-5d8d-11e3-94ee-b35a4132a5e3";
+		} else if (relType.equalsIgnoreCase("co-wife")) {
+			relTypeUuid = "2ac0d501-eadc-4624-b982-563c70035d46";
+		} else if (relType.equalsIgnoreCase("Injectable drug user")) {
+			relTypeUuid = "58da0d1e-9c89-42e9-9412-275cef1e0429";
+		} else if (relType.equalsIgnoreCase("guardian")) {
+			relTypeUuid = "5f115f62-68b7-11e3-94ee-6bef9086de92";
+			
 		}
 		return relTypeUuid;
 	}
-
+	
 	/**
 	 * get a patient's phone contact
-	 *
+	 * 
 	 * @param patient
 	 * @return
 	 */
 	public String getPersonAttributeByType(Patient patient, PersonAttributeType phoneNumberAttrType) {
 		return patient.getAttribute(phoneNumberAttrType) != null ? patient.getAttribute(phoneNumberAttrType).getValue() : "";
 	}
-
-
+	
 	/**
-	 * A class used to hold data from a query process.
-	 * The global property is set to the current time and should only be saved at the end of the process
+	 * A class used to hold data from a query process. The global property is set to the current
+	 * time and should only be saved at the end of the process
 	 */
 	public class DataResponseObject {
+		
 		private Set<Integer> patientList;
+		
 		private String timestamp;
-
+		
 		public DataResponseObject(Set<Integer> patientList, String timestamp) {
 			this.patientList = patientList;
 			this.timestamp = timestamp;
 		}
-
+		
 		public Set<Integer> getPatientList() {
 			return patientList;
 		}
-
+		
 		public void setPatientList(Set<Integer> patientList) {
 			this.patientList = patientList;
 		}
-
+		
 		public String getTimestamp() {
 			return timestamp;
 		}
-
+		
 		public void setTimestamp(String timestamp) {
 			this.timestamp = timestamp;
 		}
 	}
-
+	
 }
