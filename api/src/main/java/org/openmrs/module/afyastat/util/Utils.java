@@ -1,10 +1,12 @@
 package org.openmrs.module.afyastat.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.afyastat.api.service.InfoService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -93,4 +95,30 @@ public class Utils {
 		return encounters.size() > 0 ? encounters.get(encounters.size() - 1) : null;
 	}
 	
+	/**
+	 * Check in queue, error, and archive data for the uuid
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	public static boolean afyastatFormAlreadyExists(String uuid) {
+		InfoService infoService = Context.getService(InfoService.class);
+		
+		if (StringUtils.isBlank(uuid)) {
+			return false;
+		}
+		
+		if (infoService.getQueueDataByUuid(uuid) != null) {
+			return true;
+		}
+		
+		if (infoService.getArchiveDataByUuid(uuid) != null) {
+			return true;
+		}
+		
+		if (infoService.getErrorDataByUuid(uuid) != null) {
+			return true;
+		}
+		return false;
+	}
 }

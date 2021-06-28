@@ -105,6 +105,7 @@ public class QueueInfoProcessor {
 	
 	private void createArchiveData(final AfyaStatQueueData queueData, final String message) {
 		ArchiveInfo archiveInfo = new ArchiveInfo(queueData);
+		archiveInfo.setUuid(queueData.getUuid()); // this is a hack to multiple forms pushed from afyastat
 		archiveInfo.setMessage(message);
 		archiveInfo.setDateArchived(new Date());
 		Context.getService(InfoService.class).saveArchiveData(archiveInfo);
@@ -112,6 +113,7 @@ public class QueueInfoProcessor {
 	
 	private void createErrorData(final AfyaStatQueueData queueData, StreamProcessorException exception) {
 		ErrorInfo errorInfo = new ErrorInfo(queueData);
+		errorInfo.setUuid(queueData.getUuid()); // this is a hack to multiple forms pushed from afyastat
 		errorInfo.setDateProcessed(new Date());
 		Set errorMessage = new HashSet();
 		for (Exception e : exception.getAllException()) {
