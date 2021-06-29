@@ -401,7 +401,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		visit.setLocation(encounter.getLocation());
 		visit.setPatient(encounter.getPatient());
 		visit.setVisitType(Context.getVisitService().getVisitTypeByUuid("3371a4d4-f66f-4454-a86d-92c7b3da990c"));
-
+		
 		Context.getVisitService().saveVisit(visit);
 		setVisitOfEncounter(visit, encounter);
 	}

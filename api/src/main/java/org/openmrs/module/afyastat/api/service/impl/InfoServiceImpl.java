@@ -572,7 +572,9 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 		errorInfo.setPayload(payload);
 		String submittedPatientUuid = errorInfo.getPatientUuid();
 		
-		errorInfo.setDiscriminator("json-demographics-update");
+		//errorInfo.setDiscriminator("json-demographics-update");
+		errorInfo.setVoided(true);
+		errorInfo.setVoidReason("Merged with an existing registration");
 		
 		errorInfo = this.saveErrorData(errorInfo);
 		
