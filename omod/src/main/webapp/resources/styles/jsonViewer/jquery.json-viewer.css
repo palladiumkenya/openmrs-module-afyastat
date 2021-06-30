@@ -31,7 +31,7 @@ ul.json-dict, ol.json-array {
   color: #1e90ff;
 }
 .json-property {
-  color: #4fdee5;
+  color: brown;
   line-height: 160%;
   font-weight: 500;
 }
