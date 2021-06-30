@@ -5,6 +5,11 @@
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
+    ui.includeJavascript("afyastat", "jsonViewer/jquery.json-editor.min.js")
+
+    ui.includeJavascript("kenyaemrorderentry", "bootstrap.min.js")
+    ui.includeCss("kenyaemrorderentry", "bootstrap.min.css")
+    ui.includeCss("afyastat", "jsonViewer/jquery.json-viewer.css")
 %>
 <style>
 .simple-table {
@@ -82,7 +87,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     background-color: cadetblue;
     color: white;
 }
-.editButton {
+.mergeButton {
     background-color: cadetblue;
     color: white;
 }
@@ -90,7 +95,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     background-color: steelblue;
     color: white;
 }
-.editButton:hover {
+.mergeButton:hover {
     background-color: steelblue;
     color: white;
 }
@@ -100,6 +105,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     padding: 10px;
     max-width: 660px;
     font-weight: bold;
+}
+@media screen and (min-width: 676px) {
+    .modal-dialog {
+        max-width: 600px; /* New width for default modal */
+    }
 }
 </style>
 
@@ -182,7 +192,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             </table>
         </div>
         <div class="ke-tab" data-tabid="error_queue">
-            <table cellspacing="0" cellpadding="0" width="100%">
+            <table id="error-queue-data" cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                     <td style="width: 99%; vertical-align: top">
                         <div class="ke-panel-frame">
@@ -240,6 +250,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         </div>
     </div>
 
+    <div class="modal fade" id="showPayloadDialog" tabindex="-1" role="dialog" aria-labelledby="dateModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <h5 class="modal-title" id="dateVlModalCenterTitle">Payload</h5>
+                    <button type="button" class="close closeDialog" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <span style="color: firebrick" id="msgBox"></span>
+                    <pre id="json-display"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
@@ -310,6 +334,25 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             });
         }
 
+        jq(document).on('click','.mergeButton',function(){
+            ui.navigate('afyastat', 'mergePatients', { queueUuid: jq(this).val(),  returnUrl: location.href });
+        });
+
+        jq(document).on('click','.viewButton',function () {
+            // clear previously entered values
+
+
+            var queueUuid = jq(this).val();
+
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
+                jq('#json-display').jsonViewer(JSON.parse(result.payload),{
+                    withQuotes:true,
+                    rootCollapsable:true
+                });
+            });
+
+            jq('#showPayloadDialog').modal('show');
+        });
     });
 
     function generate_table(displayRecords, displayObject, tableId) {
@@ -335,6 +378,25 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 tr.append("<td>" + displayRecords[i].message + "</td>");
             }
             tr.append("<td>" + displayRecords[i].provider + "</td>");
+
+            var actionTd = jq('<td/>');
+
+            var btnView = jq('<button/>', {
+                text: 'View Payload',
+                class: 'viewButton',
+                value: displayRecords[i].uuid
+            });
+            actionTd.append(btnView);
+            tr.append(actionTd);
+            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration') {
+                var btnMerge = jq('<button/>', {
+                    text: 'Merge',
+                    class: 'mergeButton',
+                    value: displayRecords[i].uuid
+                });
+                actionTd.append(btnMerge);
+                tr.append(actionTd);
+            }
 
             displayObject.append(tr);
         }
