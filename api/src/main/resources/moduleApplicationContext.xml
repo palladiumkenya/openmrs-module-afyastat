@@ -192,7 +192,7 @@
         <constructor-arg value="kenyaemr.afyastat.home" />
         <constructor-arg value="Afyastat" />
         <constructor-arg value="afyastat/afyastatHome.page" />
-        <constructor-arg value="afyastat:Afya_stat_110px.png" />
+        <constructor-arg value="afyastat:Afya_stat_96_83px.png" />
         <constructor-arg value="360" />
     </bean>
 </beans>

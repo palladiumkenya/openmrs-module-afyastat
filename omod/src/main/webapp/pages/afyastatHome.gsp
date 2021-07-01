@@ -151,7 +151,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
             <div class="ke-tabmenu-item" data-tabid="error_queue">Error queue</div>
 
-            <div class="ke-tabmenu-item" data-tabid="duplicate_registration">Registration in error</div>
         </div>
 
         <div class="ke-tab" data-tabid="queue_data">
@@ -225,25 +224,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                     </fieldset>
                             </div>
                         </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="ke-tab" data-tabid="duplicate_registration">
-            <table cellspacing="0" cellpadding="0" width="100%">
-                <tr>
-                    <td style="width: 99%; vertical-align: top">
-                        <div class="ke-panel-frame">
-                            <div class="ke-panel-heading">Registration in error</div>
-
-                            <div class="ke-panel-content">
-                                <table class="alignLeft">
-
-
-                                </table>
-                            </div>
-                        </div>
-
                     </td>
                 </tr>
             </table>
