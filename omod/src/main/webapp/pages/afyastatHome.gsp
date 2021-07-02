@@ -1,7 +1,7 @@
 <%
     ui.decorateWith("kenyaemr", "standardPage", [layout: "sidebar"])
     def menuItems = [
-            [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to manifest list", href: ui.pageLink("kenyaemrorderentry", "orders/labOrdersManifestHome")]
+            [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to home", href: ui.pageLink("kenyaemr", "userHome")]
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
