@@ -40,23 +40,6 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 		Context.openSession();
 		try {
 			
-<<<<<<< HEAD
-			if (!Context.isAuthenticated()) {
-				authenticate();
-			}
-			
-=======
-			GlobalProperty lastPatientEntry = Context.getAdministrationService().getGlobalPropertyObject(
-			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_ENTRY);
-			String lastContactRegistrationIdsql = "select max(patient_id) last_id from kenyaemr_hiv_testing_patient_contact where voided=0 and patient_id is not null and contact_listing_decline_reason='CHT';";
-			List<List<Object>> lastContactRegistrationRs = Context.getAdministrationService().executeSQL(
-			    lastContactRegistrationIdsql, true);
-			Integer lastPatientId = (Integer) lastContactRegistrationRs.get(0).get(0);
-			lastPatientId = lastPatientId != null ? lastPatientId : 0;
-			
-			GlobalProperty lastContactEntry = Context.getAdministrationService().getGlobalPropertyObject(
-			    AfyaStatMetadata.MEDIC_MOBILE_LAST_PATIENT_CONTACT_ENTRY);
->>>>>>> 20a23cb... Update module to support 2.x upgrade
 			GlobalProperty chtServerName = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_SERVER_URL);
 			GlobalProperty chtUser = Context.getAdministrationService().getGlobalPropertyObject(
@@ -143,5 +126,4 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 			throw new IllegalArgumentException("Afyastat POST contact list task could not be executed!", e);
 		}
 	}
-	
 }

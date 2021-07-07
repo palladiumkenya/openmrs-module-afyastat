@@ -43,10 +43,6 @@ public class PushLinkageListToMedicMobileTask extends AbstractTask {
 		Context.openSession();
 		try {
 			
-			if (!Context.isAuthenticated()) {
-				authenticate();
-			}
-			
 			GlobalProperty chtServerName = Context.getAdministrationService().getGlobalPropertyObject(
 			    AfyaStatMetadata.MEDIC_MOBILE_SERVER_URL);
 			GlobalProperty chtUser = Context.getAdministrationService().getGlobalPropertyObject(
