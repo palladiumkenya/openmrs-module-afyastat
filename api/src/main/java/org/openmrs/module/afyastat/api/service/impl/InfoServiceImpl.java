@@ -14,28 +14,34 @@
 package org.openmrs.module.afyastat.api.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.*;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
-import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
-import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
+import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
+import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
 import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
+import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
 import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
-import org.openmrs.module.afyastat.model.*;
+import org.openmrs.module.afyastat.model.AfyaDataSource;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
+import org.openmrs.module.afyastat.model.ArchiveInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
+import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
+import org.openmrs.module.afyastat.model.FormInfoStatus;
+import org.openmrs.module.afyastat.model.RegistrationInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.util.HandlerUtil;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
