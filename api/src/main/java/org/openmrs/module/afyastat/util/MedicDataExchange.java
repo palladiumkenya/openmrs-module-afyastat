@@ -1027,6 +1027,9 @@ public class MedicDataExchange {
 		// Get registered contacts in the EMR. These will potentially have no contacts
 		ArrayNode emptyContactNode = factory.arrayNode();
 		DataResponseObject responseObject = getRegisteredCHTContacts();
+		if (responseObject == null) {
+			return null; // just notify the calling task
+		}
 		Set<Integer> patientList = responseObject.getPatientList();
 		if (patientList.size() > 0) {
 			for (Integer ptId : patientList) {
@@ -1062,6 +1065,9 @@ public class MedicDataExchange {
 		// Get registered contacts in the EMR. These will potentially have no contacts
 		ArrayNode emptyContactNode = factory.arrayNode();
 		DataResponseObject dataResponseObject = getClientsTestedPositiveNotLinked();
+		if (dataResponseObject == null) {
+			return null; // just notify the calling task
+		}
 		Set<Integer> patientList = dataResponseObject.getPatientList();
 		if (patientList.size() > 0) {
 			for (Integer ptId : patientList) {
@@ -1506,7 +1512,9 @@ public class MedicDataExchange {
 				if (StringUtils.isNotBlank(ts)) {
 					fetchDate = formatter.parse(ts);
 				}
-				effectiveDate = sd.format(fetchDate);
+				if (fetchDate != null) {
+					effectiveDate = sd.format(fetchDate);
+				}
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
@@ -1520,7 +1528,7 @@ public class MedicDataExchange {
 		q.append("select p.patient_id from patient p inner join kenyaemr_hiv_testing_patient_contact pc on pc.patient_id = p.patient_id and pc.voided = 0"); // we want to cover all contacts
 		//q.append(" where pc.voided = 0 and pc.contact_listing_decline_reason='CHT'"); // we temporarily use CHT to mark contacts from Afystat
 		
-		if (effectiveDate != null) {
+		if (StringUtils.isNotBlank(effectiveDate)) {
 			q.append(" where p.date_created >= '" + effectiveDate + "'");
 		}
 		
@@ -1585,7 +1593,9 @@ public class MedicDataExchange {
 				if (StringUtils.isNotBlank(ts)) {
 					fetchDate = formatter.parse(ts);
 				}
-				effectiveDate = sd.format(fetchDate);
+				if (fetchDate != null) {
+					effectiveDate = sd.format(fetchDate);
+				}
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
@@ -1628,7 +1638,7 @@ public class MedicDataExchange {
 		
 		q.append(sql);
 		
-		if (effectiveDate != null) {
+		if (StringUtils.isNotBlank(effectiveDate)) {
 			q.append(" and e.date_created >= '" + effectiveDate + "'");
 		}
 		

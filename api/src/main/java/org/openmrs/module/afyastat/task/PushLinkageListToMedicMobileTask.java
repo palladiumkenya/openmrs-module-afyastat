@@ -73,6 +73,13 @@ public class PushLinkageListToMedicMobileTask extends AbstractTask {
 			
 			// check if there are item(s) to post
 			ObjectNode positiveNotLinkedWrapper = e.getLinkageList();
+			
+			if (positiveNotLinkedWrapper == null) {
+				System.out
+				        .println("Could not fetch linkage clients from the database. Please contact your system administrator for more troubleshooting");
+				log.error("Could not fetch linkage clients from the database. Please contact your system administrator for more troubleshooting");
+				return;
+			}
 			ArrayNode docs = (ArrayNode) positiveNotLinkedWrapper.get("docs");
 			String nextFetchTimestamp = positiveNotLinkedWrapper.get("timestamp").getTextValue();
 			
