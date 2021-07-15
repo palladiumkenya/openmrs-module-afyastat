@@ -368,7 +368,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             });
             actionTd.append(btnView);
             tr.append(actionTd);
-            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration') {
+            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
                 var btnMerge = jq('<button/>', {
                     text: 'Merge',
                     class: 'mergeButton',

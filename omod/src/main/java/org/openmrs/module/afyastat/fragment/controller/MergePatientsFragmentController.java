@@ -78,8 +78,6 @@ public class MergePatientsFragmentController {
 		ui.validate(form, form, null);
 		
 		try {
-			System.out.println("Patient 2: " + form.getPatient2().getPatientId());
-			System.out.println("Record UUID: " + form.getQueueUuid());
 			InfoService service = Context.getService(InfoService.class);
 			service.mergeDuplicatePatient(form.getQueueUuid(), form.getPatient2().getUuid(),
 			    service.getErrorDataByUuid(form.queueUuid).getPayload());
