@@ -14,27 +14,34 @@
 package org.openmrs.module.afyastat.api.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Person;
-import org.openmrs.Role;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
-import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
-import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
+import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
+import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
 import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
+import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
-import org.openmrs.module.afyastat.model.*;
+import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
+import org.openmrs.module.afyastat.model.AfyaDataSource;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
+import org.openmrs.module.afyastat.model.ArchiveInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
+import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
+import org.openmrs.module.afyastat.model.FormInfoStatus;
+import org.openmrs.module.afyastat.model.RegistrationInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
+import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.util.HandlerUtil;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -572,7 +579,7 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 		errorInfo.setPayload(payload);
 		String submittedPatientUuid = errorInfo.getPatientUuid();
 		
-		//errorInfo.setDiscriminator("json-demographics-update");
+		errorInfo.setDiscriminator("json-demographics-update");
 		errorInfo.setVoided(true);
 		errorInfo.setVoidReason("Merged with an existing registration");
 		
@@ -580,9 +587,13 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 		
 		registerTemporaryUuid(submittedPatientUuid, existingPatientUuid);
 		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData(errorInfo);
-		afyaStatQueueData = this.saveQueueData(afyaStatQueueData);
+		//afyaStatQueueData = this.saveQueueData(afyaStatQueueData);
 		this.purgeErrorData(errorInfo);
-		requeued.add(afyaStatQueueData);
+		//requeued.add(afyaStatQueueData);
+		
+		// add CHT ref to the existing patient if at all it doesn't exist
+		Patient existingPatient = Context.getPatientService().getPatientByUuid(existingPatientUuid);
+		addChtReferenceToExistingPatient(existingPatient, submittedPatientUuid);
 		
 		// Fetch all ErrorData associated with the patient UUID (the one determined to be of a duplicate patient).
 		int countOfErrors = this.countErrorData(submittedPatientUuid).intValue();
@@ -593,7 +604,34 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 			this.purgeErrorData(errorData1);
 			requeued.add(afyaStatQueueData);
 		}
+		
 		return requeued;
+	}
+	
+	/**
+	 * Add CHT reference to a client
+	 * 
+	 * @param existingPatient
+	 * @param submittedPatientUuid
+	 */
+	private void addChtReferenceToExistingPatient(Patient existingPatient, String submittedPatientUuid) {
+		PatientIdentifierType chtPit = Context.getPatientService().getPatientIdentifierTypeByUuid(
+		    AfyaStatMetadata._PatientIdentifierType.CHT_RECORD_UUID);
+		// check if patient already has CHT ref and prefer it over the new one
+		
+		for (PatientIdentifier identifier : existingPatient.getActiveIdentifiers()) {
+			if (identifier.getIdentifierType().equals(chtPit)) { // the patient already has a CHT ref. Do nothing
+				return;
+			}
+		}
+		PatientIdentifier chtRef = new PatientIdentifier();
+		chtRef.setIdentifierType(chtPit);
+		chtRef.setIdentifier(submittedPatientUuid);
+		chtRef.setLocation(Context.getService(KenyaEmrService.class).getDefaultLocation());
+		chtRef.setPatient(existingPatient);
+		//existingPatient.addIdentifier(chtRef);
+		Context.getPatientService().savePatientIdentifier(chtRef);
+		
 	}
 	
 	private void registerTemporaryUuid(final String temporaryUuid, final String permanentUuid) {
