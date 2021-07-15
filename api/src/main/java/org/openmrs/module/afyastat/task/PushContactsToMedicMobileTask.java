@@ -70,6 +70,12 @@ public class PushContactsToMedicMobileTask extends AbstractTask {
 			
 			// check if there are item(s) to post
 			ObjectNode contactWrapper = e.getContacts();
+			if (contactWrapper == null) {
+				System.out
+				        .println("Could not fetch registered contacts from the database. Please contact your system administrator for more troubleshooting");
+				log.error("Could not fetch registered contacts from the database. Please contact your system administrator for more troubleshooting");
+				return;
+			}
 			ArrayNode docs = (ArrayNode) contactWrapper.get("docs");
 			String nextFetchTimestamp = contactWrapper.get("timestamp").getTextValue();
 			
