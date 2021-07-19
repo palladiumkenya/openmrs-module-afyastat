@@ -10,7 +10,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>afyastat</artifactId>
-	<version>1.0.0</version>
+	<version>1.2.0</version>
 	<packaging>pom</packaging>
 	<name>Afyastat</name>
 	<description>A server side module for Afyastat mobile application</description>
@@ -42,10 +42,10 @@
 		<reportingVersion>1.18.0</reportingVersion>
 		<serializationxstreamVersion>0.2.14</serializationxstreamVersion>
 		<uiframeworkVersion>3.15.0</uiframeworkVersion>
-		<kenyaemrVersion>17.4.0</kenyaemrVersion>
-		<kenyacoreVersion>2.2</kenyacoreVersion>
-		<kenyauiVersion>2.0.3</kenyauiVersion>
-		<hivtestingservicesVersion>1.1.6</hivtestingservicesVersion>
+		<kenyaemrVersion>18.0.0</kenyaemrVersion>
+		<kenyacoreVersion>3.0.0</kenyacoreVersion>
+		<kenyauiVersion>3.0.0</kenyauiVersion>
+		<hivtestingservicesVersion>1.2.0</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
 		<jacksonVersion>2.10.1</jacksonVersion>
