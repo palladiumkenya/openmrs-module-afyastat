@@ -1503,7 +1503,7 @@ public class MedicDataExchange {
 		if (globalPropertyObject.getValue() != null) {
 			try {
 				String ts = globalPropertyObject.getValue().toString();
-				if(StringUtils.isNotBlank(ts)) {
+				if (StringUtils.isNotBlank(ts)) {
 					fetchDate = formatter.parse(ts);
 				}
 				effectiveDate = sd.format(fetchDate);
@@ -1582,7 +1582,7 @@ public class MedicDataExchange {
 		if (globalPropertyObject.getValue() != null) {
 			try {
 				String ts = globalPropertyObject.getValue().toString();
-				if(StringUtils.isNotBlank(ts)) {
+				if (StringUtils.isNotBlank(ts)) {
 					fetchDate = formatter.parse(ts);
 				}
 				effectiveDate = sd.format(fetchDate);
