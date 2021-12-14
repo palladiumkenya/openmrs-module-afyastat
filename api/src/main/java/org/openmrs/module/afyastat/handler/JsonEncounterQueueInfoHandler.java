@@ -90,7 +90,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 			
 		}
 		catch (Exception e) {
-			queueProcessorException.addException(e);
+			queueProcessorException.addException(new Exception(e.getMessage()));
 			return false;
 		}
 		finally {
@@ -116,7 +116,7 @@ public class JsonEncounterQueueInfoHandler implements QueueInfoHandler {
 		}
 		catch (Exception e) {
 			if (!e.getClass().equals(StreamProcessorException.class))
-				queueProcessorException.addException(e);
+				queueProcessorException.addException(new Exception(e.getMessage()));
 		}
 		finally {
 			if (queueProcessorException.anyExceptions()) {
