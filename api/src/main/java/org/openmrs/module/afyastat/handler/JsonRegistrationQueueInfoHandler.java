@@ -108,7 +108,7 @@ public class JsonRegistrationQueueInfoHandler implements QueueInfoHandler {
 			/*Custom exception thrown by the validate function should not be added again into @queueProcessorException.
 			 It should add the runtime dao Exception while saving the data into @queueProcessorException collection */
 			if (!e.getClass().equals(StreamProcessorException.class)) {
-				queueProcessorException.addException(new Exception("Exception while process payload ", e));
+				queueProcessorException.addException(new Exception(e.getMessage(), e));
 			}
 		}
 		finally {
