@@ -40,9 +40,8 @@ public class MergePatientsPageController {
 	        @RequestParam("returnUrl") String returnUrl, PageModel model) {
 		
 		ErrorInfo eObj = Context.getService(InfoService.class).getErrorDataByUuid(queueUuid);
-		Patient potentialDuplicate = null;
+		Patient emrPatient = null;
 		
-		// Found a patient with similar characteristic : patientId = 2240 Identifier Id = MGJYDW -- this is the string to process
 		for (ErrorMessagesInfo info : eObj.getErrorMessages()) {
 			if (info.getMessage() != null
 			        && (info.getMessage().contains("patientId =") || info.getMessage().contains("Identifier Id ="))) {
@@ -51,16 +50,17 @@ public class MergePatientsPageController {
 					String patIdentifier = stringParts[stringParts.length - 1];
 					List<Patient> patients = Context.getPatientService().getPatients(null, patIdentifier.trim(), null, true);
 					if (patients.size() > 0) {
-						potentialDuplicate = patients.get(0);
+						emrPatient = patients.get(0); // just pick the first patient for now
 					}
 					
 				}
 			}
 		}
+		// Patient 2 is existing patient in the EMR
 		
 		model.addAttribute("patient1", null);
 		model.addAttribute("queueUuid", queueUuid);
-		model.addAttribute("patient2", potentialDuplicate);
+		model.addAttribute("patient2", emrPatient);
 		model.addAttribute("returnUrl", returnUrl);
 	}
 }

@@ -203,7 +203,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                         <table class="simple-table" width="90%">
                                             <thead>
                                             <tr>
-                                                <th class="nameColumn">Patient UUID</th>
+                                                <th class="nameColumn">Error data UUID</th>
                                                 <th class="cccNumberColumn">Discriminator</th>
                                                 <th class="sampleTypeColumn">Form</th>
                                                 <th class="dateRequestColumn">Date processed</th>
