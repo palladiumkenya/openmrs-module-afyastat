@@ -14,7 +14,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td class="ke-field-label" style="width: 50%; text-align: center">Patient 1 (in error queue)</td>
-				<td class="ke-field-label" style="width: 50%; text-align: center">Patient 2</td>
+				<td class="ke-field-label" style="width: 50%; text-align: center">Patient 2 (EMR patient)</td>
 			</tr>
 			<tr>
 				<td style="text-align: center"><input type="hidden" name="queueUuid" value="${queueUuid}"></td>
