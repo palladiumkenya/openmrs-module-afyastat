@@ -10,7 +10,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>afyastat</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>pom</packaging>
 	<name>Afyastat</name>
 	<description>A server side module for Afyastat mobile application</description>
