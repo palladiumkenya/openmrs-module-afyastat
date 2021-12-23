@@ -173,9 +173,9 @@ public class MergePatientsFragmentController {
 		
 		ObjectNode patientObj = (ObjectNode) jsonNode.get("patient");
 		clientName = patientObj.get("patient.given_name").asText();
-        clientName = clientName + " " + patientObj.get("patient.middle_name").asText();
-        clientName = clientName + " " + patientObj.get("patient.family_name").asText();
-
+		clientName = clientName + " " + patientObj.get("patient.middle_name").asText();
+		clientName = clientName + " " + patientObj.get("patient.family_name").asText();
+		
 		infopoints.add(dataPoint("Queue id", qObj.getId()));
 		infopoints.add(dataPoint("Gender", patientObj.get("patient.sex").asText().toLowerCase().equals("f") ? "Female"
 		        : "Male"));
