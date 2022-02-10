@@ -485,20 +485,20 @@
     </changeSet>
 
     <!--Optimizing outgoing registration by saving queue on DB -->
-    <changeSet author="pwaweru" id="afyastat-20220208-4">
+    <changeSet author="pwaweru" id="afyastat-20220210-5">
         <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="afyastat_medicoutgoingregistration"/></not>
+            <not><tableExists tableName="kenyaemr_afyastat_medicoutgoingregistration"/></not>
         </preConditions>
-        <comment>Create the department table</comment>
-        <createTable tableName="afyastat_medicoutgoingregistration">
+        <comment>Create the medicoutgoingregistration table</comment>
+        <createTable tableName="kenyaemr_afyastat_medicoutgoingregistration">
             <column autoIncrement="true" name="id" type="int">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="patient_id" type="int">
+            <column name="patientId" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="cht_ref" type="varchar(255)" />
-            <column name="kemr_ref" type="varchar(255)">
+            <column name="chtRef" type="varchar(255)" />
+            <column name="kemrRef" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="purpose" type="varchar(255)">
@@ -535,23 +535,23 @@
             <column name="owner" type="int"/>
         </createTable>
 
-        <createIndex indexName="index_date_created" tableName="afyastat_medicoutgoingregistration">
+        <createIndex indexName="index_date_created" tableName="kenyaemr_afyastat_medicoutgoingregistration">
             <column name="date_created"/>
         </createIndex>
-        <createIndex indexName="index_patient_id" tableName="afyastat_medicoutgoingregistration">
-            <column name="patient_id"/>
+        <createIndex indexName="index_patient_id" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="patientId"/>
         </createIndex>
-        <createIndex indexName="index_status" tableName="afyastat_medicoutgoingregistration">
+        <createIndex indexName="index_status" tableName="kenyaemr_afyastat_medicoutgoingregistration">
             <column name="status"/>
         </createIndex>
-        <createIndex indexName="index_purpose" tableName="afyastat_medicoutgoingregistration">
+        <createIndex indexName="index_purpose" tableName="kenyaemr_afyastat_medicoutgoingregistration">
             <column name="purpose"/>
         </createIndex>
-        <createIndex indexName="index_kemr_ref" tableName="afyastat_medicoutgoingregistration">
-            <column name="kemr_ref"/>
+        <createIndex indexName="index_kemr_ref" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="kemrRef"/>
         </createIndex>
-        <createIndex indexName="index_cht_ref" tableName="afyastat_medicoutgoingregistration">
-            <column name="cht_ref"/>
+        <createIndex indexName="index_cht_ref" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="chtRef"/>
         </createIndex>
     </changeSet>
 
