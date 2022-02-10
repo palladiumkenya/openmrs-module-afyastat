@@ -45,7 +45,7 @@ public class MedicOutgoingRegistration extends BaseOpenmrsData implements Serial
 		return patientId;
 	}
 	
-	public void setPatientId(Integer patient_id) {
+	public void setPatientId(Integer patientId) {
 		this.patientId = patientId;
 	}
 	
