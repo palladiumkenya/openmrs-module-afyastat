@@ -107,6 +107,7 @@
 		AfyaDataSource.hbm.xml
 		ArchiveInfo.hbm.xml
 		ErrorMessagesInfo.hbm.xml
+		MedicOutgoingRegistration.hbm.xml
 
 	</mappingFiles>
 
