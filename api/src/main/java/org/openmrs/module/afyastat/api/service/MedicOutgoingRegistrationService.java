@@ -74,7 +74,7 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	 */
 	@Transactional(readOnly = true)
 	MedicOutgoingRegistration getRecordByPatientId(Integer ptId);
-
+	
 	/**
 	 * Gets a record for a given chtRef.
 	 * 
@@ -83,7 +83,7 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	 */
 	@Transactional(readOnly = true)
 	public MedicOutgoingRegistration getRecordByChtRef(String chtRef);
-
+	
 	/**
 	 * Gets a record for a given kemrRef.
 	 * 

@@ -161,7 +161,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId) {
 		return (dao.getRecordByPatientId(ptId));
 	}
-
+	
 	/**
 	 * Gets a record for a given chtRef.
 	 * 
@@ -172,7 +172,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	public MedicOutgoingRegistration getRecordByChtRef(String chtRef) {
 		return (dao.getRecordByChtRef(chtRef));
 	}
-
+	
 	/**
 	 * Gets a record for a given kemrRef.
 	 * 
