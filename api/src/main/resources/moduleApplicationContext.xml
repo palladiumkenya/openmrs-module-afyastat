@@ -188,6 +188,37 @@
         </property>
     </bean>
 
+    <!-- Wraps MedicOutgoingRegistrationService methods in DB transactions and OpenMRS interceptors,
+    which set audit info like dateCreated, changedBy, etc.-->
+    <bean id="afyastat.MedicOutgoingRegistrationService"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <bean class="org.openmrs.module.afyastat.api.service.impl.MedicOutgoingRegistrationServiceImpl">
+                <property name="dao" ref="afyastat.MedicOutgoingRegistrationDao" />
+            </bean>
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors" />
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource" />
+        </property>
+    </bean>
+
+    <!-- Adds MedicOutgoingRegistrationService to OpenMRS context so it can be accessed
+    calling Context.getService(MedicOutgoingRegistrationService.class) -->
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.afyastat.api.service.MedicOutgoingRegistrationService</value>
+                <ref bean="afyastat.MedicOutgoingRegistrationService" />
+            </list>
+        </property>
+    </bean>
+
     <bean id="kenyaemr.app.afyastat" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
         <constructor-arg value="kenyaemr.afyastat.home" />
         <constructor-arg value="Afyastat" />
