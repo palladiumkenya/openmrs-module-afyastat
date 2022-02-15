@@ -61,8 +61,8 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 * @throws APIException
 	 */
 	@Override
-	public MedicOutgoingRegistration saveRecord(MedicOutgoingRegistration record) throws APIException {
-		return dao.saveRecord(record);
+	public MedicOutgoingRegistration saveOrUpdate(MedicOutgoingRegistration record) throws APIException {
+		return dao.saveOrUpdate(record);
 	}
 	
 	/**

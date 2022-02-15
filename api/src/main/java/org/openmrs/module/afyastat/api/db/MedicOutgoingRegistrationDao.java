@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
@@ -35,14 +36,16 @@ public class MedicOutgoingRegistrationDao {
 		        .add(Restrictions.eq("uuid", uuid)).uniqueResult();
 	}
 	
-	public MedicOutgoingRegistration saveRecord(MedicOutgoingRegistration record) {
+	public MedicOutgoingRegistration saveOrUpdate(MedicOutgoingRegistration record) {
 		getSession().saveOrUpdate(record);
 		getSession().flush();
 		return record;
 	}
 	
 	public List<MedicOutgoingRegistration> getAllRecords() {
-		return getSession().createCriteria(MedicOutgoingRegistration.class).list();
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.addOrder(Order.asc("date_created"));
+		return criteria.list();
 	}
 	
 	public MedicOutgoingRegistration getRecord(Integer id) {
@@ -74,17 +77,24 @@ public class MedicOutgoingRegistrationDao {
 	}
 	
 	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status) {
-		return getSession().createCriteria(MedicOutgoingRegistration.class).add(Restrictions.eq("status", status)).list();
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("status", status));
+		criteria.addOrder(Order.asc("date_created"));
+		return criteria.list();
 	}
 	
 	public List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose) {
-		return getSession().createCriteria(MedicOutgoingRegistration.class).add(Restrictions.eq("purpose", purpose)).list();
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("purpose", purpose));
+		criteria.addOrder(Order.asc("date_created"));
+		return criteria.list();
 	}
 	
 	public List<MedicOutgoingRegistration> getRecordsByDate(Date startDate, Date endDate) {
 		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
 		criteria.add(Restrictions.ge("date_created", startDate));
 		criteria.add(Restrictions.le("date_created", endDate));
+		criteria.addOrder(Order.asc("date_created"));
 		return criteria.list();
 	}
 	
