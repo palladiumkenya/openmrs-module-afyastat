@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	
 	/**
-	 * Returns an item by uuid. It can be called by any authenticated user. It is fetched in read
+	 * Returns an record by uuid. It can be called by any authenticated user. It is fetched in read
 	 * only transaction.
 	 * 
 	 * @param uuid
@@ -38,8 +38,7 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	MedicOutgoingRegistration getRecordByUuid(String uuid) throws APIException;
 	
 	/**
-	 * Saves an item. Sets the owner to superuser, if it is not set. It can be called by users with
-	 * this module's privilege. It is executed in a transaction.
+	 * Saves or edits a record. It is executed in a transaction.
 	 * 
 	 * @param record
 	 * @return
@@ -47,7 +46,7 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	 */
 	@Authorized(AfyastatConfig.MODULE_PRIVILEGE)
 	@Transactional
-	MedicOutgoingRegistration saveRecord(MedicOutgoingRegistration record) throws APIException;
+	MedicOutgoingRegistration saveOrUpdate(MedicOutgoingRegistration record) throws APIException;
 	
 	/**
 	 * Gets a list of records.
