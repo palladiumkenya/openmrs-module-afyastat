@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	
 	/**
-	 * Returns an record by uuid. It can be called by any authenticated user. It is fetched in read
+	 * Returns a record by uuid. It can be called by any authenticated user. It is fetched in read
 	 * only transaction.
 	 * 
 	 * @param uuid
