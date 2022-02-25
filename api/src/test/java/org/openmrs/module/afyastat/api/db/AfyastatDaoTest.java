@@ -7,8 +7,10 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.afyastat.api.dao;
+package org.openmrs.module.afyastat.api.db;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**
@@ -19,4 +21,9 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
  */
 public class AfyastatDaoTest extends BaseModuleContextSensitiveTest {
 	
+	@Test
+	@Ignore("Unignore if you want to make the DAO persistable")
+	public void daoTest() {
+		//run test
+	}
 }

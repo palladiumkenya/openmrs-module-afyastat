@@ -120,6 +120,16 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	List<MedicOutgoingRegistration> getRecordsByStatus(Integer status);
 	
 	/**
+	 * Gets records with a given status limiting the returned records to a certain number.
+	 * 
+	 * @param status the record status
+	 * @param limit the limit to number of records
+	 * @return all records with the given status
+	 */
+	@Transactional(readOnly = true)
+	List<MedicOutgoingRegistration> getRecordsByStatus(Integer status, Integer limit);
+	
+	/**
 	 * Gets records for a given purpose.
 	 * 
 	 * @param purpose the record purpose

@@ -118,6 +118,18 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	}
 	
 	/**
+	 * Gets records with a given status limiting the returned records to a certain number.
+	 * 
+	 * @param status the record status
+	 * @param limit the limit to number of records
+	 * @return all records with the given status
+	 */
+	@Override
+	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status, Integer limit) {
+		return (dao.getRecordsByStatus(status, limit));
+	}
+	
+	/**
 	 * Gets records for a given purpose.
 	 * 
 	 * @param purpose the record purpose
