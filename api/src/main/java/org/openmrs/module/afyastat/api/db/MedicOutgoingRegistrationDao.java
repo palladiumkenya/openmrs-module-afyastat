@@ -44,7 +44,7 @@ public class MedicOutgoingRegistrationDao {
 	
 	public List<MedicOutgoingRegistration> getAllRecords() {
 		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.addOrder(Order.asc("date_created"));
+		criteria.addOrder(Order.asc("dateCreated"));
 		return criteria.list();
 	}
 	
@@ -79,22 +79,30 @@ public class MedicOutgoingRegistrationDao {
 	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status) {
 		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
 		criteria.add(Restrictions.eq("status", status));
-		criteria.addOrder(Order.asc("date_created"));
+		criteria.addOrder(Order.asc("dateCreated"));
+		return criteria.list();
+	}
+	
+	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status, Integer limit) {
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("status", status));
+		criteria.addOrder(Order.asc("dateCreated"));
+		criteria.setMaxResults(limit);
 		return criteria.list();
 	}
 	
 	public List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose) {
 		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
 		criteria.add(Restrictions.eq("purpose", purpose));
-		criteria.addOrder(Order.asc("date_created"));
+		criteria.addOrder(Order.asc("dateCreated"));
 		return criteria.list();
 	}
 	
 	public List<MedicOutgoingRegistration> getRecordsByDate(Date startDate, Date endDate) {
 		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.add(Restrictions.ge("date_created", startDate));
-		criteria.add(Restrictions.le("date_created", endDate));
-		criteria.addOrder(Order.asc("date_created"));
+		criteria.add(Restrictions.ge("dateCreated", startDate));
+		criteria.add(Restrictions.le("dateCreated", endDate));
+		criteria.addOrder(Order.asc("dateCreated"));
 		return criteria.list();
 	}
 	
