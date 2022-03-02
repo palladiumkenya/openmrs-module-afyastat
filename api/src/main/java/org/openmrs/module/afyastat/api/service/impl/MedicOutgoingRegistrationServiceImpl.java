@@ -15,21 +15,25 @@ import java.util.List;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.afyastat.api.db.MedicOutgoingRegistrationDao;
+import org.openmrs.module.afyastat.api.db.hibernate.HibernateMedicOutgoingRegistrationDao;
 import org.openmrs.module.afyastat.api.service.MedicOutgoingRegistrationService;
 import org.openmrs.module.afyastat.model.MedicOutgoingRegistration;
 
 public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService implements MedicOutgoingRegistrationService {
 	
-	MedicOutgoingRegistrationDao dao;
+	private HibernateMedicOutgoingRegistrationDao medicOutgoingRegistrationDao;
 	
 	UserService userService;
 	
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 */
-	public void setDao(MedicOutgoingRegistrationDao dao) {
-		this.dao = dao;
+	public void setMedicOutgoingRegistrationDao(HibernateMedicOutgoingRegistrationDao medicOutgoingRegistrationDao) {
+		this.medicOutgoingRegistrationDao = medicOutgoingRegistrationDao;
+	}
+	
+	public HibernateMedicOutgoingRegistrationDao getMedicOutgoingRegistrationDao() {
+		return (medicOutgoingRegistrationDao);
 	}
 	
 	/**
@@ -49,7 +53,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public MedicOutgoingRegistration getRecordByUuid(String uuid) throws APIException {
-		return dao.getRecordByUuid(uuid);
+		return medicOutgoingRegistrationDao.getRecordByUuid(uuid);
 	}
 	
 	/**
@@ -62,7 +66,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public MedicOutgoingRegistration saveOrUpdate(MedicOutgoingRegistration record) throws APIException {
-		return dao.saveOrUpdate(record);
+		return medicOutgoingRegistrationDao.saveOrUpdate(record);
 	}
 	
 	/**
@@ -72,7 +76,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public List<MedicOutgoingRegistration> getAllRecords() {
-		return dao.getAllRecords();
+		return medicOutgoingRegistrationDao.getAllRecords();
 	}
 	
 	/**
@@ -83,7 +87,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public MedicOutgoingRegistration getRecordById(Integer id) {
-		return dao.getRecord(id);
+		return medicOutgoingRegistrationDao.getRecord(id);
 	}
 	
 	/**
@@ -93,7 +97,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public void purgeRecord(MedicOutgoingRegistration record) {
-		dao.purgeRecord(record);
+		medicOutgoingRegistrationDao.purgeRecord(record);
 	}
 	
 	/**
@@ -103,7 +107,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public void voidRecord(Integer id) {
-		dao.voidRecord(id);
+		medicOutgoingRegistrationDao.voidRecord(id);
 	}
 	
 	/**
@@ -114,7 +118,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status) {
-		return (dao.getRecordsByStatus(status));
+		return (medicOutgoingRegistrationDao.getRecordsByStatus(status));
 	}
 	
 	/**
@@ -126,7 +130,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status, Integer limit) {
-		return (dao.getRecordsByStatus(status, limit));
+		return (medicOutgoingRegistrationDao.getRecordsByStatus(status, limit));
 	}
 	
 	/**
@@ -137,7 +141,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose) {
-		return (dao.getRecordsByPurpose(purpose));
+		return (medicOutgoingRegistrationDao.getRecordsByPurpose(purpose));
 	}
 	
 	/**
@@ -149,7 +153,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public List<MedicOutgoingRegistration> getRecordsByDate(Date startDate, Date endDate) {
-		return (dao.getRecordsByDate(startDate, endDate));
+		return (medicOutgoingRegistrationDao.getRecordsByDate(startDate, endDate));
 	}
 	
 	/**
@@ -160,7 +164,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public void recordSetStatus(Integer id, Integer status) {
-		dao.recordSetStatus(id, status);
+		medicOutgoingRegistrationDao.recordSetStatus(id, status);
 	}
 	
 	/**
@@ -171,7 +175,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId) {
-		return (dao.getRecordByPatientId(ptId));
+		return (medicOutgoingRegistrationDao.getRecordByPatientId(ptId));
 	}
 	
 	/**
@@ -182,7 +186,7 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public MedicOutgoingRegistration getRecordByChtRef(String chtRef) {
-		return (dao.getRecordByChtRef(chtRef));
+		return (medicOutgoingRegistrationDao.getRecordByChtRef(chtRef));
 	}
 	
 	/**
@@ -193,6 +197,6 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 */
 	@Override
 	public MedicOutgoingRegistration getRecordByKemrRef(String kemrRef) {
-		return (dao.getRecordByKemrRef(kemrRef));
+		return (medicOutgoingRegistrationDao.getRecordByKemrRef(kemrRef));
 	}
 }

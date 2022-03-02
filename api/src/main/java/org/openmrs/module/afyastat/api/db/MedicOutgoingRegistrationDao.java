@@ -12,102 +12,118 @@ package org.openmrs.module.afyastat.api.db;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.afyastat.model.MedicOutgoingRegistration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-@Repository("afyastat.MedicOutgoingRegistrationDao")
-public class MedicOutgoingRegistrationDao {
+public interface MedicOutgoingRegistrationDao {
 	
-	@Autowired
-	DbSessionFactory sessionFactory;
+	/**
+	 * Get a record with a given UUID
+	 * 
+	 * @param uuid the record UUID
+	 * @return a record object
+	 */
+	public MedicOutgoingRegistration getRecordByUuid(String uuid);
 	
-	private DbSession getSession() {
-		return sessionFactory.getCurrentSession();
-	}
+	/**
+	 * Save or Update a record
+	 * 
+	 * @param record the record to save or update
+	 * @return the saved or updated record object
+	 */
+	public MedicOutgoingRegistration saveOrUpdate(MedicOutgoingRegistration record);
 	
-	public MedicOutgoingRegistration getRecordByUuid(String uuid) {
-		return (MedicOutgoingRegistration) getSession().createCriteria(MedicOutgoingRegistration.class)
-		        .add(Restrictions.eq("uuid", uuid)).uniqueResult();
-	}
+	/**
+	 * Get all records
+	 * 
+	 * @return a list of records
+	 */
+	public List<MedicOutgoingRegistration> getAllRecords();
 	
-	public MedicOutgoingRegistration saveOrUpdate(MedicOutgoingRegistration record) {
-		getSession().saveOrUpdate(record);
-		getSession().flush();
-		return record;
-	}
+	/**
+	 * Get a record with a given ID
+	 * 
+	 * @param ptId the record ID
+	 * @return a record object
+	 */
+	public MedicOutgoingRegistration getRecord(Integer id);
 	
-	public List<MedicOutgoingRegistration> getAllRecords() {
-		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.addOrder(Order.asc("dateCreated"));
-		return criteria.list();
-	}
+	/**
+	 * Get a record with a given patient ID
+	 * 
+	 * @param ptId the patient ID
+	 * @return a record object
+	 */
+	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId);
 	
-	public MedicOutgoingRegistration getRecord(Integer id) {
-		return (MedicOutgoingRegistration) getSession().get(MedicOutgoingRegistration.class, id);
-	}
+	/**
+	 * Get a record with a given CHT ref
+	 * 
+	 * @param chtRef the CHT ref
+	 * @return a record object
+	 */
+	public MedicOutgoingRegistration getRecordByChtRef(String chtRef);
 	
-	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId) {
-		return (MedicOutgoingRegistration) getSession().createCriteria(MedicOutgoingRegistration.class)
-		        .add(Restrictions.eq("patientId", ptId)).uniqueResult();
-	}
+	/**
+	 * Get a record with a given KEMR ref
+	 * 
+	 * @param kemrRef the KEMR ref
+	 * @return a record object
+	 */
+	public MedicOutgoingRegistration getRecordByKemrRef(String kemrRef);
 	
-	public MedicOutgoingRegistration getRecordByChtRef(String chtRef) {
-		return (MedicOutgoingRegistration) getSession().createCriteria(MedicOutgoingRegistration.class)
-		        .add(Restrictions.eq("chtRef", chtRef)).uniqueResult();
-	}
+	/**
+	 * Delete a record
+	 * 
+	 * @param record the record object to delete
+	 */
+	public void purgeRecord(MedicOutgoingRegistration record);
 	
-	public MedicOutgoingRegistration getRecordByKemrRef(String kemrRef) {
-		return (MedicOutgoingRegistration) getSession().createCriteria(MedicOutgoingRegistration.class)
-		        .add(Restrictions.eq("kemrRef", kemrRef)).uniqueResult();
-	}
+	/**
+	 * Mark a record as voided
+	 * 
+	 * @param id the id of the record
+	 */
+	public void voidRecord(Integer id);
 	
-	public void purgeRecord(MedicOutgoingRegistration record) {
-		getSession().delete(record);
-	}
+	/**
+	 * Get records with a given status
+	 * 
+	 * @param status the status (0=unsynced, 1=synced)
+	 * @return a list of record objects
+	 */
+	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status);
 	
-	public void voidRecord(Integer id) {
-		MedicOutgoingRegistration record = (MedicOutgoingRegistration) getSession().get(MedicOutgoingRegistration.class, id);
-		record.setVoided(true);
-	}
+	/**
+	 * Get records with a given status
+	 * 
+	 * @param status the status (0=unsynced, 1=synced)
+	 * @param limit the limit to number of records to return
+	 * @return a list of record objects
+	 */
+	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status, Integer limit);
 	
-	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status) {
-		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.add(Restrictions.eq("status", status));
-		criteria.addOrder(Order.asc("dateCreated"));
-		return criteria.list();
-	}
+	/**
+	 * Gets records with a given purpose
+	 * 
+	 * @param purpose the purpose
+	 * @return a list of record objects
+	 */
+	public List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose);
 	
-	public List<MedicOutgoingRegistration> getRecordsByStatus(Integer status, Integer limit) {
-		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.add(Restrictions.eq("status", status));
-		criteria.addOrder(Order.asc("dateCreated"));
-		criteria.setMaxResults(limit);
-		return criteria.list();
-	}
+	/**
+	 * Gets a range of records given the start date and end date
+	 * 
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return a list of record objects
+	 */
+	public List<MedicOutgoingRegistration> getRecordsByDate(Date startDate, Date endDate);
 	
-	public List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose) {
-		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.add(Restrictions.eq("purpose", purpose));
-		criteria.addOrder(Order.asc("dateCreated"));
-		return criteria.list();
-	}
-	
-	public List<MedicOutgoingRegistration> getRecordsByDate(Date startDate, Date endDate) {
-		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
-		criteria.add(Restrictions.ge("dateCreated", startDate));
-		criteria.add(Restrictions.le("dateCreated", endDate));
-		criteria.addOrder(Order.asc("dateCreated"));
-		return criteria.list();
-	}
-	
-	public void recordSetStatus(Integer id, Integer status) {
-		MedicOutgoingRegistration record = (MedicOutgoingRegistration) getSession().get(MedicOutgoingRegistration.class, id);
-		record.setStatus(status);
-	}
+	/**
+	 * Sets the status of the queue record 0=unsynced, 1=synced
+	 * 
+	 * @param id the id of the record
+	 * @param status the status to set
+	 */
+	public void recordSetStatus(Integer id, Integer status);
 }
