@@ -266,6 +266,19 @@ public class MergePatientsFragmentController {
 	}
 	
 	/**
+	 * Requeue erros
+	 * 
+	 * @param errorList - comma separated list of error uuids, or string 'all'
+	 * @return the status
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public SimpleObject requeueErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
+		InfoService service = Context.getService(InfoService.class);
+		service.reQueueErrors(errorList);
+		return SimpleObject.create("status", "success");
+	}
+	
+	/**
 	 * Convenience method to create a simple data point object
 	 * 
 	 * @param label the label

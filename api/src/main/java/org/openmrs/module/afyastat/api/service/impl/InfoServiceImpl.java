@@ -32,6 +32,7 @@ import org.openmrs.module.afyastat.model.ErrorInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
 import org.openmrs.util.HandlerUtil;
 
+import javax.servlet.jsp.ErrorData;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
@@ -619,5 +620,31 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 			formDataStatus.setStatus("unknown");
 		}
 		return formDataStatus;
+	}
+	
+	@Override
+	public void reQueueErrors(String errorList) {
+		if (Context.isAuthenticated()) {
+			
+			if (errorList.equals("all")) {
+				List<ErrorInfo> errors = getAllErrorData();
+				
+				for (ErrorInfo errorData : errors) {
+					//ErrorInfo errorData = getErrorDataByUuid(uuid);
+					AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+					saveQueueData(queueData);
+					purgeErrorData(errorData);
+				}
+			} else {
+				String[] uuidList = errorList.split(",");
+				//DataService dataService = Context.getService(DataService.class);
+				for (String uuid : uuidList) {
+					ErrorInfo errorData = getErrorDataByUuid(uuid);
+					AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+					saveQueueData(queueData);
+					purgeErrorData(errorData);
+				}
+			}
+		}
 	}
 }
