@@ -58,6 +58,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 .dateRequestColumn {
     width: 120px;
 }
+.selectColumn {
+    width: 40px;
+    padding-left: 5px;
+}
 .actionColumn {
     width: 250px;
 }
@@ -202,6 +206,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                         <legend></legend>
                                         <table class="simple-table" width="90%">
                                             <thead>
+
                                             <tr>
                                                 <th class="nameColumn">Error data UUID</th>
                                                 <th class="cccNumberColumn">Discriminator</th>
@@ -209,7 +214,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="dateRequestColumn">Date processed</th>
                                                 <th class="sampleStatusColumn">Message</th>
                                                 <th class="dateRequestColumn">Provider</th>
-                                                <th class="actionColumn"></th>
+                                                <th class="selectColumn"><input type="checkbox" id="chk-select-all"/></th>
+                                                <th class="actionColumn">
+                                                    <input type="button" id="requeueErrors" value="Re-queue"/>
+                                                    <input type="button" id="deleteErrors" value="Delete"/>
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody id="error-list">
@@ -250,6 +259,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
 <script type="text/javascript">
 
+    var selectedErrors = [];
     //On ready
     jq = jQuery;
     jq(function () {
@@ -333,6 +343,32 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
             jq('#showPayloadDialog').modal('show');
         });
+
+        // population selection list
+        jq(document).on('click','.selectElement',function () {
+
+            var queueUuid = jq(this).val();
+            if (jq(this).is(":checked")) {
+                selectedErrors.push(queueUuid);
+            }
+            else {
+                 var elemIndex = selectedErrors.indexOf(queueUuid);
+                 if (elemIndex > -1) {
+                    selectedErrors.splice(elemIndex, 1);
+                 }
+             }
+            console.log(selectedErrors);
+        });
+
+        jq(document).on('click','#requeueErrors',function () {
+            // clear previously entered values
+            var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
+            //selectedErrors
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                document.location.reload();
+            });
+
+        });
     });
 
     function generate_table(displayRecords, displayObject, tableId) {
@@ -359,6 +395,17 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             }
             tr.append("<td>" + displayRecords[i].provider + "</td>");
 
+            if (tableId === 'error') {
+                var selectTd = jq('<td/>');
+                var selectCheckbox = jq('<input/>', {
+                    type: 'checkbox',
+                    class: 'selectElement',
+                    value: displayRecords[i].uuid
+                });
+
+                selectTd.append(selectCheckbox);
+                tr.append(selectTd);
+            }
             var actionTd = jq('<td/>');
 
             var btnView = jq('<button/>', {
@@ -368,6 +415,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             });
             actionTd.append(btnView);
             tr.append(actionTd);
+
             if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
                 var btnMerge = jq('<button/>', {
                     text: 'Merge',
