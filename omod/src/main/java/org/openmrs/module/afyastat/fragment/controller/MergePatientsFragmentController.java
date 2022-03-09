@@ -264,6 +264,32 @@ public class MergePatientsFragmentController {
 	}
 	
 	/**
+	 * Requeue errors
+	 * 
+	 * @param errorList - comma separated list of error uuids, or string 'all'
+	 * @return the status
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public SimpleObject requeueErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
+		InfoService service = Context.getService(InfoService.class);
+		service.reQueueErrors(errorList);
+		return SimpleObject.create("status", "success");
+	}
+	
+	/**
+	 * Purge errors
+	 * 
+	 * @param errorList - comma separated list of error uuids, or string 'all'
+	 * @return the status
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public SimpleObject purgeErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
+		InfoService service = Context.getService(InfoService.class);
+		service.purgeErrors(errorList);
+		return SimpleObject.create("status", "success");
+	}
+	
+	/**
 	 * Convenience method to create a simple data point object
 	 * 
 	 * @param label the label

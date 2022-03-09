@@ -4,6 +4,7 @@ import org.openmrs.Person;
 import org.openmrs.Role;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.afyastat.model.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -410,4 +411,18 @@ public interface InfoService extends OpenmrsService {
 	 * @should return with status 'unknown' if form data with given formDataUuid cannot be traced
 	 */
 	FormInfoStatus getFormDataStatusByFormDataUuid(String formDataUuid);
+	
+	/**
+	 * Re-queue a list of errors so that they can be processed again
+	 * 
+	 * @param errorList
+	 */
+	void reQueueErrors(final @RequestParam(value = "errorList") String errorList);
+	
+	/**
+	 * Purges from the database a list of errors
+	 * 
+	 * @param errorList
+	 */
+	void purgeErrors(final @RequestParam(value = "errorList") String errorList);
 }
