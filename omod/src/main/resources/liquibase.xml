@@ -503,7 +503,7 @@
             <column name="purpose" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="payload" type="varchar(255)">
+            <column name="payload" type="varchar(4096)">
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="int" defaultValueNumeric="0"/>
