@@ -264,7 +264,7 @@ public class MergePatientsFragmentController {
 	}
 	
 	/**
-	 * Requeue erros
+	 * Requeue errors
 	 * 
 	 * @param errorList - comma separated list of error uuids, or string 'all'
 	 * @return the status
@@ -273,6 +273,19 @@ public class MergePatientsFragmentController {
 	public SimpleObject requeueErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
 		InfoService service = Context.getService(InfoService.class);
 		service.reQueueErrors(errorList);
+		return SimpleObject.create("status", "success");
+	}
+	
+	/**
+	 * Purge errors
+	 * 
+	 * @param errorList - comma separated list of error uuids, or string 'all'
+	 * @return the status
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public SimpleObject purgeErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
+		InfoService service = Context.getService(InfoService.class);
+		service.purgeErrors(errorList);
 		return SimpleObject.create("status", "success");
 	}
 	

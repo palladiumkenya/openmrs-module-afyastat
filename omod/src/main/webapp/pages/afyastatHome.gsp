@@ -356,15 +356,42 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                  if (elemIndex > -1) {
                     selectedErrors.splice(elemIndex, 1);
                  }
+                 jq('#chk-select-all').prop('checked', false);
              }
             console.log(selectedErrors);
         });
 
+        // handle select all
+        jq(document).on('click','#chk-select-all',function () {
+           if(jq(this).is(':checked')) {
+                jq('.selectElement').prop('checked', true);
+                selectedErrors = [];
+           }
+           else {
+                jq('.selectElement').prop('checked', false);
+           }
+
+        });
+
+        // handles button than re-queues errors
         jq(document).on('click','#requeueErrors',function () {
             // clear previously entered values
+            //TODO: can we also check if the select all checkbox is checked?
             var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
             //selectedErrors
             ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                document.location.reload();
+            });
+
+        });
+
+        // handles button for deleting errors
+        jq(document).on('click','#deleteErrors',function () {
+            // clear previously entered values
+            //TODO: can we also check if the select all checkbox is checked?
+            var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
+            //selectedErrors
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
                 document.location.reload();
             });
 
