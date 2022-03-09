@@ -358,7 +358,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                  }
                  jq('#chk-select-all').prop('checked', false);
              }
-            console.log(selectedErrors);
         });
 
         // handle select all
