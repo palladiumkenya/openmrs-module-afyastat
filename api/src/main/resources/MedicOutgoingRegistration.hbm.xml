@@ -13,7 +13,7 @@
         <property name="chtRef" type="java.lang.String" column="chtRef" length="255" unique="false" />
         <property name="kemrRef" type="java.lang.String" column="kemrRef" length="255" unique="false" />
         <property name="purpose" type="java.lang.String" column="purpose" length="255" unique="false" />
-        <property name="payload" type="java.lang.String" column="payload" length="255" unique="false" />
+        <property name="payload" type="java.lang.String" column="payload" length="4096" unique="false" />
         <property name="status" type="int" column="status" unique="false" />
         <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 
