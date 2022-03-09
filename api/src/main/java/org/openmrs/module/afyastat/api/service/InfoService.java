@@ -412,5 +412,17 @@ public interface InfoService extends OpenmrsService {
 	 */
 	FormInfoStatus getFormDataStatusByFormDataUuid(String formDataUuid);
 	
+	/**
+	 * Re-queue a list of errors so that they can be processed again
+	 * 
+	 * @param errorList
+	 */
 	void reQueueErrors(final @RequestParam(value = "errorList") String errorList);
+	
+	/**
+	 * Purges from the database a list of errors
+	 * 
+	 * @param errorList
+	 */
+	void purgeErrors(final @RequestParam(value = "errorList") String errorList);
 }

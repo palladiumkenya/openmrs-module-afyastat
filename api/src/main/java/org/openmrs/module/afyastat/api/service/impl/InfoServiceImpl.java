@@ -647,4 +647,24 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 			}
 		}
 	}
+	
+	@Override
+	public void purgeErrors(String errorList) {
+		if (Context.isAuthenticated()) {
+			
+			if (errorList.equals("all")) {
+				List<ErrorInfo> errors = getAllErrorData();
+				
+				for (ErrorInfo errorData : errors) {
+					purgeErrorData(errorData);
+				}
+			} else {
+				String[] uuidList = errorList.split(",");
+				for (String uuid : uuidList) {
+					ErrorInfo errorData = getErrorDataByUuid(uuid);
+					purgeErrorData(errorData);
+				}
+			}
+		}
+	}
 }
