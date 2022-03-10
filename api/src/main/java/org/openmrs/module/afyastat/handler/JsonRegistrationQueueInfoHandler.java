@@ -396,11 +396,11 @@ public class JsonRegistrationQueueInfoHandler implements QueueInfoHandler {
 		String emailAddress = JsonFormatUtils.readAsString(payload, "$['patient']['patient.email_address']");
 		setAsAttributeByUUID(EMAIL_ADDRESS, emailAddress);
 		
-		String guardianFirstName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.guardian_first_name']");
-		setAsAttributeByUUID(GUARDIAN_FIRST_NAME, guardianFirstName);
+		//String guardianFirstName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.guardian_first_name']"); // currently not collected in Afyastat
+		//setAsAttributeByUUID(GUARDIAN_FIRST_NAME, guardianFirstName);
 		
-		String guardianLastName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.guardian_last_name']");
-		setAsAttributeByUUID(GUARDIAN_LAST_NAME, guardianLastName);
+		//String guardianLastName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.guardian_last_name']"); // Currently not collected in Afyastat
+		//setAsAttributeByUUID(GUARDIAN_LAST_NAME, guardianLastName);
 		
 		String alternativePhoneContact = JsonFormatUtils.readAsString(payload,
 		    "$['patient']['patient.alternate_phone_contact']");

@@ -115,7 +115,7 @@ public class MedicDataExchange {
 			if (Utils.afyastatFormAlreadyExists(documentUUID)) {
 				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentUUID
 				        + ". The payload will be ignored");
-				return "Afyastat sent a duplicate registration to KenyaEMR. This has been ignored";
+				return "Afyastat sent a duplicate form to KenyaEMR. This has been ignored";
 			}
 			String payload = formNode.toString();
 			String discriminator = formNode.path("discriminator").path("discriminator").getTextValue();
