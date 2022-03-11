@@ -266,6 +266,21 @@ public class MergePatientsFragmentController {
 	}
 	
 	/**
+	 * Post and requeue error item for creation of a new registration. This bypasses any patient
+	 * matching checks
+	 * 
+	 * @param uuid the queue reference
+	 * @return the summary
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public SimpleObject createNewRegistration(@RequestParam("queueUuid") String uuid, @SpringBean KenyaUiUtils kenyaUi,
+	        UiUtils ui) {
+		InfoService service = Context.getService(InfoService.class);
+		service.createAsNewRegistration(uuid);
+		return SimpleObject.create("status", "success");
+	}
+	
+	/**
 	 * Requeue errors
 	 * 
 	 * @param errorList - comma separated list of error uuids, or string 'all'

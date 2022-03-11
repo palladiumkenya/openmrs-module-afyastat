@@ -344,9 +344,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             jq('#showPayloadDialog').modal('show');
         });
 
+        // used to create new registration and bypass any patient matching on the provided patient demographics
+        jq(document).on('click','.createButton',function () {
+            var queueUuid = jq(this).val();
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'createNewRegistration', { queueUuid : queueUuid }, function (result) {
+                document.location.reload();
+            });
+        });
+
         // population selection list
         jq(document).on('click','.selectElement',function () {
-
             var queueUuid = jq(this).val();
             if (jq(this).is(":checked")) {
                 selectedErrors.push(queueUuid);
@@ -449,6 +456,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     value: displayRecords[i].uuid
                 });
                 actionTd.append(btnMerge);
+                tr.append(actionTd);
+            }
+
+            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
+                var btnCreateNewRegistration = jq('<button/>', {
+                    text: 'Register',
+                    class: 'createButton',
+                    value: displayRecords[i].uuid
+                });
+                actionTd.append(btnCreateNewRegistration);
                 tr.append(actionTd);
             }
 
