@@ -13,6 +13,10 @@
  */
 package org.openmrs.module.afyastat.api.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -703,6 +707,30 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 					purgeErrorData(errorData);
 				}
 			}
+		}
+	}
+	
+	@Override
+	public void createAsNewRegistration(String queueUuid) {
+		if (Context.isAuthenticated()) {
+			ErrorInfo errorData = getErrorDataByUuid(queueUuid);
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = null;
+			try {
+				jsonNode = objectMapper.readTree(errorData.getPayload());
+			}
+			catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			
+			ObjectNode objectNode = (ObjectNode) jsonNode;
+			objectNode.put("skipPatientMatching", "true");
+			
+			errorData.setPayload(objectNode.toString());
+			AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+			
+			saveQueueData(queueData);
+			purgeErrorData(errorData);
 		}
 	}
 }

@@ -425,4 +425,11 @@ public interface InfoService extends OpenmrsService {
 	 * @param errorList
 	 */
 	void purgeErrors(final @RequestParam(value = "errorList") String errorList);
+	
+	/**
+	 * Creates from an error item a new registration This bypasses the patient matching process
+	 * 
+	 * @param queueUuid
+	 */
+	void createAsNewRegistration(final @RequestParam(value = "queueUuid") String queueUuid);
 }
