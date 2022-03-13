@@ -111,6 +111,18 @@
                                 referencedTableName="location" referencedColumnNames="location_id"/>
     </changeSet>
 
+    <changeSet id="medic_queue_data_20220311-1445" author="makombe">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_queue_data"/>
+        </preConditions>
+        <comment>
+            Adds a column to record epoch date when  the form was filled in Afyastat app.
+        </comment>
+        <addColumn tableName="medic_queue_data" >
+            <column name="date_form_filled" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="medic_archive_data_20200723-1448" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -163,6 +175,18 @@
         <addForeignKeyConstraint constraintName="medic_archive_data_data_source"
                                  baseTableName="medic_archive_data" baseColumnNames="data_source"
                                  referencedTableName="medic_data_source" referencedColumnNames="id"/>
+    </changeSet>
+
+     <changeSet id="medic_archive_data_20220311-1450" author="makombe">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_archive_data"/>
+        </preConditions>
+        <comment>
+            Adds a column to record epoch date when  the form was filled in Afyastat app.
+        </comment>
+        <addColumn tableName="medic_archive_data" >
+            <column name="date_form_filled" type="bigint"/>
+        </addColumn>
     </changeSet>
 
     <changeSet id="medic_error_data_20200723-1449" author="pwangoo">
@@ -229,6 +253,18 @@
         <addForeignKeyConstraint constraintName="medic_error_data_location"
                                  baseTableName="medic_error_data" baseColumnNames="location"
                                  referencedTableName="location" referencedColumnNames="location_id"/>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20220311-1450" author="makombe">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_error_data"/>
+        </preConditions>
+        <comment>
+            Adds a column to record epoch date when  the form was filled in Afyastat app.
+        </comment>
+        <addColumn tableName="medic_error_data" >
+            <column name="date_form_filled" type="bigint"/>
+        </addColumn>
     </changeSet>
 
     <changeSet id="medic_notification_data_20200723-1451" author="pwangoo">

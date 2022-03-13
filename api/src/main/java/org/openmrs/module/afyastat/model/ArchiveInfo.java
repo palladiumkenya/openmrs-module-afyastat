@@ -23,6 +23,8 @@ public class ArchiveInfo extends AuditableInfo {
 	
 	private Date dateArchived;
 	
+	private Long dateFormFilled;
+	
 	public ArchiveInfo() {
 	}
 	
@@ -44,5 +46,13 @@ public class ArchiveInfo extends AuditableInfo {
 	
 	public void setDateArchived(final Date dateArchived) {
 		this.dateArchived = dateArchived;
+	}
+	
+	public Long getDateFormFilled() {
+		return dateFormFilled;
+	}
+	
+	public void setDateFormFilled(final Long dateFormFilled) {
+		this.dateFormFilled = dateFormFilled;
 	}
 }
