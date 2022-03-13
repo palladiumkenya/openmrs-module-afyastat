@@ -30,6 +30,7 @@
 
         <property name="patientUuid" type="java.lang.String" column="patient_uuid" not-null="false"/>
         <property name="formDataUuid" type="java.lang.String" column="form_data_uuid" not-null="false"/>
+        <property name="dateFormFilled" type="java.lang.Long" column="date_form_filled" not-null="false"/>
     </class>
 
 </hibernate-mapping>

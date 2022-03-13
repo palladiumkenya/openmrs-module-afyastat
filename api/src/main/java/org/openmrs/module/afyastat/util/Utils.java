@@ -7,6 +7,9 @@ import org.openmrs.Form;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.api.service.InfoService;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
+import org.openmrs.module.afyastat.model.ArchiveInfo;
+import org.openmrs.module.afyastat.model.ErrorInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -101,7 +104,7 @@ public class Utils {
 	 * @param uuid
 	 * @return
 	 */
-	public static boolean afyastatFormAlreadyExists(String uuid) {
+	public static boolean afyastatFormAlreadyExists(String uuid, String formUuid, Long dateFormFilled) {
 		InfoService infoService = Context.getService(InfoService.class);
 		
 		if (StringUtils.isBlank(uuid)) {
@@ -119,6 +122,38 @@ public class Utils {
 		if (infoService.getErrorDataByUuid(uuid) != null) {
 			return true;
 		}
+
+		if (StringUtils.isBlank(formUuid)) {
+			return false;
+		}
+
+		List<ArchiveInfo> archivedForms = infoService.getArchiveDataByFormDataUuid(formUuid);
+		if (archivedForms.size() > 0) {
+			for (ArchiveInfo archivedForm : archivedForms) {
+				if (archivedForm.getDateFormFilled() != null && archivedForm.getDateFormFilled().equals(dateFormFilled)) {
+					return true;
+				}
+			}
+		}
+
+		List<ErrorInfo> errorForms = infoService.getErrorDataByFormDataUuid(formUuid);
+		if (errorForms.size() > 0) {
+			for (ErrorInfo errorForm : errorForms) {
+				if (errorForm.getDateFormFilled() != null && errorForm.getDateFormFilled().equals(dateFormFilled)) {
+					return true;
+				}
+			}
+		}
+
+		List<AfyaStatQueueData> queueDataForms = infoService.getQueueDataByFormDataUuid(formUuid);
+		if (queueDataForms.size() > 0) {
+			for (AfyaStatQueueData queueDataForm : queueDataForms) {
+				if (queueDataForm.getDateFormFilled() != null && queueDataForm.getDateFormFilled().equals(dateFormFilled)) {
+					return true;
+				}
+			}
+		}
+
 		return false;
 	}
 }
