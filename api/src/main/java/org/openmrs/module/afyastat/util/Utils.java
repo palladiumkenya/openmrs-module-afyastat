@@ -104,56 +104,29 @@ public class Utils {
 	 * @param uuid
 	 * @return
 	 */
-	public static boolean afyastatFormAlreadyExists(String uuid, String formUuid, Long dateFormFilled) {
+	public static boolean afyastatFormAlreadyExists(String uuid, String formUuid, Long dateFormFilled, String patientUuid) {
 		InfoService infoService = Context.getService(InfoService.class);
 		
 		if (StringUtils.isBlank(uuid)) {
 			return false;
 		}
 		
-		if (infoService.getQueueDataByUuid(uuid) != null) {
+		if (infoService.getQueueDataByUuid(uuid) != null
+		        || infoService.getQueueDataByFormDataUuidDateFormFilledAndPatientUuid(formUuid, dateFormFilled, patientUuid) != null) {
 			return true;
 		}
 		
-		if (infoService.getArchiveDataByUuid(uuid) != null) {
+		if (infoService.getArchiveDataByUuid(uuid) != null
+		        || infoService.getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(formUuid, dateFormFilled,
+		            patientUuid) != null) {			
 			return true;
 		}
 		
-		if (infoService.getErrorDataByUuid(uuid) != null) {
+		if (infoService.getErrorDataByUuid(uuid) != null
+		        || infoService.getErrorDataByFormDataUuiDateFormFilledAndPatientUuid(formUuid, dateFormFilled, patientUuid) != null) {
 			return true;
 		}
-
-		if (StringUtils.isBlank(formUuid)) {
-			return false;
-		}
-
-		List<ArchiveInfo> archivedForms = infoService.getArchiveDataByFormDataUuid(formUuid);
-		if (archivedForms.size() > 0) {
-			for (ArchiveInfo archivedForm : archivedForms) {
-				if (archivedForm.getDateFormFilled() != null && archivedForm.getDateFormFilled().equals(dateFormFilled)) {
-					return true;
-				}
-			}
-		}
-
-		List<ErrorInfo> errorForms = infoService.getErrorDataByFormDataUuid(formUuid);
-		if (errorForms.size() > 0) {
-			for (ErrorInfo errorForm : errorForms) {
-				if (errorForm.getDateFormFilled() != null && errorForm.getDateFormFilled().equals(dateFormFilled)) {
-					return true;
-				}
-			}
-		}
-
-		List<AfyaStatQueueData> queueDataForms = infoService.getQueueDataByFormDataUuid(formUuid);
-		if (queueDataForms.size() > 0) {
-			for (AfyaStatQueueData queueDataForm : queueDataForms) {
-				if (queueDataForm.getDateFormFilled() != null && queueDataForm.getDateFormFilled().equals(dateFormFilled)) {
-					return true;
-				}
-			}
-		}
-
+		
 		return false;
 	}
 }

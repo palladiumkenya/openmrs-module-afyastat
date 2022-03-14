@@ -27,6 +27,7 @@ public class AfyaStatQueueData extends AuditableInfo {
 	public AfyaStatQueueData(final AuditableInfo data) {
 		super(data);
 	}
+	
 	public Long getDateFormFilled() {
 		return dateFormFilled;
 	}
