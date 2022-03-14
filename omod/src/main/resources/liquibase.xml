@@ -51,7 +51,7 @@
                                  referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
 
-   <changeSet id="medic_queue_data_20200723-1444" author="pwangoo">
+   <changeSet id="medic_queue_data_20220310-212106" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="medic_queue_data"/>
@@ -114,12 +114,30 @@
     <changeSet id="medic_queue_data_20220311-1445" author="makombe">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="medic_queue_data"/>
+            <not>
+                <columnExists tableName="medic_queue_data" columnName="date_form_filled"/>
+            </not>
         </preConditions>
         <comment>
             Adds a column to record epoch date when  the form was filled in Afyastat app.
         </comment>
         <addColumn tableName="medic_queue_data" >
             <column name="date_form_filled" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="medic_queue_data_20220311-100303" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_queue_data"/>
+            <not>
+                <columnExists tableName="medic_queue_data" columnName="client_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record the client name.
+        </comment>
+        <addColumn tableName="medic_queue_data">
+            <column name="client_name" type="varchar(255)"/>
         </addColumn>
     </changeSet>
 
@@ -180,6 +198,9 @@
      <changeSet id="medic_archive_data_20220311-1450" author="makombe">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="medic_archive_data"/>
+            <not>
+                <columnExists tableName="medic_archive_data" columnName="date_form_filled"/>
+            </not>
         </preConditions>
         <comment>
             Adds a column to record epoch date when  the form was filled in Afyastat app.
@@ -189,7 +210,22 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="medic_error_data_20200723-1449" author="pwangoo">
+    <changeSet id="medic_queue_data_20220311-130303" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_archive_data"/>
+            <not>
+                <columnExists tableName="medic_archive_data" columnName="client_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record the client name.
+        </comment>
+        <addColumn tableName="medic_archive_data">
+            <column name="client_name" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20220310-212027" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="medic_error_data"/>
@@ -258,12 +294,30 @@
     <changeSet id="medic_error_data_20220311-1450" author="makombe">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="medic_error_data"/>
+            <not>
+                <columnExists tableName="medic_error_data" columnName="date_form_filled"/>
+            </not>
         </preConditions>
         <comment>
             Adds a column to record epoch date when  the form was filled in Afyastat app.
         </comment>
         <addColumn tableName="medic_error_data" >
             <column name="date_form_filled" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20220311-120303" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_error_data"/>
+            <not>
+                <columnExists tableName="medic_error_data" columnName="client_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record the client name.
+        </comment>
+        <addColumn tableName="medic_error_data">
+            <column name="client_name" type="varchar(255)"/>
         </addColumn>
     </changeSet>
 

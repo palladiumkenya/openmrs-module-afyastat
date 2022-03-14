@@ -57,8 +57,9 @@ public class AfyastatHomePageController {
 		List<SimpleObject> errorList = new ArrayList<SimpleObject>();
 		ObjectMapper objectMapper = new ObjectMapper();
 		for (AfyaStatQueueData qObj : queueDataList) {
-			String clientName = "";
-			if (qObj.getDiscriminator().equalsIgnoreCase("json-registration")) {
+			String clientName = qObj.getClientName();
+			if ((clientName == null || clientName.trim().equalsIgnoreCase(""))
+			        && qObj.getDiscriminator().equalsIgnoreCase("json-registration")) {
 				JsonNode jsonNode = null;
 				try {
 					jsonNode = objectMapper.readTree(qObj.getPayload());
@@ -68,10 +69,15 @@ public class AfyastatHomePageController {
 				}
 				
 				ObjectNode patientObj = (ObjectNode) jsonNode.get("patient");
-				clientName = patientObj.get("patient.given_name").asText();
-				clientName = clientName + " " + patientObj.get("patient.family_name").asText();
-				clientName = clientName + " " + patientObj.get("patient.middle_name").asText();
+				String givenName = patientObj.get("patient.given_name").asText();
+				clientName += (givenName == null) ? "" : givenName;
+				String familyName = " " + patientObj.get("patient.family_name").asText();
+				clientName += (familyName == null) ? "" : (" " + familyName);
+				String middleName = " " + patientObj.get("patient.middle_name").asText();
+				clientName += (middleName == null) ? "" : (" " + middleName);
+				clientName = clientName.trim();
 			}
+			clientName = (clientName == null) ? "" : clientName;
 			SimpleObject queueObject = SimpleObject.create("id", qObj.getId(), "uuid", qObj.getUuid(), "patientUuid", qObj
 			        .getPatientUuid(), "discriminator", qObj.getDiscriminator(), "provider", qObj.getProvider().getName(),
 			    "dateSubmitted", ui.formatDatePretty(qObj.getDateCreated()), "formName", qObj.getFormName()
@@ -85,11 +91,13 @@ public class AfyastatHomePageController {
 			for (ErrorMessagesInfo info : eObj.getErrorMessages()) {
 				errorMessages.add(info.getMessage());
 			}
+			String clientName = eObj.getClientName();
+			clientName = (clientName == null) ? "" : clientName;
 			SimpleObject errorObject = SimpleObject.create("id", eObj.getId(), "uuid", eObj.getUuid(), "patientUuid", eObj
 			        .getPatientUuid(), "message", StringUtils.join(errorMessages, ", "), "discriminator", eObj
-			        .getDiscriminator(), "provider", eObj.getProvider().getName(), "dateProcessed", ui.formatDatePretty(eObj
-			        .getDateProcessed()), "formName", eObj.getFormName().equalsIgnoreCase("Unknown name") ? "Registration"
-			        : eObj.getFormName());
+			        .getDiscriminator(), "provider", eObj.getProvider().getName(), "clientName", clientName,
+			    "dateProcessed", ui.formatDatePretty(eObj.getDateProcessed()), "formName", eObj.getFormName()
+			            .equalsIgnoreCase("Unknown name") ? "Registration" : eObj.getFormName());
 			errorList.add(errorObject);
 		}
 		

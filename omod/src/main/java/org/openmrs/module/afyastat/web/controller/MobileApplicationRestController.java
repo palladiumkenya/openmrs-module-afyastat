@@ -27,7 +27,6 @@ public class MobileApplicationRestController extends BaseRestController {
 	@RequestMapping(method = RequestMethod.POST, value = "/medicregistration")
 	@ResponseBody
 	public Object receiveSHR(HttpServletRequest request) {
-		
 		String requestBody = null;
 		try {
 			requestBody = Utils.fetchRequestBody(request.getReader());
@@ -39,7 +38,6 @@ public class MobileApplicationRestController extends BaseRestController {
 		if (requestBody != null) {
 			MedicDataExchange shr = new MedicDataExchange();
 			return shr.processIncomingRegistration(requestBody);
-			
 		}
 		return new SimpleObject().add("Report", "The request could not be interpreted properly");
 	}

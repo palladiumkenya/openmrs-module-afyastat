@@ -37,11 +37,6 @@ public class QueueContactsToMedicMobileTask extends AbstractTask {
 			//Queue the peer educators and peers
 			medicDataExchange.queueKpPeerPeerEductorList();
 			
-			//test payload
-			//medicDataExchange.getContacts();
-			
-			System.out.println("Successfully queued contacts for Afyastat");
-			log.info("Successfully queued contacts for Afyastat");
 		}
 		catch (Exception e) {
 			throw new IllegalArgumentException("Afyastat QUEUE contact list task could not be executed!", e);
