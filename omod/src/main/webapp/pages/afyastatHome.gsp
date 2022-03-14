@@ -95,11 +95,21 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     background-color: cadetblue;
     color: white;
 }
+
+.createButton {
+    background-color: cadetblue;
+    color: white;
+}
 .viewButton:hover {
     background-color: steelblue;
     color: white;
 }
 .mergeButton:hover {
+    background-color: steelblue;
+    color: white;
+}
+
+.createButton:hover {
     background-color: steelblue;
     color: white;
 }
@@ -438,17 +448,17 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
                 selectTd.append(selectCheckbox);
                 tr.append(selectTd);
+
+                var actionTd = jq('<td/>');
+
+                var btnView = jq('<button/>', {
+                    text: 'View Payload',
+                    class: 'viewButton',
+                    value: displayRecords[i].uuid
+                });
+                actionTd.append(btnView);
+                tr.append(actionTd);
             }
-            var actionTd = jq('<td/>');
-
-            var btnView = jq('<button/>', {
-                text: 'View Payload',
-                class: 'viewButton',
-                value: displayRecords[i].uuid
-            });
-            actionTd.append(btnView);
-            tr.append(actionTd);
-
             if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
                 var btnMerge = jq('<button/>', {
                     text: 'Merge',
