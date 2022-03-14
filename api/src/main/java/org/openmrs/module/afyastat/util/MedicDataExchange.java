@@ -112,20 +112,22 @@ public class MedicDataExchange {
 			
 			ObjectNode formNode = processFormPayload(jsonNode);
 			String documentUUID = formNode.get("documentUUID").getTextValue();
-			if (Utils.afyastatFormAlreadyExists(documentUUID)) {
+			Long dateFormFilled = formNode.get("dateFormFilled").getLongValue();
+			String formDataUuid = formNode.path("encounter").path("encounter.form_uuid").getTextValue();
+			String patientUuid = formNode.path("patient").path("patient.uuid").getTextValue();
+			
+			if (Utils.afyastatFormAlreadyExists(documentUUID, formDataUuid, dateFormFilled, patientUuid)) {
 				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentUUID
 				        + ". The payload will be ignored");
 				return "Afyastat sent a duplicate form to KenyaEMR. This has been ignored";
 			}
 			String payload = formNode.toString();
 			String discriminator = formNode.path("discriminator").path("discriminator").getTextValue();
-			String formDataUuid = formNode.path("encounter").path("encounter.form_uuid").getTextValue();
-			String patientUuid = formNode.path("patient").path("patient.uuid").getTextValue();
 			Integer locationId = Integer.parseInt(formNode.path("encounter").path("encounter.location_id").getTextValue());
 			String providerString = formNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = formNode.path("encounter").path("encounter.user_system_id").getTextValue();
 			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
-			    documentUUID);
+			    documentUUID, dateFormFilled);
 		}
 		return "Data queue form created successfully";
 	}
@@ -154,7 +156,9 @@ public class MedicDataExchange {
 		if (jsonNode != null) {
 			ObjectNode regNode = (ObjectNode) jsonNode.get("registration");
 			String documentId = regNode.get("_id").getTextValue();
-			if (Utils.afyastatFormAlreadyExists(documentId)) {
+			Long dateFormFilled = regNode.get("reported_date").getLongValue();
+			
+			if (Utils.afyastatFormAlreadyExists(documentId, "", dateFormFilled, "")) {
 				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentId
 				        + ". The payload will be ignored");
 				return "Afyastat sent a duplicate registration to KenyaEMR. This has been ignored";
@@ -179,7 +183,7 @@ public class MedicDataExchange {
 				
 				// add registration queue data
 				saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
-				    patientUuid);
+				    patientUuid, dateFormFilled);
 				if (relationshipNode != null) {
 					String relationshipDiscriminator = "json-relationship";
 					saveMedicDataQueue(relationshipNode.toString(), locationId, providerString, patientUuid,
@@ -217,8 +221,10 @@ public class MedicDataExchange {
 			        .getTextValue());
 			String providerString = demographicUpdateNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = demographicUpdateNode.path("encounter").path("encounter.user_system_id").getTextValue();
+			Long dateFormFilled = demographicUpdateNode.get("reported_date").getLongValue();
+			
 			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
-			    patientUuid);
+			    patientUuid, dateFormFilled);
 		}
 		return "Data queue demographics updates created successfully";
 	}
@@ -274,14 +280,14 @@ public class MedicDataExchange {
 	}
 	
 	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
-	        String discriminator, String formUuid, String userString, String queueUUID) {
+	        String discriminator, String formUuid, String userString, String queueUUID, Long dateFormFilled) {
 		AfyaDataSource dataSource = dataService.getDataSource(1);
 		Provider provider = Context.getProviderService().getProviderByIdentifier(providerString);
 		User user = Context.getUserService().getUserByUsername(userString);
 		Location location = Context.getLocationService().getLocation(locationId);
 		Form form = Context.getFormService().getFormByUuid(formUuid);
 		
-		if (Utils.afyastatFormAlreadyExists(queueUUID)) {
+		if (Utils.afyastatFormAlreadyExists(queueUUID, formUuid, dateFormFilled, patientUuid)) {
 			System.out.println("Afyastat attempted to send a duplicate record with uuid = " + queueUUID
 			        + ". The payload will be ignored");
 			return;
@@ -293,6 +299,7 @@ public class MedicDataExchange {
 			medicQueData.setFormName("Unknown name");
 		}
 		medicQueData.setUuid(queueUUID);
+		medicQueData.setDateFormFilled(dateFormFilled);
 		medicQueData.setPayload(payload);
 		medicQueData.setDiscriminator(discriminator);
 		medicQueData.setPatientUuid(patientUuid);
@@ -476,7 +483,8 @@ public class MedicDataExchange {
 			e.printStackTrace();
 		}
 		String documentUUID = jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "";
-		
+		Long dateFormFilled = (Long) (jsonNode.get("reported_date") != null ? jsonNode.get("reported_date").getLongValue()
+		        : "");
 		String encounterDate = jsonNode.path("fields").path("encounter_date").getTextValue() != null
 		        && !jsonNode.path("fields").path("encounter_date").getTextValue().equalsIgnoreCase("") ? formatStringDate(jsonNode
 		        .path("fields").path("encounter_date").getTextValue())
@@ -527,6 +535,8 @@ public class MedicDataExchange {
 		formsNode.put("discriminator", discriminator);
 		formsNode.put("encounter", encounter);
 		formsNode.put("documentUUID", documentUUID);
+		formsNode.put("dateFormFilled", dateFormFilled);
+		
 		return formsNode;
 	}
 	

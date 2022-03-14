@@ -52,6 +52,18 @@ public interface InfoDao<T extends Info> extends SingleClassInfoDao<T> {
 	List<T> getAllDataByFormDataUuid(final String formDataUuid);
 	
 	/**
+	 * Return all saved data with the given form data uuid and date form filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid the patientUuid
+	 * @return the data with the matching formDataUuid,dateFormFilled and patientUuid
+	 * @should return data with the matching formDataUuid, dateFormFilled and patientUuid
+	 * @should return null when no data with matching formDataUuid, dateFormFilled and patientUuid
+	 */
+	T getDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid, Long dateFormFilled, String patientUuid);
+	
+	/**
 	 * Return all saved data.
 	 * 
 	 * @return all saved data.

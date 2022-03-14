@@ -103,6 +103,36 @@ public abstract class HibernateInfoDao<T extends Info> extends HibernateSingleCl
 	}
 	
 	/**
+	 * Return the data with the given uuid and dateFormFilled.
+	 * 
+	 * @param formDataUuid the formDataUuid.
+	 * @param dateFormFilled the dateFormFilled.
+	 * @param patientUuid the patientUuid.
+	 * @return the data with the matching uuid, dateFormFilled and patientUuid.
+	 * @should return data with matching uuid,dateFormFilled and patientUuid.
+	 * @should return null when no data with matching uuid, dateFormFilled and patientUuid.
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public T getDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid, final Long dateFormFilled,
+	        String patientUuid) {
+		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("formDataUuid", formDataUuid));
+		criteria.add(Restrictions.eq("dateFormFilled", dateFormFilled));
+		criteria.add(Restrictions.eq("patientUuid", patientUuid));
+		T data = (T) criteria.uniqueResult();
+		if (data != null) {
+			List<InfoHandler> handlers = HandlerUtil.getHandlersForType(InfoHandler.class, data.getClass());
+			for (InfoHandler handler : handlers) {
+				if (handler.accept(data)) {
+					handler.handleGet(data);
+				}
+			}
+		}
+		return data;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see InfoDao#getAllDataByFormDataUuid(String)
