@@ -185,6 +185,19 @@ public interface InfoService extends OpenmrsService {
 	List<ArchiveInfo> getArchiveDataByFormDataUuid(final String formDataUuid);
 	
 	/**
+	 * Return all archived data with the given form data uuid and date form filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid the patientUuid
+	 * @return returned archived data with the matching formDataUuid, patientUuid and dateFormFilled
+	 * @should return archived data with the matching formDataUuid, patientUuid and dateFormFilled
+	 * @should return null when no archived data with matchin formDataUuid and dateFormFilled
+	 */
+	ArchiveInfo getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid);
+	
+	/**
 	 * Return all error data with the given form data uuid.
 	 * 
 	 * @param formDataUuid the form data uuid
@@ -195,6 +208,20 @@ public interface InfoService extends OpenmrsService {
 	List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid);
 	
 	/**
+	 * Return all error data with the given form data uuid, patientUuid and date form is filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid patientUuid
+	 * @return return error data with the matching formDataUuid,dateFormFilled and patientUuid
+	 * @should return the error data with the matching formDataUuid, dateFormFilled and patientUuid
+	 * @should return null when no error data with matching formDataUuid, dateFormFilled and
+	 *         patientUuid
+	 */
+	ErrorInfo getErrorDataByFormDataUuiDateFormFilledAndPatientUuid(final String formDataUuid, final Long dateFormFilled,
+	        String patientUuid);
+	
+	/**
 	 * Return all queue data with the given form data uuid.
 	 * 
 	 * @param formDataUuid the form data uuid
@@ -203,6 +230,20 @@ public interface InfoService extends OpenmrsService {
 	 * @should return empty list when no queue data with matching formDataUuid
 	 */
 	List<AfyaStatQueueData> getQueueDataByFormDataUuid(final String formDataUuid);
+	
+	/**
+	 * Return all queue data with the given form data uuid and date form is filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid the patientUuid
+	 * @return return queue data with the matching formDataUuid,patientUuid and dateFormFilled
+	 * @should return the queue data with the matching formDataUuid, patientUuid and dateFormFilled
+	 * @should return null when no queue data with matching formDataUuid, patientUuid and
+	 *         dateFormFilled
+	 */
+	AfyaStatQueueData getQueueDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid);
 	
 	/**
 	 * Return all saved archive data.

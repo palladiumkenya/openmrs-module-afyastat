@@ -114,15 +114,15 @@ public class MedicDataExchange {
 			String documentUUID = formNode.get("documentUUID").getTextValue();
 			Long dateFormFilled = formNode.get("dateFormFilled").getLongValue();
 			String formDataUuid = formNode.path("encounter").path("encounter.form_uuid").getTextValue();
+			String patientUuid = formNode.path("patient").path("patient.uuid").getTextValue();
 			
-			if (Utils.afyastatFormAlreadyExists(documentUUID, formDataUuid, dateFormFilled)) {
+			if (Utils.afyastatFormAlreadyExists(documentUUID, formDataUuid, dateFormFilled, patientUuid)) {
 				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentUUID
 				        + ". The payload will be ignored");
 				return "Afyastat sent a duplicate form to KenyaEMR. This has been ignored";
 			}
 			String payload = formNode.toString();
 			String discriminator = formNode.path("discriminator").path("discriminator").getTextValue();
-			String patientUuid = formNode.path("patient").path("patient.uuid").getTextValue();
 			Integer locationId = Integer.parseInt(formNode.path("encounter").path("encounter.location_id").getTextValue());
 			String providerString = formNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = formNode.path("encounter").path("encounter.user_system_id").getTextValue();
@@ -158,7 +158,7 @@ public class MedicDataExchange {
 			String documentId = regNode.get("_id").getTextValue();
 			Long dateFormFilled = regNode.get("reported_date").getLongValue();
 			
-			if (Utils.afyastatFormAlreadyExists(documentId, "", dateFormFilled)) {
+			if (Utils.afyastatFormAlreadyExists(documentId, "", dateFormFilled, "")) {
 				System.out.println("Afyastat attempted to send a duplicate record with uuid = " + documentId
 				        + ". The payload will be ignored");
 				return "Afyastat sent a duplicate registration to KenyaEMR. This has been ignored";
@@ -287,7 +287,7 @@ public class MedicDataExchange {
 		Location location = Context.getLocationService().getLocation(locationId);
 		Form form = Context.getFormService().getFormByUuid(formUuid);
 		
-		if (Utils.afyastatFormAlreadyExists(queueUUID, formUuid, dateFormFilled)) {
+		if (Utils.afyastatFormAlreadyExists(queueUUID, formUuid, dateFormFilled, patientUuid)) {
 			System.out.println("Afyastat attempted to send a duplicate record with uuid = " + queueUUID
 			        + ". The payload will be ignored");
 			return;

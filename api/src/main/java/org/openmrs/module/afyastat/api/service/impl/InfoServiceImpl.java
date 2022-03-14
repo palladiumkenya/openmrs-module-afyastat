@@ -338,13 +338,34 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 	}
 	
 	@Override
+	public ArchiveInfo getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid) {
+		return getArchiveInfoDao().getDataByFormDataUuidDateFormFilledAndPatientUuid(formDataUuid, dateFormFilled,
+		    patientUuid);
+	}
+	
+	@Override
 	public List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid) {
 		return getErrorInfoDao().getAllDataByFormDataUuid(formDataUuid);
 	}
 	
 	@Override
+	public ErrorInfo getErrorDataByFormDataUuiDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid) {
+		return getErrorInfoDao()
+		        .getDataByFormDataUuidDateFormFilledAndPatientUuid(formDataUuid, dateFormFilled, patientUuid);
+	}
+	
+	@Override
 	public List<AfyaStatQueueData> getQueueDataByFormDataUuid(final String formDataUuid) {
 		return getAfyaStatQueueDataDao().getAllDataByFormDataUuid(formDataUuid);
+	}
+	
+	@Override
+	public AfyaStatQueueData getQueueDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFiled, String patientUuid) {
+		return getAfyaStatQueueDataDao().getDataByFormDataUuidDateFormFilledAndPatientUuid(formDataUuid, dateFormFiled,
+		    patientUuid);
 	}
 	
 	/**
