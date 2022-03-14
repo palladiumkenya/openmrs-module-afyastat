@@ -27,6 +27,8 @@ public class MedicQueData extends BaseOpenmrsData {
 	
 	private String patientUuid;
 	
+	private String clientName;
+	
 	private String formDataUuid;
 	
 	private Long dateFormFilled;
@@ -46,6 +48,19 @@ public class MedicQueData extends BaseOpenmrsData {
 		this.patientUuid = patientUuid;
 		this.formDataUuid = formDataUuid;
 		this.dateFormFilled = dateFormFilled;
+	}
+	
+	public MedicQueData(String discriminator, String payload, String formName, String patientUuid, String clientName,
+	    String formDataUuid, AfyaDataSource dataSource, Location location, Provider provider) {
+		this.location = location;
+		this.discriminator = discriminator;
+		this.dataSource = dataSource;
+		this.payload = payload;
+		this.provider = provider;
+		this.formName = formName;
+		this.patientUuid = patientUuid;
+		this.clientName = clientName;
+		this.formDataUuid = formDataUuid;
 	}
 	
 	public void prePersist() {
@@ -124,6 +139,14 @@ public class MedicQueData extends BaseOpenmrsData {
 	
 	public void setPatientUuid(String patientUuid) {
 		this.patientUuid = patientUuid;
+	}
+	
+	public String getClientName() {
+		return clientName;
+	}
+	
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 	
 	public String getFormDataUuid() {

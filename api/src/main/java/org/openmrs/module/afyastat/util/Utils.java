@@ -1,5 +1,10 @@
 package org.openmrs.module.afyastat.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -7,14 +12,6 @@ import org.openmrs.Form;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.api.service.InfoService;
-import org.openmrs.module.afyastat.model.AfyaStatQueueData;
-import org.openmrs.module.afyastat.model.ArchiveInfo;
-import org.openmrs.module.afyastat.model.ErrorInfo;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 public class Utils {
 	
