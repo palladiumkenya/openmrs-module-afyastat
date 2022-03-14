@@ -13,6 +13,10 @@
  */
 package org.openmrs.module.afyastat.api.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -609,9 +613,7 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 		
 		registerTemporaryUuid(submittedPatientUuid, existingPatientUuid);
 		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData(errorInfo);
-		//afyaStatQueueData = this.saveQueueData(afyaStatQueueData);
 		this.purgeErrorData(errorInfo);
-		//requeued.add(afyaStatQueueData);
 		
 		// add CHT ref to the existing patient if at all it doesn't exist
 		Patient existingPatient = Context.getPatientService().getPatientByUuid(existingPatientUuid);
@@ -651,7 +653,6 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 		chtRef.setIdentifier(submittedPatientUuid);
 		chtRef.setLocation(Context.getService(KenyaEmrService.class).getDefaultLocation());
 		chtRef.setPatient(existingPatient);
-		//existingPatient.addIdentifier(chtRef);
 		Context.getPatientService().savePatientIdentifier(chtRef);
 		
 	}
@@ -689,14 +690,12 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 				List<ErrorInfo> errors = getAllErrorData();
 				
 				for (ErrorInfo errorData : errors) {
-					//ErrorInfo errorData = getErrorDataByUuid(uuid);
 					AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
 					saveQueueData(queueData);
 					purgeErrorData(errorData);
 				}
 			} else {
 				String[] uuidList = errorList.split(",");
-				//DataService dataService = Context.getService(DataService.class);
 				for (String uuid : uuidList) {
 					ErrorInfo errorData = getErrorDataByUuid(uuid);
 					AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
@@ -722,6 +721,48 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 				for (String uuid : uuidList) {
 					ErrorInfo errorData = getErrorDataByUuid(uuid);
 					purgeErrorData(errorData);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void createAsNewRegistration(String queueUuid) {
+		if (Context.isAuthenticated()) {
+			ErrorInfo errorData = getErrorDataByUuid(queueUuid);
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = null;
+			try {
+				jsonNode = objectMapper.readTree(errorData.getPayload());
+			}
+			catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			
+			String submittedPatientUuid = errorData.getPatientUuid();
+			
+			ObjectNode objectNode = (ObjectNode) jsonNode;
+			objectNode.put("skipPatientMatching", "true");
+			
+			AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+			queueData.setPayload(objectNode.toString());
+			
+			errorData.setVoided(true);
+			errorData.setVoidReason("To be created as new registration");
+			
+			errorData = saveErrorData(errorData);
+			saveQueueData(queueData);
+			purgeErrorData(errorData);
+			
+			// Fetch all ErrorData associated with the patient UUID (the one determined to be of a duplicate patient).
+			int countOfErrors = countErrorData(submittedPatientUuid).intValue();
+			if (countOfErrors > 0) {
+				List<ErrorInfo> allToRequeue = getPagedErrorData(submittedPatientUuid, 1, countOfErrors);
+				for (ErrorInfo errorData1 : allToRequeue) {
+					AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData(errorData1);
+					afyaStatQueueData = saveQueueData(afyaStatQueueData);
+					saveQueueData(afyaStatQueueData);
+					purgeErrorData(errorData1);
 				}
 			}
 		}
