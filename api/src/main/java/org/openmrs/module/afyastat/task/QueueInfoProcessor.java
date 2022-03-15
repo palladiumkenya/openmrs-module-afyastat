@@ -65,9 +65,13 @@ public class QueueInfoProcessor {
 						if (queueDataHandler.accept(afyaStatQueueData)) {
 							queueDataHandler.process(afyaStatQueueData);
 							queueDataIterator.remove();
-							// archive them after we're done processing the queue data.
-							createArchiveData(afyaStatQueueData, "Queue data processed successfully!");
-							infoService.purgeQueueData(afyaStatQueueData);
+							// archive them after we're done processing the queue data but for demographic update purge.
+							if (afyaStatQueueData.getDiscriminator().equalsIgnoreCase("json-demographics-update")) {
+								infoService.purgeQueueData(afyaStatQueueData);
+							} else {
+								createArchiveData(afyaStatQueueData, "Queue data processed successfully!");
+								infoService.purgeQueueData(afyaStatQueueData);
+							}
 						}
 					}
 					catch (Exception e) {
