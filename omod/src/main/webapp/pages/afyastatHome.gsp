@@ -58,6 +58,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 .dateRequestColumn {
     width: 120px;
 }
+.clientNameColumn {
+    width: 120px;
+}
 .selectColumn {
     width: 40px;
     padding-left: 5px;
@@ -180,7 +183,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                     <table class="simple-table" width="90%">
                                         <thead>
                                         <tr>
-                                            <th class="nameColumn">Patient/UUID</th>
+                                            <th class="clientNameColumn">Client Name</th>
                                             <th class="cccNumberColumn">Discriminator</th>
                                             <th class="sampleTypeColumn">Form</th>
                                             <th class="dateRequestColumn">Date submitted</th>
@@ -218,7 +221,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                             <thead>
 
                                             <tr>
-                                                <th class="nameColumn">Error data UUID</th>
+                                                <th class="clientNameColumn">Client Name</th>
                                                 <th class="cccNumberColumn">Discriminator</th>
                                                 <th class="sampleTypeColumn">Form</th>
                                                 <th class="dateRequestColumn">Date processed</th>
@@ -420,11 +423,13 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         for (var i = 0; i < displayRecords.length; i++) {
 
             tr = jq('<tr/>');
-            if (tableId === 'queue') {
-                tr.append("<td>" + (displayRecords[i].clientName != "" ? displayRecords[i].clientName : displayRecords[i].patientUuid) + "</td>");
-            } else {
-                tr.append("<td>" + displayRecords[i].patientUuid + "</td>");
-            }
+            // if (tableId === 'queue') {
+            //     tr.append("<td>" + (displayRecords[i].clientName != "" ? displayRecords[i].clientName : displayRecords[i].patientUuid) + "</td>");
+            // } else {
+            //     tr.append("<td>" + displayRecords[i].patientUuid + "</td>");
+            // }
+            // tr.append("<td>" + displayRecords[i].patientUuid + "</td>");
+            tr.append("<td>" + displayRecords[i].clientName + "</td>");
 
             tr.append("<td>" + displayRecords[i].discriminator + "</td>");
             tr.append("<td>" + displayRecords[i].formName + "</td>");
@@ -436,7 +441,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             if (tableId === 'error') {
                 tr.append("<td>" + displayRecords[i].message + "</td>");
             }
-            tr.append("<td>" + displayRecords[i].provider + "</td>");
+            tr.append("<td>" + displayRecords[i].provider + "</td>");           
 
             if (tableId === 'error') {
                 var selectTd = jq('<td/>');

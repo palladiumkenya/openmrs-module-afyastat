@@ -45,6 +45,7 @@ import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
+import org.openmrs.module.afyastat.utils.JsonFormatUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -123,11 +124,12 @@ public class MedicDataExchange {
 			}
 			String payload = formNode.toString();
 			String discriminator = formNode.path("discriminator").path("discriminator").getTextValue();
+			String clientName = getClientName(formNode);
 			Integer locationId = Integer.parseInt(formNode.path("encounter").path("encounter.location_id").getTextValue());
 			String providerString = formNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = formNode.path("encounter").path("encounter.user_system_id").getTextValue();
 			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
-			    documentUUID, dateFormFilled);
+			    documentUUID, dateFormFilled, clientName);
 		}
 		return "Data queue form created successfully";
 	}
@@ -176,6 +178,7 @@ public class MedicDataExchange {
 				String discriminator = registrationNode.path("discriminator").path("discriminator").getTextValue();
 				String formDataUuid = registrationNode.path("encounter").path("encounter.form_uuid").getTextValue();
 				String patientUuid = registrationNode.path("patient").path("patient.uuid").getTextValue();
+				String clientName = getClientName(registrationNode);
 				Integer locationId = Integer.parseInt(registrationNode.path("encounter").path("encounter.location_id")
 				        .getTextValue());
 				String providerString = registrationNode.path("encounter").path("encounter.provider_id").getTextValue();
@@ -183,7 +186,7 @@ public class MedicDataExchange {
 				
 				// add registration queue data
 				saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
-				    patientUuid, dateFormFilled);
+				    patientUuid, dateFormFilled, clientName);
 				if (relationshipNode != null) {
 					String relationshipDiscriminator = "json-relationship";
 					saveMedicDataQueue(relationshipNode.toString(), locationId, providerString, patientUuid,
@@ -199,6 +202,35 @@ public class MedicDataExchange {
 			}
 		}
 		return "Data queue registration created successfully";
+	}
+	
+	/**
+	 * Gets the client name from sent data
+	 * 
+	 * @param registrationNode the registration node
+	 * @param payload the payload data
+	 * @return the client name
+	 */
+	//private String getClientName(ObjectNode registrationNode, String payload) {
+	private String getClientName(ObjectNode registrationNode) {
+		String clientName = "";
+		//String givenName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.given_name']");
+		String givenName = registrationNode.path("patient").path("patient.given_name").getTextValue();
+		clientName += (givenName == null) ? "" : givenName;
+		//String familyName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.family_name']");
+		String familyName = registrationNode.path("patient").path("patient.family_name").getTextValue();
+		clientName += (familyName == null) ? "" : (" " + familyName);
+		String middleName = "";
+		try {
+			//middleName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.middle_name']");
+			middleName = registrationNode.path("patient").path("patient.middle_name").getTextValue();
+			clientName += (middleName == null) ? "" : (" " + middleName);
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		clientName = clientName.trim();
+		return (clientName);
 	}
 	
 	public String processDemographicsUpdate(String resultPayload) {
@@ -217,6 +249,7 @@ public class MedicDataExchange {
 			String discriminator = demographicUpdateNode.path("discriminator").path("discriminator").getTextValue();
 			String formDataUuid = demographicUpdateNode.path("encounter").path("encounter.form_uuid").getTextValue();
 			String patientUuid = demographicUpdateNode.path("patient").path("patient.uuid").getTextValue();
+			String clientName = getClientName(demographicUpdateNode);
 			Integer locationId = Integer.parseInt(demographicUpdateNode.path("encounter").path("encounter.location_id")
 			        .getTextValue());
 			String providerString = demographicUpdateNode.path("encounter").path("encounter.provider_id").getTextValue();
@@ -224,7 +257,7 @@ public class MedicDataExchange {
 			Long dateFormFilled = demographicUpdateNode.get("reported_date").getLongValue();
 			
 			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
-			    patientUuid, dateFormFilled);
+			    patientUuid, dateFormFilled, clientName);
 		}
 		return "Data queue demographics updates created successfully";
 	}
@@ -280,7 +313,8 @@ public class MedicDataExchange {
 	}
 	
 	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
-	        String discriminator, String formUuid, String userString, String queueUUID, Long dateFormFilled) {
+	        String discriminator, String formUuid, String userString, String queueUUID, Long dateFormFilled,
+	        String clientName) {
 		AfyaDataSource dataSource = dataService.getDataSource(1);
 		Provider provider = Context.getProviderService().getProviderByIdentifier(providerString);
 		User user = Context.getUserService().getUserByUsername(userString);
@@ -303,6 +337,7 @@ public class MedicDataExchange {
 		medicQueData.setPayload(payload);
 		medicQueData.setDiscriminator(discriminator);
 		medicQueData.setPatientUuid(patientUuid);
+		medicQueData.setClientName(clientName);
 		medicQueData.setFormDataUuid(formUuid);
 		medicQueData.setProvider(provider);
 		medicQueData.setLocation(location);
@@ -1114,7 +1149,7 @@ public class MedicDataExchange {
 				}
 			}
 		} else {
-			System.err.println("AfyaStat Outgoing Registration No Contacts to queue");
+			System.out.println("AfyaStat Outgoing Registration No Contacts to queue");
 			return (false);
 		}
 		
@@ -1239,7 +1274,7 @@ public class MedicDataExchange {
 				}
 			}
 		} else {
-			System.err.println("AfyaStat Outgoing Registration No Linkage Contacts to queue");
+			System.out.println("AfyaStat Outgoing Registration No Linkage Contacts to queue");
 			return (false);
 		}
 		

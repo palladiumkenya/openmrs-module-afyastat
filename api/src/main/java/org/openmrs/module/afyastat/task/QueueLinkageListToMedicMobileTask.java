@@ -34,8 +34,6 @@ public class QueueLinkageListToMedicMobileTask extends AbstractTask {
 			//Queue the linkage contacts
 			medicDataExchange.queueLinkageList();
 			
-			System.err.println("Successfully queued linkage contacts for Afyastat");
-			log.info("Successfully queued linkage contacts for Afyastat");
 		}
 		catch (Exception e) {
 			throw new IllegalArgumentException("Afyastat QUEUE linkage list task could not be executed!", e);
