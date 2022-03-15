@@ -45,7 +45,6 @@ import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.module.kenyaemr.metadata.HivMetadata;
 import org.openmrs.module.kenyaemr.util.EmrUtils;
 import org.openmrs.module.metadatadeploy.MetadataUtils;
-import org.openmrs.module.afyastat.utils.JsonFormatUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -211,18 +210,14 @@ public class MedicDataExchange {
 	 * @param payload the payload data
 	 * @return the client name
 	 */
-	//private String getClientName(ObjectNode registrationNode, String payload) {
 	private String getClientName(ObjectNode registrationNode) {
 		String clientName = "";
-		//String givenName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.given_name']");
 		String givenName = registrationNode.path("patient").path("patient.given_name").getTextValue();
 		clientName += (givenName == null) ? "" : givenName;
-		//String familyName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.family_name']");
 		String familyName = registrationNode.path("patient").path("patient.family_name").getTextValue();
 		clientName += (familyName == null) ? "" : (" " + familyName);
 		String middleName = "";
 		try {
-			//middleName = JsonFormatUtils.readAsString(payload, "$['patient']['patient.middle_name']");
 			middleName = registrationNode.path("patient").path("patient.middle_name").getTextValue();
 			clientName += (middleName == null) ? "" : (" " + middleName);
 		}

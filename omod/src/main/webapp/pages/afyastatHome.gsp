@@ -423,12 +423,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         for (var i = 0; i < displayRecords.length; i++) {
 
             tr = jq('<tr/>');
-            // if (tableId === 'queue') {
-            //     tr.append("<td>" + (displayRecords[i].clientName != "" ? displayRecords[i].clientName : displayRecords[i].patientUuid) + "</td>");
-            // } else {
-            //     tr.append("<td>" + displayRecords[i].patientUuid + "</td>");
-            // }
-            // tr.append("<td>" + displayRecords[i].patientUuid + "</td>");
             tr.append("<td>" + displayRecords[i].clientName + "</td>");
 
             tr.append("<td>" + displayRecords[i].discriminator + "</td>");
