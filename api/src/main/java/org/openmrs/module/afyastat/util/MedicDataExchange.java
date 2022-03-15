@@ -249,7 +249,7 @@ public class MedicDataExchange {
 			        .getTextValue());
 			String providerString = demographicUpdateNode.path("encounter").path("encounter.provider_id").getTextValue();
 			String userName = demographicUpdateNode.path("encounter").path("encounter.user_system_id").getTextValue();
-			Long dateFormFilled = demographicUpdateNode.get("reported_date").getLongValue();
+			Long dateFormFilled = demographicUpdateNode.path("demographicsupdate").path("dateFormFilled").getLongValue();
 			
 			saveMedicDataQueue(payload, locationId, providerString, patientUuid, discriminator, formDataUuid, userName,
 			    patientUuid, dateFormFilled, clientName);
@@ -316,7 +316,8 @@ public class MedicDataExchange {
 		Location location = Context.getLocationService().getLocation(locationId);
 		Form form = Context.getFormService().getFormByUuid(formUuid);
 		
-		if (Utils.afyastatFormAlreadyExists(queueUUID, formUuid, dateFormFilled, patientUuid)) {
+		if (Utils.afyastatFormAlreadyExists(queueUUID, formUuid, dateFormFilled, patientUuid)
+		        && !discriminator.equalsIgnoreCase("json-demographics-update")) {
 			System.out.println("Afyastat attempted to send a duplicate record with uuid = " + queueUUID
 			        + ". The payload will be ignored");
 			return;
@@ -2245,6 +2246,8 @@ public class MedicDataExchange {
 		    jsonNode.get("patient_nextOfKinPostaladdress") != null ? jsonNode.get("patient_nextOfKinPostaladdress")
 		            .getTextValue() : "");
 		demographicsUpdateNode.put("demographicsupdate.otheridentifier", getIdentifierTypes(jsonNode));
+		Long dateFormFilled = jsonNode.get("reported_date") != null ? jsonNode.get("reported_date").getLongValue() : null;
+		demographicsUpdateNode.put("dateFormFilled", dateFormFilled);
 		
 		obs.put(
 		    "1054^CIVIL STATUS^99DCT",
