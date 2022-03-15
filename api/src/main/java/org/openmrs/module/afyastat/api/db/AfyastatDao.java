@@ -9,10 +9,10 @@
  */
 package org.openmrs.module.afyastat.api.db;
 
-import org.openmrs.module.afyastat.api.service.MedicQueData;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 
 public interface AfyastatDao {
 	
-	public MedicQueData saveQueData(MedicQueData medicQueData);
+	public AfyaStatQueueData saveQueData(AfyaStatQueueData afyaStatQueueData);
 	
 }

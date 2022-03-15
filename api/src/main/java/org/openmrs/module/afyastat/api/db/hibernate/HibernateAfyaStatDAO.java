@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.afyastat.api.db.AfyastatDao;
-import org.openmrs.module.afyastat.api.service.MedicQueData;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 
 public class HibernateAfyaStatDAO implements AfyastatDao {
 	
@@ -46,9 +46,9 @@ public class HibernateAfyaStatDAO implements AfyastatDao {
 	 */
 	
 	@Override
-	public MedicQueData saveQueData(MedicQueData medicQueData) throws DAOException {
+	public AfyaStatQueueData saveQueData(AfyaStatQueueData afyaStatQueueData) throws DAOException {
 		
-		sessionFactory.getCurrentSession().saveOrUpdate(medicQueData);
-		return medicQueData;
+		sessionFactory.getCurrentSession().saveOrUpdate(afyaStatQueueData);
+		return afyaStatQueueData;
 	}
 }
