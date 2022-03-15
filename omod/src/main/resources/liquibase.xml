@@ -141,6 +141,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet author="makombe" id="index_medic_queue_data_20220315-2348">								
+        <createIndex indexName="index_date_form_filled_medic_queue_data" tableName="medic_queue_data">
+            <column name="form_data_uuid"/>
+            <column name="date_form_filled"/>
+            <column name="patient_uuid"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet id="medic_archive_data_20200723-1448" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -223,6 +231,14 @@
         <addColumn tableName="medic_archive_data">
             <column name="client_name" type="varchar(255)"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet author="makombe" id="index_medic_archive_data_20220315-2339">								
+        <createIndex indexName="index_date_form_filled_medic_archive_data" tableName="medic_archive_data">
+            <column name="form_data_uuid"/>
+            <column name="date_form_filled"/>
+            <column name="patient_uuid"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="medic_error_data_20220310-212027" author="pwangoo">
@@ -319,6 +335,14 @@
         <addColumn tableName="medic_error_data">
             <column name="client_name" type="varchar(255)"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet author="makombe" id="index_medic_error_data_20220315-2337">								
+        <createIndex indexName="index_date_form_filled_error_data" tableName="medic_error_data">
+            <column name="form_data_uuid"/>
+            <column name="date_form_filled"/>
+            <column name="patient_uuid"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="medic_notification_data_20200723-1451" author="pwangoo">
