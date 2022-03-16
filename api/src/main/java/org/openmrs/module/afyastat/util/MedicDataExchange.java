@@ -35,9 +35,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.api.AfyastatService;
 import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.MedicOutgoingRegistrationService;
-import org.openmrs.module.afyastat.api.service.MedicQueData;
 import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.afyastat.model.AfyaDataSource;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.MedicOutgoingRegistration;
 import org.openmrs.module.hivtestingservices.api.HTSService;
 import org.openmrs.module.hivtestingservices.api.PatientContact;
@@ -290,21 +290,21 @@ public class MedicDataExchange {
 		Location location = Context.getLocationService().getLocation(locationId);
 		Form form = Context.getFormService().getFormByUuid(formUuid);
 		
-		MedicQueData medicQueData = new MedicQueData();
+		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData();
 		if (form != null && form.getName() != null) {
-			medicQueData.setFormName(form.getName());
+			afyaStatQueueData.setFormName(form.getName());
 		} else {
-			medicQueData.setFormName("Unknown name");
+			afyaStatQueueData.setFormName("Unknown name");
 		}
-		medicQueData.setPayload(payload);
-		medicQueData.setDiscriminator(discriminator);
-		medicQueData.setPatientUuid(patientUuid);
-		medicQueData.setFormDataUuid(formUuid);
-		medicQueData.setProvider(provider);
-		medicQueData.setLocation(location);
-		medicQueData.setDataSource(dataSource);
-		medicQueData.setCreator(user);
-		afyastatService.saveQueData(medicQueData);
+		afyaStatQueueData.setPayload(payload);
+		afyaStatQueueData.setDiscriminator(discriminator);
+		afyaStatQueueData.setPatientUuid(patientUuid);
+		afyaStatQueueData.setFormDataUuid(formUuid);
+		afyaStatQueueData.setProvider(provider);
+		afyaStatQueueData.setLocation(location);
+		afyaStatQueueData.setDataSource(dataSource);
+		afyaStatQueueData.setCreator(user);
+		afyastatService.saveQueData(afyaStatQueueData);
 	}
 	
 	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
@@ -321,24 +321,24 @@ public class MedicDataExchange {
 			        + ". The payload will be ignored");
 			return;
 		}
-		MedicQueData medicQueData = new MedicQueData();
+		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData();
 		if (form != null && form.getName() != null) {
-			medicQueData.setFormName(form.getName());
+			afyaStatQueueData.setFormName(form.getName());
 		} else {
-			medicQueData.setFormName("Unknown name");
+			afyaStatQueueData.setFormName("Unknown name");
 		}
-		medicQueData.setUuid(queueUUID);
-		medicQueData.setDateFormFilled(dateFormFilled);
-		medicQueData.setPayload(payload);
-		medicQueData.setDiscriminator(discriminator);
-		medicQueData.setPatientUuid(patientUuid);
-		medicQueData.setClientName(clientName);
-		medicQueData.setFormDataUuid(formUuid);
-		medicQueData.setProvider(provider);
-		medicQueData.setLocation(location);
-		medicQueData.setDataSource(dataSource);
-		medicQueData.setCreator(user);
-		afyastatService.saveQueData(medicQueData);
+		afyaStatQueueData.setUuid(queueUUID);
+		afyaStatQueueData.setDateFormFilled(dateFormFilled);
+		afyaStatQueueData.setPayload(payload);
+		afyaStatQueueData.setDiscriminator(discriminator);
+		afyaStatQueueData.setPatientUuid(patientUuid);
+		afyaStatQueueData.setClientName(clientName);
+		afyaStatQueueData.setFormDataUuid(formUuid);
+		afyaStatQueueData.setProvider(provider);
+		afyaStatQueueData.setLocation(location);
+		afyaStatQueueData.setDataSource(dataSource);
+		afyaStatQueueData.setCreator(user);
+		afyastatService.saveQueData(afyaStatQueueData);
 	}
 	
 	/**

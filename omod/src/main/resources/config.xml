@@ -99,7 +99,6 @@
 
 	<mappingFiles>
 
-		MedicQueData.hbm.xml
 		RegistrationInfo.hbm.xml
 		AfyaStatQueueData.hbm.xml
 		NotificationInfo.hbm.xml
