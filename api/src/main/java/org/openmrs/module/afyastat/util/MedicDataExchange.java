@@ -2356,6 +2356,11 @@ public class MedicDataExchange {
 		
 		return addressNode;
 	}
+
+	public boolean queueClientForOutgoingRegistration(Integer clientID, String purpose)
+	{
+		return(true);
+	}
 	
 	private String relationshipTypeConverter(String relType) {
 		String relTypeUuid = null;
