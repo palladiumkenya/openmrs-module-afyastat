@@ -2357,6 +2357,158 @@ public class MedicDataExchange {
 		return addressNode;
 	}
 	
+	public boolean queueClientForOutgoingRegistration(Integer clientID, String purpose) {
+		//Search for client
+		Patient patient = Context.getPatientService().getPatient(clientID);
+		if (patient == null) {
+			return (false);
+		}
+		//Build Payload
+		JsonNodeFactory factory = getJsonNodeFactory();
+		ObjectNode objectWrapper = factory.objectNode();
+		ObjectNode fields = factory.objectNode();
+		
+		String sex = "";
+		String dateFormat = "yyyy-MM-dd";
+		
+		String fullName = "";
+		
+		if (patient.getGivenName() != null) {
+			fullName += patient.getGivenName();
+		}
+		
+		if (patient.getMiddleName() != null) {
+			fullName += " " + patient.getMiddleName();
+		}
+		
+		if (patient.getFamilyName() != null) {
+			fullName += " " + patient.getFamilyName();
+		}
+		
+		if (patient.getGender() != null) {
+			if (patient.getGender().equals("M")) {
+				sex = "male";
+			} else {
+				sex = "female";
+			}
+		}
+		
+		objectWrapper.put("_id", patient.getUuid());
+		objectWrapper.put("type", "data_record");
+		objectWrapper.put("form", "case_information");
+		objectWrapper.put("record_purpose", purpose);
+		
+		objectWrapper.put("content_type", "xml");
+		objectWrapper.put("reported_date", patient.getDateCreated().getTime());
+		
+		PatientIdentifierType chtRefType = Context.getPatientService().getPatientIdentifierTypeByUuid(
+		    AfyaStatMetadata._PatientIdentifierType.CHT_RECORD_UUID);
+		//PatientIdentifier nationalId = patient.getPatientIdentifier(Utils.NATIONAL_ID);
+		PatientIdentifier chtReference = patient.getPatientIdentifier(chtRefType);
+		
+		PatientIdentifier parentChtRef = null;
+		String relType = null;
+		String parentName = "";
+		
+		// get address
+		
+		ObjectNode address = getPatientAddress(patient);
+		String nationality = address.get("NATIONALITY").getTextValue();
+		
+		String postalAddress = address.get("POSTAL_ADDRESS").getTextValue();
+		String county = address.get("COUNTY").getTextValue();
+		String subCounty = address.get("SUB_COUNTY").getTextValue();
+		String ward = address.get("WARD").getTextValue();
+		String landMark = address.get("NEAREST_LANDMARK").getTextValue();
+		
+		fields.put("needs_sign_off", false);
+		fields.put("case_id", patient.getUuid());
+		String kemrRef = patient.getUuid();
+		fields.put("cht_ref_uuid", chtReference != null ? chtReference.getIdentifier() : "");
+		String chtRef = (chtReference != null ? chtReference.getIdentifier() : "");
+		
+		// add information about the client this contact was listed under
+		PatientContact originalContactRecord = htsService.getPatientContactEntryForPatient(patient);
+		if (originalContactRecord != null) {
+			Patient relatedPatient = originalContactRecord.getPatientRelatedTo(); // we want the cht ref for this client for use in cht/afyastat
+			parentChtRef = relatedPatient.getPatientIdentifier(chtRefType);
+			if (originalContactRecord.getRelationType() != null) {
+				relType = getContactRelation(originalContactRecord.getRelationType());
+			}
+			
+			if (relatedPatient.getGivenName() != null) {
+				parentName += relatedPatient.getGivenName();
+			}
+			
+			if (relatedPatient.getMiddleName() != null) {
+				parentName += " " + relatedPatient.getMiddleName();
+			}
+			
+			if (relatedPatient.getFamilyName() != null) {
+				parentName += " " + relatedPatient.getFamilyName();
+			}
+		}
+		
+		fields.put("relation_uuid", parentChtRef != null ? parentChtRef.getIdentifier() : "");
+		fields.put("relation_type", relType != null ? relType : "");
+		fields.put("relation_name", StringUtils.isNotBlank(parentName) ? parentName : "");
+		
+		fields.put("patient_familyName", patient.getFamilyName() != null ? patient.getFamilyName() : "");
+		fields.put("patient_firstName", patient.getGivenName() != null ? patient.getGivenName() : "");
+		fields.put("patient_middleName", patient.getMiddleName() != null ? patient.getMiddleName() : "");
+		fields.put("name", fullName);
+		fields.put("patient_name", fullName);
+		fields.put("patient_sex", sex);
+		fields.put("patient_birthDate",
+		    patient.getBirthdate() != null ? getSimpleDateFormat(dateFormat).format(patient.getBirthdate()) : "");
+		fields.put("patient_dobKnown", "_1066_No_99DCT");
+		fields.put("patient_telephone", getPersonAttributeByType(patient, phoneNumberAttrType));
+		fields.put("patient_nationality", nationality);
+		fields.put("patient_county", county);
+		fields.put("patient_subcounty", subCounty);
+		fields.put("patient_ward", ward);
+		fields.put("location", "");
+		fields.put("sub_location", "");
+		fields.put("patient_village", "");
+		fields.put("patient_landmark", landMark);
+		fields.put("patient_residence", postalAddress);
+		fields.put("patient_nearesthealthcentre", "");
+		
+		Encounter encounter = Utils.lastEncounter(patient, et, Arrays.asList(initial, retest));
+		if (encounter != null) {
+			fields.put("date_tested_positive", getSimpleDateFormat(dateFormat).format(encounter.getEncounterDatetime()));
+		}
+		
+		fields.put("assignee", "");
+		objectWrapper.put("fields", fields);
+		
+		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
+		ArrayNode emptyContactNode = factory.arrayNode();
+		ObjectNode responseWrapper = factory.objectNode();
+		
+		objectWrapper.put("contacts", emptyContactNode);
+		patientContactNode.add(objectWrapper);
+		
+		responseWrapper.put("docs", patientContactNode);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		responseWrapper.put("timestamp", formatter.format(new Date()));
+		
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
+		if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(clientID, purpose) == null) {
+			MedicOutgoingRegistration record = new MedicOutgoingRegistration();
+			record.setPatientId(clientID);
+			record.setChtRef(chtRef);
+			record.setKemrRef(kemrRef);
+			record.setPurpose(purpose);
+			record.setPayload(responseWrapper.toString());
+			record.setStatus(0);
+			
+			medicOutgoingRegistrationService.saveOrUpdate(record);
+		}
+		return (true);
+	}
+	
 	private String relationshipTypeConverter(String relType) {
 		String relTypeUuid = null;
 		if (relType.equalsIgnoreCase("partner")) {

@@ -111,6 +111,15 @@ public interface MedicOutgoingRegistrationDao {
 	public List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose);
 	
 	/**
+	 * Gets records with a given patient id and purpose
+	 * 
+	 * @param purpose the purpose
+	 * @param ptId the patient ID
+	 * @return a record object
+	 */
+	public MedicOutgoingRegistration getRecordByPatientAndPurpose(Integer ptId, String purpose);
+	
+	/**
 	 * Gets a range of records given the start date and end date
 	 * 
 	 * @param startDate the start date
