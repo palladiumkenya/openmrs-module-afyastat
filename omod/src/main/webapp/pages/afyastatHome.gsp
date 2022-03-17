@@ -1,7 +1,8 @@
 <%
     ui.decorateWith("kenyaemr", "standardPage", [layout: "sidebar"])
     def menuItems = [
-            [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to home", href: ui.pageLink("kenyaemr", "userHome")]
+            [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to home", href: ui.pageLink("kenyaemr", "userHome")],
+            [label: "Afyastat - Outgoing Queue", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Afyastat - Outgoing Queue", href: ui.pageLink("afyastat", "afyastatOutgoingQueue")]
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
@@ -138,7 +139,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
     <div>
         <fieldset>
-            <legend>Queue summary</legend>
+            <legend>Afyastat - Incoming Queue summary</legend>
             <div>
                 <table class="simple-table" width="30%">
                     <thead>
