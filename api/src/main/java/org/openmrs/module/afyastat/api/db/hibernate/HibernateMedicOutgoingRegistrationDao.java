@@ -190,6 +190,21 @@ public class HibernateMedicOutgoingRegistrationDao implements MedicOutgoingRegis
 	}
 	
 	/**
+	 * Gets records with a given patient id and purpose
+	 * 
+	 * @param purpose the purpose
+	 * @param ptId the patient ID
+	 * @return a record object
+	 */
+	@Override
+	public MedicOutgoingRegistration getRecordByPatientAndPurpose(Integer ptId, String purpose) {
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("patientId", ptId));
+		criteria.add(Restrictions.eq("purpose", purpose));
+		return (MedicOutgoingRegistration) criteria.uniqueResult();
+	}
+	
+	/**
 	 * Gets a range of records given the start date and end date
 	 * 
 	 * @param startDate the start date

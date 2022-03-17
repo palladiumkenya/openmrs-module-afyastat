@@ -145,6 +145,18 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	}
 	
 	/**
+	 * Gets records with a given patient id and purpose
+	 * 
+	 * @param ptId the patient ID
+	 * @param purpose the purpose
+	 * @return a record object
+	 */
+	@Override
+	public MedicOutgoingRegistration getRecordByPatientAndPurpose(Integer ptId, String purpose) {
+		return (medicOutgoingRegistrationDao.getRecordByPatientAndPurpose(ptId, purpose));
+	}
+	
+	/**
 	 * Gets records for within a given date range
 	 * 
 	 * @param startDate the range start date

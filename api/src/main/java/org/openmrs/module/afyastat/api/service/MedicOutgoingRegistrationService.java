@@ -139,6 +139,16 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	List<MedicOutgoingRegistration> getRecordsByPurpose(String purpose);
 	
 	/**
+	 * Gets records with a given patient id and purpose
+	 * 
+	 * @param purpose the purpose
+	 * @param ptId the patient ID
+	 * @return a record object
+	 */
+	@Transactional(readOnly = true)
+	MedicOutgoingRegistration getRecordByPatientAndPurpose(Integer ptId, String purpose);
+	
+	/**
 	 * Gets records for within a given date range
 	 * 
 	 * @param startDate the range start date
