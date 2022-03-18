@@ -2357,11 +2357,50 @@ public class MedicDataExchange {
 		return addressNode;
 	}
 	
-	public boolean queueClientForOutgoingRegistration(Integer clientID, String purpose) {
+	/**
+	 * Manually queue a client into the outgoing queue
+	 * 
+	 * @param clientId the client ID
+	 * @param purpose the purpose
+	 * @return true on success or false on failure
+	 */
+	public boolean queueClientForOutgoingRegistration(Integer clientId, String purpose) {
+		//Trim
+		purpose = purpose.trim();
+		//Proceed only if the client and purpose dont already exist on DB
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
+		if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(clientId, purpose) == null) {
+			
+			PatientContactListData data = generateClientPayload(clientId, purpose, "");
+			
+			if (data != null) {
+				MedicOutgoingRegistration record = new MedicOutgoingRegistration();
+				record.setPatientId(clientId);
+				record.setChtRef(data.getChtRef());
+				record.setKemrRef(data.getKemrRef());
+				record.setPurpose(data.getPurpose());
+				record.setPayload(data.getContactWrapper().toString());
+				record.setStatus(0);
+				
+				//Save to the outgoing queue
+				medicOutgoingRegistrationService.saveOrUpdate(record);
+				return (true);
+			} else {
+				return (false);
+			}
+		}
+		return (false);
+	}
+	
+	public PatientContactListData generateClientPayload(Integer clientId, String purpose, String assignee) {
+		purpose = purpose.trim();
+		assignee = assignee.trim();
+		PatientContactListData data = new PatientContactListData();
 		//Search for client
-		Patient patient = Context.getPatientService().getPatient(clientID);
+		Patient patient = Context.getPatientService().getPatient(clientId);
 		if (patient == null) {
-			return (false);
+			return (null);
 		}
 		//Build Payload
 		JsonNodeFactory factory = getJsonNodeFactory();
@@ -2479,7 +2518,7 @@ public class MedicDataExchange {
 			fields.put("date_tested_positive", getSimpleDateFormat(dateFormat).format(encounter.getEncounterDatetime()));
 		}
 		
-		fields.put("assignee", "");
+		fields.put("assignee", assignee);
 		objectWrapper.put("fields", fields);
 		
 		ArrayNode patientContactNode = getJsonNodeFactory().arrayNode();
@@ -2493,20 +2532,12 @@ public class MedicDataExchange {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		responseWrapper.put("timestamp", formatter.format(new Date()));
 		
-		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
-		        .getService(MedicOutgoingRegistrationService.class);
-		if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(clientID, purpose) == null) {
-			MedicOutgoingRegistration record = new MedicOutgoingRegistration();
-			record.setPatientId(clientID);
-			record.setChtRef(chtRef);
-			record.setKemrRef(kemrRef);
-			record.setPurpose(purpose);
-			record.setPayload(responseWrapper.toString());
-			record.setStatus(0);
-			
-			medicOutgoingRegistrationService.saveOrUpdate(record);
-		}
-		return (true);
+		data.setChtRef(chtRef);
+		data.setKemrRef(kemrRef);
+		data.setPurpose(purpose);
+		data.setContactWrapper(responseWrapper);
+		
+		return (data);
 	}
 	
 	private String relationshipTypeConverter(String relType) {
