@@ -60,6 +60,7 @@ public class AfyastatHomePageController {
 			String clientName = qObj.getClientName();
 			if ((clientName == null || clientName.trim().equalsIgnoreCase(""))
 			        && qObj.getDiscriminator().equalsIgnoreCase("json-registration")) {
+				clientName = "";
 				JsonNode jsonNode = null;
 				try {
 					jsonNode = objectMapper.readTree(qObj.getPayload());
