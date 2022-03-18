@@ -2360,7 +2360,7 @@ public class MedicDataExchange {
 	/**
 	 * Manually queue a client into the outgoing queue
 	 * 
-	 * @param clientId the client ID
+	 * @param clientId the patient ID
 	 * @param purpose the purpose
 	 * @return true on success or false on failure
 	 */
