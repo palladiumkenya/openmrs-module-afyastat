@@ -48,9 +48,11 @@
                 <td>
                     <select name="status" id="purpose">
                         <option></option>
-                        <option value="hts">HIV Testing services</option>
+                        <option value="testing">HIV Testing services</option>
                         <option value="linkage">HIV Linkage</option>
-                        <option value="kp">Key Population</option>
+                        <option value="prep_verification">PrEP Verification</option>
+                        <option value="treatment_verification">Treatment Verification</option>
+                        <option value="kp_followup">KP Followup</option>
                     </select>
                 </td>
             </tr>
@@ -60,8 +62,8 @@
             <tr></tr>
             <tr>
                 <td colspan="2">
-                    <button type="button"> Fetch details</button>
-                	<button type="button" class="cancel-button"> Add to queue</button>
+                    <button type="button" id="fetch-registry-entry"> Fetch details</button>
+                	<button type="button" class="cancel-button" id="queue-entry"> Add to queue</button>
                 </td>
             </tr>
 
@@ -85,10 +87,10 @@
             <td>Status</td>
         </tr>
         <tr>
-            <td>Chairman Kibor</td>
-            <td>Tracing and linkage</td>
-            <td>22-11-2021</td>
-            <td>Sent</td>
+            <td id="entry-name"></td>
+            <td id="entry-purpose"></td>
+            <td id="entry-date">22-11-2021</td>
+            <td id="entry-status">Sent</td>
         </tr>
     </table>
 
@@ -96,6 +98,35 @@
 
 <script type="text/javascript">
 jq(function() {
+    // handle click event of fetch entry button
+    jq(document).on('click','#fetch-registry-entry',function () {
 
+        var selectedPerson = jq('input[name=person]').val();
+
+        ui.getFragmentActionAsJson('afyastat', 'addRegistrationToQueue', 'getOutgoingEntryForPatient', { personId : selectedPerson }, function (result) {
+            if (result.hasEntry) {
+                jq('#entry-name').text(result.patientName);
+                jq('#entry-purpose').text(result.purpose);
+                jq('#entry-date').text(result.dateCreated);
+                jq('#entry-status').text(result.status);
+            }
+        });
+    });
+
+    // handle click event of add to queue button
+    jq(document).on('click','#queue-entry',function () {
+
+        var selectedPerson = jq('input[name=person]').val();
+        var purpose = jq('#purpose').val();
+
+        ui.getFragmentActionAsJson('afyastat', 'addRegistrationToQueue', 'addOutgoingEntryForPatient', { personId : selectedPerson, purpose : purpose }, function (result) {
+            if (result) {
+                jq('#entry-name').text(result.patientName);
+                jq('#entry-purpose').text(result.purpose);
+                jq('#entry-date').text(result.dateCreated);
+                jq('#entry-status').text(result.status);
+            }
+        });
+    });
 });
 </script>
