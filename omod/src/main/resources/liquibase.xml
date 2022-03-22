@@ -141,7 +141,13 @@
         </addColumn>
     </changeSet>
 
-    <changeSet author="makombe" id="index_medic_queue_data_20220315-2348">								
+    <changeSet author="makombe" id="index_medic_queue_data_20220315-2348">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_queue_data"/>
+            <not>
+                <indexExists indexName="index_date_form_filled_medic_queue_data" tableName="medic_queue_data"/>
+            </not>
+        </preConditions>
         <createIndex indexName="index_date_form_filled_medic_queue_data" tableName="medic_queue_data">
             <column name="form_data_uuid"/>
             <column name="date_form_filled"/>
@@ -233,7 +239,13 @@
         </addColumn>
     </changeSet>
 
-    <changeSet author="makombe" id="index_medic_archive_data_20220315-2339">								
+    <changeSet author="makombe" id="index_medic_archive_data_20220315-2339">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_archive_data"/>
+            <not>
+                <indexExists indexName="index_date_form_filled_medic_archive_data" tableName="medic_archive_data"/>
+            </not>
+        </preConditions>
         <createIndex indexName="index_date_form_filled_medic_archive_data" tableName="medic_archive_data">
             <column name="form_data_uuid"/>
             <column name="date_form_filled"/>
@@ -337,8 +349,14 @@
         </addColumn>
     </changeSet>
 
-    <changeSet author="makombe" id="index_medic_error_data_20220315-2337">								
-        <createIndex indexName="index_date_form_filled_error_data" tableName="medic_error_data">
+    <changeSet author="makombe" id="index_medic_error_data_20220315-2337">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_error_data"/>
+            <not>
+                <indexExists indexName="index_date_form_filled_medic_error_data" tableName="medic_error_data"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_date_form_filled_medic_error_data" tableName="medic_error_data">
             <column name="form_data_uuid"/>
             <column name="date_form_filled"/>
             <column name="patient_uuid"/>
@@ -665,6 +683,19 @@
         </createIndex>
         <createIndex indexName="index_cht_ref" tableName="kenyaemr_afyastat_medicoutgoingregistration">
             <column name="chtRef"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="pwaweru" id="index_medicoutgoingregistration_20220323-161330">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="kenyaemr_afyastat_medicoutgoingregistration"/>
+            <not>
+                <indexExists indexName="index_purpose_patientid_medicoutgoingregistration" tableName="kenyaemr_afyastat_medicoutgoingregistration"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_purpose_patientid_medicoutgoingregistration" tableName="kenyaemr_afyastat_medicoutgoingregistration" unique="true">
+            <column name="purpose"/>
+            <column name="patientId"/>
         </createIndex>
     </changeSet>
 

@@ -92,12 +92,13 @@ public class HibernateMedicOutgoingRegistrationDao implements MedicOutgoingRegis
 	 * Get a record with a given patient ID
 	 * 
 	 * @param ptId the patient ID
-	 * @return a record object
+	 * @return a list of objects
 	 */
 	@Override
-	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId) {
-		return (MedicOutgoingRegistration) getSession().createCriteria(MedicOutgoingRegistration.class)
-		        .add(Restrictions.eq("patientId", ptId)).uniqueResult();
+	public List<MedicOutgoingRegistration> getRecordsByPatientId(Integer ptId) {
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("patientId", ptId));
+		return criteria.list();
 	}
 	
 	/**

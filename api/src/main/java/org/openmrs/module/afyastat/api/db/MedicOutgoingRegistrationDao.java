@@ -51,9 +51,9 @@ public interface MedicOutgoingRegistrationDao {
 	 * Get a record with a given patient ID
 	 * 
 	 * @param ptId the patient ID
-	 * @return a record object
+	 * @return a list of objects
 	 */
-	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId);
+	public List<MedicOutgoingRegistration> getRecordsByPatientId(Integer ptId);
 	
 	/**
 	 * Get a record with a given CHT ref
