@@ -75,58 +75,85 @@
 </form>
 </br>
 </br>
+<div id="message"><span id="lblText" style="color: Red; top: 50px;"></span></div>
 </br>
 <fieldset>
     <legend>Client/Patient information in the registration queue</legend>
     </br>
     <table class="simple-table" width="60%">
-        <tr>
-            <td width="30%">Client/Patient</td>
-            <td width="20%">Purpose</td>
-            <td width="20%">Date added</td>
-            <td>Status</td>
-        </tr>
-        <tr>
-            <td id="entry-name"></td>
-            <td id="entry-purpose"></td>
-            <td id="entry-date">22-11-2021</td>
-            <td id="entry-status">Sent</td>
-        </tr>
+        <thead>
+            <tr>
+                <th width="30%">Client/Patient</th>
+                <th width="20%">Purpose</th>
+                <th width="20%">Date added</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="queue-list">
+        </tbody>
     </table>
 
 </fieldset>
 
 <script type="text/javascript">
-jq(function() {
-    // handle click event of fetch entry button
-    jq(document).on('click','#fetch-registry-entry',function () {
+    jq(function() {
+        //display area
+        var queueListDisplayArea = jq('#queue-list');
 
-        var selectedPerson = jq('input[name=person]').val();
+        // handle click event of fetch entry button
+        jq(document).on('click','#fetch-registry-entry',function () {
 
-        ui.getFragmentActionAsJson('afyastat', 'addRegistrationToQueue', 'getOutgoingEntryForPatient', { personId : selectedPerson }, function (result) {
-            if (result.hasEntry) {
-                jq('#entry-name').text(result.patientName);
-                jq('#entry-purpose').text(result.purpose);
-                jq('#entry-date').text(result.dateCreated);
-                jq('#entry-status').text(result.status);
-            }
+            var selectedPerson = jq('input[name=person]').val();
+
+            ui.getFragmentActionAsJson('afyastat', 'addRegistrationToQueue', 'getOutgoingEntryForPatient', { personId : selectedPerson }, function (result) {
+                let queueRecords = result;
+                jq("#queue-list").empty();
+                if (queueRecords) {
+                    if(queueRecords.length > 0) {
+                        console.log("Generating Table: " + queueRecords.length);
+                        generate_table(queueRecords, queueListDisplayArea);
+                        jq("#lblText").html('Found Patient Records in the queue');
+                        jq('#message').fadeIn('slow').delay(3000).fadeOut('slow');
+                    } else {
+                        console.log("Not Generating Table: No data available");
+                        jq("#lblText").html('NO Patient Records in the queue');
+                        jq('#message').fadeIn('slow').delay(3000).fadeOut('slow');
+                    }
+                } else {
+                    console.log("Not Generating Table: No data available");
+                    jq("#lblText").html('Error nothing in the queue');
+                    jq('#message').fadeIn('slow').delay(3000).fadeOut('slow');
+                }
+            });
+        });
+
+        // handle click event of add to queue button
+        jq(document).on('click','#queue-entry',function () {
+
+            var selectedPerson = jq('input[name=person]').val();
+            var purpose = jq('#purpose').val();
+
+            ui.getFragmentActionAsJson('afyastat', 'addRegistrationToQueue', 'addOutgoingEntryForPatient', { personId : selectedPerson, purpose : purpose }, function (result) {
+                let queueRecords = result;
+                jq("#queue-list").empty();
+                if (queueRecords) {
+                    if(queueRecords.length > 0) {
+                        console.log("Generating Table: " + queueRecords.length);
+                        generate_table(queueRecords, queueListDisplayArea);
+                        jq("#lblText").html('Record queued successfully.');
+                        jq('#message').fadeIn('slow').delay(3000).fadeOut('slow');
+                    } else {
+                        console.log("Not Generating Table: No data available");
+                        jq("#lblText").html('Failed to queue record');
+                        jq('#message').fadeIn('slow').delay(3000).fadeOut('slow');
+                    }
+                } else {
+                    console.log("Not Generating Table: No data available");
+                    jq("#lblText").html('Error: Failed to queue record');
+                    jq('#message').fadeIn('slow').delay(3000).fadeOut('slow');
+                }
+            });
         });
     });
 
-    // handle click event of add to queue button
-    jq(document).on('click','#queue-entry',function () {
-
-        var selectedPerson = jq('input[name=person]').val();
-        var purpose = jq('#purpose').val();
-
-        ui.getFragmentActionAsJson('afyastat', 'addRegistrationToQueue', 'addOutgoingEntryForPatient', { personId : selectedPerson, purpose : purpose }, function (result) {
-            if (result) {
-                jq('#entry-name').text(result.patientName);
-                jq('#entry-purpose').text(result.purpose);
-                jq('#entry-date').text(result.dateCreated);
-                jq('#entry-status').text(result.status);
-            }
-        });
-    });
-});
 </script>

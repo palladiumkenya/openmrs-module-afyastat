@@ -1129,7 +1129,7 @@ public class MedicDataExchange {
 				
 				MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
 				        .getService(MedicOutgoingRegistrationService.class);
-				if (medicOutgoingRegistrationService.getRecordByPatientId(ptId) == null) {
+				if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(ptId, returnData.getPurpose()) == null) {
 					MedicOutgoingRegistration record = new MedicOutgoingRegistration();
 					record.setPatientId(ptId);
 					record.setChtRef(returnData.getChtRef());
@@ -1251,7 +1251,7 @@ public class MedicDataExchange {
 				
 				MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
 				        .getService(MedicOutgoingRegistrationService.class);
-				if (medicOutgoingRegistrationService.getRecordByPatientId(ptId) == null) {
+				if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(ptId, returnData.getPurpose()) == null) {
 					MedicOutgoingRegistration record = new MedicOutgoingRegistration();
 					record.setPatientId(ptId);
 					record.setChtRef(returnData.getChtRef());
@@ -1488,7 +1488,7 @@ public class MedicDataExchange {
 					
 					MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
 					        .getService(MedicOutgoingRegistrationService.class);
-					if (medicOutgoingRegistrationService.getRecordByPatientId(ptId) == null) {
+					if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(ptId, returnData.getPurpose()) == null) {
 						MedicOutgoingRegistration record = new MedicOutgoingRegistration();
 						record.setPatientId(ptId);
 						record.setChtRef(returnData.getChtRef());
@@ -1557,7 +1557,7 @@ public class MedicDataExchange {
 						
 						MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
 						        .getService(MedicOutgoingRegistrationService.class);
-						if (medicOutgoingRegistrationService.getRecordByPatientId(ptId) == null) {
+						if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(ptId, returnData.getPurpose()) == null) {
 							MedicOutgoingRegistration record = new MedicOutgoingRegistration();
 							record.setPatientId(ptId);
 							record.setChtRef(returnData.getChtRef());
@@ -2360,11 +2360,13 @@ public class MedicDataExchange {
 		//Proceed only if the client and purpose dont already exist on DB
 		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
 		        .getService(MedicOutgoingRegistrationService.class);
-		if (medicOutgoingRegistrationService.getRecordByPatientAndPurpose(clientId, purpose) == null) {
-			
-			PatientContactListData data = generateClientPayload(clientId, purpose, "");
-			
-			if (data != null) {
+		
+		PatientContactListData data = generateClientPayload(clientId, purpose, "");
+		
+		if (data != null) {
+			MedicOutgoingRegistration queueEntry = medicOutgoingRegistrationService.getRecordByPatientAndPurpose(clientId,
+			    purpose);
+			if (queueEntry == null) {
 				MedicOutgoingRegistration record = new MedicOutgoingRegistration();
 				record.setPatientId(clientId);
 				record.setChtRef(data.getChtRef());
@@ -2375,12 +2377,21 @@ public class MedicDataExchange {
 				
 				//Save to the outgoing queue
 				medicOutgoingRegistrationService.saveOrUpdate(record);
-				return (true);
 			} else {
-				return (false);
+				queueEntry.setChtRef(data.getChtRef());
+				queueEntry.setKemrRef(data.getKemrRef());
+				queueEntry.setPayload(data.getContactWrapper().toString());
+				queueEntry.setStatus(0);
+				
+				//Save to the outgoing queue
+				medicOutgoingRegistrationService.saveOrUpdate(queueEntry);
 			}
+			System.out.println("Afyastat outgoing queue. Saved Record");
+			return (true);
+		} else {
+			System.err.println("Afyastat outgoing queue. NOT Saved");
+			return (false);
 		}
-		return (false);
 	}
 	
 	public PatientContactListData generateClientPayload(Integer clientId, String purpose, String assignee) {

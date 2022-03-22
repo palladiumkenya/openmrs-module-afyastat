@@ -182,12 +182,12 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	/**
 	 * Gets a record for a given patient id.
 	 * 
-	 * @param ptId the record ptId
-	 * @return the record with the given patient id
+	 * @param ptId the patient ID
+	 * @return the list of records
 	 */
 	@Override
-	public MedicOutgoingRegistration getRecordByPatientId(Integer ptId) {
-		return (medicOutgoingRegistrationDao.getRecordByPatientId(ptId));
+	public List<MedicOutgoingRegistration> getRecordsByPatientId(Integer ptId) {
+		return (medicOutgoingRegistrationDao.getRecordsByPatientId(ptId));
 	}
 	
 	/**
