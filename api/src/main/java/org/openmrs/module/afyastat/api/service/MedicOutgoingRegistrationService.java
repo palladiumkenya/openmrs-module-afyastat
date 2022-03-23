@@ -68,11 +68,11 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	/**
 	 * Gets a record for a given patient id.
 	 * 
-	 * @param ptId the record ptId
-	 * @return the record with the given patient id
+	 * @param ptId the patient ID
+	 * @return all the records with the given patient id
 	 */
 	@Transactional(readOnly = true)
-	MedicOutgoingRegistration getRecordByPatientId(Integer ptId);
+	List<MedicOutgoingRegistration> getRecordsByPatientId(Integer ptId);
 	
 	/**
 	 * Gets a record for a given chtRef.

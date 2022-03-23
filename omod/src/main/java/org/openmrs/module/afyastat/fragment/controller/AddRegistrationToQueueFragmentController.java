@@ -23,6 +23,10 @@ import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Handler for afyastat registration queue search page
  */
@@ -58,35 +62,43 @@ public class AddRegistrationToQueueFragmentController {
 	 * @return the summary
 	 */
 	@AppAction("kenyaemr.afyastat.home")
-	public SimpleObject getOutgoingEntryForPatient(@RequestParam("personId") Integer personId,
+	public List<SimpleObject> getOutgoingEntryForPatient(@RequestParam("personId") Integer personId,
 	        @SpringBean KenyaUiUtils kenyaUi, UiUtils ui) {
-		MedicOutgoingRegistrationService service = Context.getService(MedicOutgoingRegistrationService.class);
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
 		
-		MedicOutgoingRegistration entry = service.getRecordByPatientId(personId);
+		List<MedicOutgoingRegistration> outgoingQueueList = medicOutgoingRegistrationService.getRecordsByPatientId(personId);
 		
-		SimpleObject resp = new SimpleObject();
+		List<SimpleObject> queueList = new ArrayList<SimpleObject>();
 		
-		if (entry != null) {
-			Person person = Context.getPersonService().getPerson(entry.getPatientId());
-			String fullName = person.getGivenName();
+		for (MedicOutgoingRegistration entry : outgoingQueueList) {
+			SimpleObject resp = new SimpleObject();
 			
-			if (person.getFamilyName() != null) {
-				fullName += " " + person.getFamilyName();
+			if (entry != null) {
+				Person person = Context.getPersonService().getPerson(entry.getPatientId());
+				
+				String clientName = person.getGivenName();
+				clientName = (clientName == null) ? "" : clientName;
+				
+				String familyName = person.getFamilyName();
+				clientName += (familyName == null) ? "" : (" " + familyName);
+				
+				String middleName = person.getMiddleName();
+				clientName += (middleName == null) ? "" : (" " + middleName);
+				
+				clientName = (clientName == null) ? "" : clientName;
+				
+				resp.put("hasEntry", true);
+				resp.put("clientName", clientName);
+				resp.put("purpose", entry.getPurpose());
+				resp.put("dateCreated", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(entry.getDateCreated()));
+				resp.put("status", entry.getStatus().equals(1) ? "Sent" : "Pending");
+			} else {
+				resp.put("hasEntry", false);
 			}
-			
-			if (person.getMiddleName() != null) {
-				fullName += " " + person.getMiddleName();
-			}
-			
-			resp.put("hasEntry", true);
-			resp.put("patientName", fullName);
-			resp.put("purpose", entry.getPurpose());
-			resp.put("dateCreated", entry.getDateCreated());
-			resp.put("status", entry.getStatus().equals(1) ? "Sent" : "Pending");
-		} else {
-			resp.put("hasEntry", false);
+			queueList.add(resp);
 		}
-		return resp;
+		return (queueList);
 	}
 	
 	/**
@@ -96,36 +108,52 @@ public class AddRegistrationToQueueFragmentController {
 	 * @return the summary
 	 */
 	@AppAction("kenyaemr.afyastat.home")
-	public SimpleObject addOutgoingEntryForPatient(@RequestParam("personId") Integer personId,
+	public List<SimpleObject> addOutgoingEntryForPatient(@RequestParam("personId") Integer personId,
 	        @RequestParam("purpose") String purpose, @SpringBean KenyaUiUtils kenyaUi, UiUtils ui) {
-		MedicOutgoingRegistrationService service = Context.getService(MedicOutgoingRegistrationService.class);
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
 		
-		MedicDataExchange me = new MedicDataExchange();
-		me.queueClientForOutgoingRegistration(personId, purpose);
-		MedicOutgoingRegistration entry = service.getRecordByPatientId(personId);
+		MedicDataExchange medicDataExchange = new MedicDataExchange();
+		boolean saved = medicDataExchange.queueClientForOutgoingRegistration(personId, purpose);
 		
-		SimpleObject resp = new SimpleObject();
-		
-		if (entry != null) {
-			Person person = Context.getPersonService().getPerson(entry.getPatientId());
-			String fullName = person.getGivenName();
-			
-			if (person.getFamilyName() != null) {
-				fullName += " " + person.getFamilyName();
-			}
-			
-			if (person.getMiddleName() != null) {
-				fullName += " " + person.getMiddleName();
-			}
-			
-			resp.put("patientName", fullName);
-			resp.put("purpose", entry.getPurpose());
-			resp.put("dateCreated", entry.getDateCreated());
-			resp.put("status", "Pending");
+		if (saved) {
+			System.out.println("Afyastat outgoing queue. Successfully Queued a patient into outgoing queue");
 		} else {
-			resp.put("hasEntry", false);
+			System.err.println("Afyastat outgoing queue. Failed to Queue a patient into outgoing queue");
 		}
-		return resp;
+		
+		List<MedicOutgoingRegistration> outgoingQueueList = medicOutgoingRegistrationService.getRecordsByPatientId(personId);
+		
+		List<SimpleObject> queueList = new ArrayList<SimpleObject>();
+		
+		for (MedicOutgoingRegistration entry : outgoingQueueList) {
+			SimpleObject resp = new SimpleObject();
+			
+			if (entry != null) {
+				Person person = Context.getPersonService().getPerson(entry.getPatientId());
+				
+				String clientName = person.getGivenName();
+				clientName = (clientName == null) ? "" : clientName;
+				
+				String familyName = person.getFamilyName();
+				clientName += (familyName == null) ? "" : (" " + familyName);
+				
+				String middleName = person.getMiddleName();
+				clientName += (middleName == null) ? "" : (" " + middleName);
+				
+				clientName = (clientName == null) ? "" : clientName;
+				
+				resp.put("hasEntry", true);
+				resp.put("clientName", clientName);
+				resp.put("purpose", entry.getPurpose());
+				resp.put("dateCreated", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(entry.getDateCreated()));
+				resp.put("status", (entry.getStatus() == 0) ? "Pending" : "Sent");
+			} else {
+				resp.put("hasEntry", false);
+			}
+			queueList.add(resp);
+		}
+		return (queueList);
 	}
 	
 }
