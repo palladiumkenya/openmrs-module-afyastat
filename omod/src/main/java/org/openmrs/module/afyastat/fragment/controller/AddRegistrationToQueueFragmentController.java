@@ -22,6 +22,9 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,6 +96,7 @@ public class AddRegistrationToQueueFragmentController {
 				resp.put("purpose", entry.getPurpose());
 				resp.put("dateCreated", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(entry.getDateCreated()));
 				resp.put("status", entry.getStatus().equals(1) ? "Sent" : "Pending");
+				resp.put("uuid", entry.getUuid());
 			} else {
 				resp.put("hasEntry", false);
 			}
@@ -148,12 +152,75 @@ public class AddRegistrationToQueueFragmentController {
 				resp.put("purpose", entry.getPurpose());
 				resp.put("dateCreated", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(entry.getDateCreated()));
 				resp.put("status", (entry.getStatus() == 0) ? "Pending" : "Sent");
+				resp.put("uuid", entry.getUuid());
 			} else {
 				resp.put("hasEntry", false);
 			}
 			queueList.add(resp);
 		}
 		return (queueList);
+	}
+	
+	/**
+	 * Gets record payload
+	 * 
+	 * @param uuid the queue reference
+	 * @return the summary
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public SimpleObject getQueueEntryPayload(@RequestParam("queueUuid") String uuid, @SpringBean KenyaUiUtils kenyaUi,
+	        UiUtils ui) {
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
+		
+		MedicOutgoingRegistration outgoingQueueObject = medicOutgoingRegistrationService.getRecordByUuid(uuid);
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = null;
+		
+		try {
+			jsonNode = objectMapper.readTree(outgoingQueueObject.getPayload());
+		}
+		catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		SimpleObject summary = new SimpleObject();
+		summary.put("payload", outgoingQueueObject.getPayload());
+		return summary;
+	}
+	
+	/**
+	 * Sets message payload
+	 * 
+	 * @param uuid the queue reference
+	 * @param payload the payload
+	 * @return the summary
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public boolean updateMessagePayload(@RequestParam("queueUuid") String queueUuid,
+	        @RequestParam("payload") String payload, @SpringBean KenyaUiUtils kenyaUi, UiUtils ui) {
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
+		
+		MedicOutgoingRegistration outgoingQueueObject = medicOutgoingRegistrationService
+		        .recordSetPayload(queueUuid, payload);
+		return ((outgoingQueueObject != null) ? true : false);
+	}
+	
+	/**
+	 * Sets record status therefore requeue
+	 * 
+	 * @param uuid the queue reference
+	 * @return the summary
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public boolean requeueOutgoingRecord(@RequestParam("queueUuid") String uuid, @SpringBean KenyaUiUtils kenyaUi, UiUtils ui) {
+		MedicOutgoingRegistrationService medicOutgoingRegistrationService = Context
+		        .getService(MedicOutgoingRegistrationService.class);
+		
+		MedicOutgoingRegistration outgoingQueueObject = medicOutgoingRegistrationService.recordSetStatus(uuid, 0);
+		
+		return ((outgoingQueueObject != null) ? true : false);
 	}
 	
 }

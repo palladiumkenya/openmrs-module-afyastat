@@ -4,7 +4,10 @@ import org.openmrs.Person;
 import org.openmrs.Role;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.afyastat.model.*;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.openmrs.annotation.Authorized;
+import org.openmrs.module.afyastat.AfyastatConfig;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -473,4 +476,14 @@ public interface InfoService extends OpenmrsService {
 	 * @param queueUuid
 	 */
 	void createAsNewRegistration(final @RequestParam(value = "queueUuid") String queueUuid);
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Authorized(AfyastatConfig.MODULE_PRIVILEGE)
+	@Transactional
+	public AuditableInfo recordSetPayload(String uuid, String payload);
 }

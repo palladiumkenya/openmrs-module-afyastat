@@ -134,5 +134,21 @@ public interface MedicOutgoingRegistrationDao {
 	 * @param id the id of the record
 	 * @param status the status to set
 	 */
-	public void recordSetStatus(Integer id, Integer status);
+	public MedicOutgoingRegistration recordSetStatus(Integer id, Integer status);
+	
+	/**
+	 * Sets the status of the queue record 0=unsynced, 1=synced
+	 * 
+	 * @param uuid the uuid of the record
+	 * @param status the status to set
+	 */
+	public MedicOutgoingRegistration recordSetStatus(String uuid, Integer status);
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	public MedicOutgoingRegistration recordSetPayload(String uuid, String payload);
 }
