@@ -5,6 +5,11 @@
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
+    ui.includeJavascript("afyastat", "jsonViewer/jquery.json-editor.min.js")
+    ui.includeJavascript("afyastat", "bootstrap/bootstrap.bundle.min.js")   
+
+    ui.includeCss("afyastat", "bootstrap/bootstrap-iso.css")
+    ui.includeCss("afyastat", "jsonViewer/jquery.json-viewer.css")
 %>
 <style>
 
@@ -39,27 +44,5 @@
     jq(function () {
 
     });
-
-    function generate_table(displayRecords, displayObject) {
-        var tr;
-        displayObject.html('');
-
-        for (var i = 0; i < displayRecords.length; i++) {
-
-            if(displayRecords[i].hasEntry) {
-                console.log("Found Table Entry");
-                tr = jq('<tr/>');
-                tr.append("<td>" + displayRecords[i].clientName + "</td>");
-                tr.append("<td>" + displayRecords[i].purpose + "</td>");
-                tr.append("<td>" + displayRecords[i].dateCreated + "</td>");
-                tr.append("<td>" + displayRecords[i].status + "</td>");
-
-                displayObject.append(tr);
-            } else {
-                console.log("No Table Entry");
-            }
-
-        }
-    }
 
 </script>

@@ -42,6 +42,7 @@ import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.afyastat.model.AfyaDataSource;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.ArchiveInfo;
+import org.openmrs.module.afyastat.model.AuditableInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
 import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
 import org.openmrs.module.afyastat.model.FormInfoStatus;
@@ -224,6 +225,17 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 	@Override
 	public ErrorInfo getErrorDataByUuid(final String uuid) {
 		return getErrorInfoDao().getDataByUuid(uuid);
+	}
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Override
+	public AuditableInfo recordSetPayload(String uuid, String payload) {
+		return (getErrorInfoDao().recordSetPayload(uuid, payload));
 	}
 	
 	/**

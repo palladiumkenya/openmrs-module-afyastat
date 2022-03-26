@@ -228,8 +228,39 @@ public class HibernateMedicOutgoingRegistrationDao implements MedicOutgoingRegis
 	 * @param status the status to set
 	 */
 	@Override
-	public void recordSetStatus(Integer id, Integer status) {
+	public MedicOutgoingRegistration recordSetStatus(Integer id, Integer status) {
 		MedicOutgoingRegistration record = (MedicOutgoingRegistration) getSession().get(MedicOutgoingRegistration.class, id);
 		record.setStatus(status);
+		return (record);
+	}
+	
+	/**
+	 * Sets the status of the queue record 0=unsynced, 1=synced
+	 * 
+	 * @param uuid the uuid of the record
+	 * @param status the status to set
+	 */
+	@Override
+	public MedicOutgoingRegistration recordSetStatus(String uuid, Integer status) {
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		MedicOutgoingRegistration record = (MedicOutgoingRegistration) criteria.uniqueResult();
+		record.setStatus(status);
+		return (record);
+	}
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Override
+	public MedicOutgoingRegistration recordSetPayload(String uuid, String payload) {
+		Criteria criteria = getSession().createCriteria(MedicOutgoingRegistration.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		MedicOutgoingRegistration record = (MedicOutgoingRegistration) criteria.uniqueResult();
+		record.setPayload(payload);
+		return (record);
 	}
 }

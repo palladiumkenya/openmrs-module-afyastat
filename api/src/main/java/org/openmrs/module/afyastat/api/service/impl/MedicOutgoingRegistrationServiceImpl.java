@@ -175,8 +175,30 @@ public class MedicOutgoingRegistrationServiceImpl extends BaseOpenmrsService imp
 	 * @param status the record status
 	 */
 	@Override
-	public void recordSetStatus(Integer id, Integer status) {
-		medicOutgoingRegistrationDao.recordSetStatus(id, status);
+	public MedicOutgoingRegistration recordSetStatus(Integer id, Integer status) {
+		return (medicOutgoingRegistrationDao.recordSetStatus(id, status));
+	}
+	
+	/**
+	 * Sets the status of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param status the record status
+	 */
+	@Override
+	public MedicOutgoingRegistration recordSetStatus(String uuid, Integer status) {
+		return (medicOutgoingRegistrationDao.recordSetStatus(uuid, status));
+	}
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Override
+	public MedicOutgoingRegistration recordSetPayload(String uuid, String payload) {
+		return (medicOutgoingRegistrationDao.recordSetPayload(uuid, payload));
 	}
 	
 	/**

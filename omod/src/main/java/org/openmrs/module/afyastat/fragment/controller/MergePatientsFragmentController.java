@@ -30,6 +30,7 @@ import org.openmrs.PersonName;
 import org.openmrs.api.IdentifierNotUniqueException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.api.service.InfoService;
+import org.openmrs.module.afyastat.model.AuditableInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
 import org.openmrs.module.kenyaui.KenyaUiUtils;
 import org.openmrs.module.kenyaui.annotation.AppAction;
@@ -263,6 +264,20 @@ public class MergePatientsFragmentController {
 		SimpleObject summary = new SimpleObject();
 		summary.put("payload", qObj.getPayload());
 		return summary;
+	}
+	
+	/**
+	 * Sets message payload
+	 * 
+	 * @param queueUuid the queue reference
+	 * @param payload the payload
+	 * @return the summary
+	 */
+	@AppAction("kenyaemr.afyastat.home")
+	public boolean updateMessagePayload(@RequestParam("queueUuid") String queueUuid,
+	        @RequestParam("payload") String payload, @SpringBean KenyaUiUtils kenyaUi, UiUtils ui) {
+		AuditableInfo data = Context.getService(InfoService.class).recordSetPayload(queueUuid, payload);
+		return ((data != null) ? true : false);
 	}
 	
 	/**

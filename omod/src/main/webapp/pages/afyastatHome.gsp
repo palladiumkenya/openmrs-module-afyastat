@@ -8,8 +8,8 @@
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
     ui.includeJavascript("afyastat", "jsonViewer/jquery.json-editor.min.js")
 
-    ui.includeJavascript("kenyaemrorderentry", "bootstrap.min.js")
-    ui.includeCss("kenyaemrorderentry", "bootstrap.min.css")
+    ui.includeJavascript("afyastat", "bootstrap/bootstrap.bundle.min.js")
+    ui.includeCss("afyastat", "bootstrap/bootstrap-iso.css")
     ui.includeCss("afyastat", "jsonViewer/jquery.json-viewer.css")
 %>
 <style>
@@ -50,6 +50,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 #queue-pager li{
     display: inline-block;
 }
+#chk-select-all {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.selectElement {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 .nameColumn {
     width: 260px;
 }
@@ -67,7 +77,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     padding-left: 5px;
 }
 .actionColumn {
-    width: 250px;
+    width: 350px;
 }
 .sampleStatusColumn {
     width: 150px;
@@ -91,18 +101,29 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border: 1px solid #ddd;
 }
 
-.viewButton {
+.viewPayloadButton {
     background-color: cadetblue;
     color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.editPayloadButton {
+    background-color: cadetblue;
+    color: white;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .mergeButton {
     background-color: cadetblue;
     color: white;
+    margin-right: 5px;
+    margin-left: 5px;
 }
-
 .createButton {
     background-color: cadetblue;
     color: white;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .viewButton:hover {
     background-color: steelblue;
@@ -141,7 +162,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         <fieldset>
             <legend>Afyastat - Incoming Queue summary</legend>
             <div>
-                <table class="simple-table" width="30%">
+                <table class="simple-table" width="100%">
                     <thead>
                     </thead>
                     <tbody>
@@ -181,7 +202,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                             <div class="ke-panel-content">
                                 <fieldset>
                                     <legend></legend>
-                                    <table class="simple-table" width="90%">
+                                    <table class="simple-table" width="100%">
                                         <thead>
                                         <tr>
                                             <th class="clientNameColumn">Client Name</th>
@@ -218,7 +239,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                             <div class="ke-panel-content">
                                     <fieldset>
                                         <legend></legend>
-                                        <table class="simple-table" width="90%">
+                                        <table class="simple-table" width="100%">
                                             <thead>
 
                                             <tr>
@@ -253,21 +274,44 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         </div>
     </div>
 
-    <div class="modal fade" id="showPayloadDialog" tabindex="-1" role="dialog" aria-labelledby="dateModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header modal-header-primary">
-                    <h5 class="modal-title" id="dateVlModalCenterTitle">Payload</h5>
-                    <button type="button" class="close closeDialog" data-dismiss="modal">&times;</button>
+    <div class="bootstrap-iso">
+        <div class="modal fade" id="showViewPayloadDialog" tabindex="-1" role="dialog" aria-labelledby="backdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="backdropLabel">View Payload</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-view-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <span style="color: firebrick" id="msgBox"></span>
-                    <pre id="json-display"></pre>
+            </div>
+        </div>
+
+        <div class="modal fade" id="showEditPayloadDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="staticBackdropLabel">Edit Payload</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-edit-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="savePayloadButton btn btn-primary">Save and Requeue</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
 </div>
 
@@ -302,6 +346,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
         var visibleErrorPages = 1;
         var visibleQueuePages = 1;
+
+        var payloadEditor = {};
 
         if (totalErrorPages <= 5) {
             visibleErrorPages = totalErrorPages;
@@ -342,20 +388,79 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             ui.navigate('afyastat', 'mergePatients', { queueUuid: jq(this).val(),  returnUrl: location.href });
         });
 
-        jq(document).on('click','.viewButton',function () {
-            // clear previously entered values
-
-
+        jq(document).on('click','.viewPayloadButton',function () {
             var queueUuid = jq(this).val();
+            console.log("Checking for queue entry with uuid: " + queueUuid);
 
             ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
-                jq('#json-display').jsonViewer(JSON.parse(result.payload),{
+                let payloadObject = [];
+                try {
+                    payloadObject = JSON.parse(result.payload);
+                } catch(ex) {
+                    payloadObject = JSON.parse("{}")
+                }
+                
+                jq('#json-view-display').empty();
+                jq('#json-view-display').jsonViewer(payloadObject,{
                     withQuotes:true,
                     rootCollapsable:true
                 });
             });
 
-            jq('#showPayloadDialog').modal('show');
+            jq('#showViewPayloadDialog').modal('show');
+        });
+
+        jq(document).on('click','.editPayloadButton',function () {
+            var queueUuid = jq(this).val();
+            console.log("Checking for queue entry with uuid: " + queueUuid);
+
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
+                let payloadObject = [];
+                try {
+                    payloadObject = JSON.parse(result.payload);
+                } catch(ex) {
+                    payloadObject = JSON.parse("{}")
+                }
+
+                jq('#json-edit-display').empty();
+                payloadEditor = new JsonEditor('#json-edit-display', payloadObject,{
+                    withQuotes:true,
+                    rootCollapsable:true
+                });
+                jq('.savePayloadButton').val(queueUuid);
+            });
+
+            jq('#showEditPayloadDialog').modal('show');
+        });
+
+        jq(document).on('click','.savePayloadButton',function () {
+            var queueUuid = jq(this).val();
+            console.log("Got the edited entry with uuid: " + queueUuid);
+
+            let newPayload = "";
+            try {
+                newPayload = JSON.stringify(payloadEditor.get());
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'updateMessagePayload', { queueUuid : queueUuid, payload : newPayload}, function (result) {
+                    if(result)
+                    {
+                        console.log("Payload Successfully Edited");
+                        alert("Payload Successfully Edited");
+                        let selectedError = [];
+                        selectedError.push(queueUuid);
+                        let listToSubmit = selectedError.join();
+                        ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                            document.location.reload();
+                        });
+                        jq('#showEditPayloadDialog').modal('hide');
+                    } else {
+                        console.log("Error Editing Payload");
+                        alert("Error Editing Payload");
+                    }
+                });
+            } catch (ex) {
+                console.log("Payload JSON Error: " + ex);
+                alert(ex);
+            }
         });
 
         // used to create new registration and bypass any patient matching on the provided patient demographics
@@ -452,11 +557,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 var actionTd = jq('<td/>');
 
                 var btnView = jq('<button/>', {
-                    text: 'View Payload',
-                    class: 'viewButton',
+                    text: 'View',
+                    class: 'viewPayloadButton',
                     value: displayRecords[i].uuid
                 });
+
+                var btnEdit = jq('<button/>', {
+                    text: 'Edit',
+                    class: 'editPayloadButton',
+                    value: displayRecords[i].uuid
+                });
+
                 actionTd.append(btnView);
+                actionTd.append(btnEdit);
+
                 tr.append(actionTd);
             }
             if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {

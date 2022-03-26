@@ -166,5 +166,25 @@ public interface MedicOutgoingRegistrationService extends OpenmrsService {
 	 */
 	@Authorized(AfyastatConfig.MODULE_PRIVILEGE)
 	@Transactional
-	void recordSetStatus(Integer id, Integer status);
+	MedicOutgoingRegistration recordSetStatus(Integer id, Integer status);
+	
+	/**
+	 * Sets the status of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param status the record status
+	 */
+	@Authorized(AfyastatConfig.MODULE_PRIVILEGE)
+	@Transactional
+	MedicOutgoingRegistration recordSetStatus(String uuid, Integer status);
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Authorized(AfyastatConfig.MODULE_PRIVILEGE)
+	@Transactional
+	public MedicOutgoingRegistration recordSetPayload(String uuid, String payload);
 }
