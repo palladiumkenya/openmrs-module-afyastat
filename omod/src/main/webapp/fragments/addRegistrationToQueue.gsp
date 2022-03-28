@@ -32,15 +32,20 @@
     margin-right: 10px;
     margin-left: 10px;
 }
+.viewPayloadButton:hover {
+    background-color: orange;
+    color: black;
+}
 .editPayloadButton {
     background-color: cadetblue;
     color: white;
     margin-right: 10px;
     margin-left: 10px;
 }
-/* #showPayloadDialog {
-    display: none;
-} */
+.editPayloadButton:hover {
+    background-color: orange;
+    color: black;
+}
 @media screen and (min-width: 676px) {
     .modal-dialog {
         max-width: 600px; /* New width for default modal */
@@ -355,15 +360,19 @@
                     class: 'viewPayloadButton',
                     value: displayRecords[i].uuid
                 });
+                actionTd.append(btnView);
 
+                /** 
+                 * Uncomment if Edit Button is required for editing the payload on outgoing queue
+                 * 
                 var btnEdit = jq('<button/>', {
                     text: 'Edit Payload',
                     class: 'editPayloadButton',
                     value: displayRecords[i].uuid
                 });
-
-                actionTd.append(btnView);
                 actionTd.append(btnEdit);
+                */
+
                 tr.append(actionTd);
 
                 displayObject.append(tr);
