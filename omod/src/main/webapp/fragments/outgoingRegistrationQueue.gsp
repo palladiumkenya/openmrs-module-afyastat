@@ -45,6 +45,7 @@
 }
 </style>
 
+<div class="ke-page-content">
     <div>
         <fieldset>
             <legend>Summary</legend>
@@ -93,6 +94,7 @@
             </div>
         </fieldset>
     </div>
+</div>
 
 <script type="text/javascript">
     jq(function() {
@@ -128,11 +130,33 @@
                     endRec = (displayRecordsIndex) + recPerPage;
 
                     recordsToDisplay = allRecords.slice(displayRecordsIndex, endRec);
-                    generate_table(recordsToDisplay, recordsDisplayArea);
+                    generate_queue_table(recordsToDisplay, recordsDisplayArea);
                 }
             });
         }
 
     });
+
+    function generate_queue_table(displayRecords, displayObject) {
+        var tr;
+        displayObject.html('');
+
+        for (var i = 0; i < displayRecords.length; i++) {
+
+            if(displayRecords[i].hasEntry) {
+                console.log("Found Table Entry");
+                tr = jq('<tr/>');
+                tr.append("<td>" + displayRecords[i].clientName + "</td>");
+                tr.append("<td>" + displayRecords[i].purpose + "</td>");
+                tr.append("<td>" + displayRecords[i].dateCreated + "</td>");
+                tr.append("<td>" + displayRecords[i].status + "</td>");
+
+                displayObject.append(tr);
+            } else {
+                console.log("No Table Entry");
+            }
+
+        }
+    }
 
 </script>

@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
+import org.openmrs.module.afyastat.model.AuditableInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
 
 import java.util.List;
@@ -94,5 +95,14 @@ public class HibernateErrorInfoDao extends HibernateInfoDao<ErrorInfo> implement
 		}
 		
 		return criteria;
+	}
+	
+	@Override
+	public AuditableInfo recordSetPayload(String uuid, String payload) {
+		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		AuditableInfo data = (AuditableInfo) criteria.uniqueResult();
+		data.setPayload(payload);
+		return (data);
 	}
 }
