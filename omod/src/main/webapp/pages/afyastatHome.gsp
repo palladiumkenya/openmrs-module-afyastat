@@ -107,11 +107,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     margin-right: 5px;
     margin-left: 5px;
 }
+.viewPayloadButton:hover {
+    background-color: orange;
+    color: black;
+}
 .editPayloadButton {
     background-color: cadetblue;
     color: white;
     margin-right: 5px;
     margin-left: 5px;
+}
+.editPayloadButton:hover {
+    background-color: orange;
+    color: black;
 }
 .mergeButton {
     background-color: cadetblue;
@@ -130,13 +138,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     color: white;
 }
 .mergeButton:hover {
-    background-color: steelblue;
-    color: white;
+    background-color: orange;
+    color: black;
 }
-
 .createButton:hover {
-    background-color: steelblue;
-    color: white;
+    background-color: orange;
+    color: black;
 }
 .page-content{
     background: #eee;
