@@ -99,7 +99,6 @@
 
 	<mappingFiles>
 
-		MedicQueData.hbm.xml
 		RegistrationInfo.hbm.xml
 		AfyaStatQueueData.hbm.xml
 		NotificationInfo.hbm.xml
@@ -107,6 +106,7 @@
 		AfyaDataSource.hbm.xml
 		ArchiveInfo.hbm.xml
 		ErrorMessagesInfo.hbm.xml
+		MedicOutgoingRegistration.hbm.xml
 
 	</mappingFiles>
 

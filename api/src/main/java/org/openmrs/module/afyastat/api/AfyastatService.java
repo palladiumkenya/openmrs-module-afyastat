@@ -10,7 +10,7 @@
 package org.openmrs.module.afyastat.api;
 
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.afyastat.api.service.MedicQueData;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -20,6 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface AfyastatService extends OpenmrsService {
 	
-	public MedicQueData saveQueData(MedicQueData medicQueData);
+	public AfyaStatQueueData saveQueData(AfyaStatQueueData afyaStatQueueData);
 	
 }

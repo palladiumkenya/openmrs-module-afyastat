@@ -10,7 +10,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>afyastat</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>pom</packaging>
 	<name>Afyastat</name>
 	<description>A server side module for Afyastat mobile application</description>
@@ -47,10 +47,10 @@
 		<hivtestingservicesVersion>1.1.4</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
-		<jacksonVersion>2.10.1</jacksonVersion>
+		<jacksonVersion>2.13.1</jacksonVersion>
 		<jsonPathVersion>0.8.1</jsonPathVersion>
-		<apacheHttpClientVersion>4.5.10</apacheHttpClientVersion>
-		<webservicesRestVersion>2.1</webservicesRestVersion>
+		<apacheHttpClientVersion>4.5.13</apacheHttpClientVersion>
+		<webservicesRestVersion>2.26.0</webservicesRestVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 	</properties>
@@ -243,7 +243,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.8.1</version>
+				<version>4.13.2</version>
 			</dependency>
 
 			<dependency>
@@ -349,7 +349,7 @@
 			<dependency>
 				<groupId>org.jsoup</groupId>
 				<artifactId>jsoup</artifactId>
-				<version>1.9.2</version>
+				<version>1.14.3</version>
 			</dependency>
 			<!-- End external libraries -->
 

@@ -19,10 +19,20 @@ package org.openmrs.module.afyastat.model;
  */
 public class AfyaStatQueueData extends AuditableInfo {
 	
+	private Long dateFormFilled;
+	
 	public AfyaStatQueueData() {
 	}
 	
 	public AfyaStatQueueData(final AuditableInfo data) {
 		super(data);
+	}
+	
+	public Long getDateFormFilled() {
+		return dateFormFilled;
+	}
+	
+	public void setDateFormFilled(final Long dateFormFilled) {
+		this.dateFormFilled = dateFormFilled;
 	}
 }

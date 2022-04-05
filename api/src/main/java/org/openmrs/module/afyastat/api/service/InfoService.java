@@ -4,6 +4,10 @@ import org.openmrs.Person;
 import org.openmrs.Role;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.afyastat.model.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.openmrs.annotation.Authorized;
+import org.openmrs.module.afyastat.AfyastatConfig;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -184,6 +188,19 @@ public interface InfoService extends OpenmrsService {
 	List<ArchiveInfo> getArchiveDataByFormDataUuid(final String formDataUuid);
 	
 	/**
+	 * Return all archived data with the given form data uuid and date form filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid the patientUuid
+	 * @return returned archived data with the matching formDataUuid, patientUuid and dateFormFilled
+	 * @should return archived data with the matching formDataUuid, patientUuid and dateFormFilled
+	 * @should return null when no archived data with matchin formDataUuid and dateFormFilled
+	 */
+	ArchiveInfo getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid);
+	
+	/**
 	 * Return all error data with the given form data uuid.
 	 * 
 	 * @param formDataUuid the form data uuid
@@ -194,6 +211,20 @@ public interface InfoService extends OpenmrsService {
 	List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid);
 	
 	/**
+	 * Return all error data with the given form data uuid, patientUuid and date form is filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid patientUuid
+	 * @return return error data with the matching formDataUuid,dateFormFilled and patientUuid
+	 * @should return the error data with the matching formDataUuid, dateFormFilled and patientUuid
+	 * @should return null when no error data with matching formDataUuid, dateFormFilled and
+	 *         patientUuid
+	 */
+	ErrorInfo getErrorDataByFormDataUuiDateFormFilledAndPatientUuid(final String formDataUuid, final Long dateFormFilled,
+	        String patientUuid);
+	
+	/**
 	 * Return all queue data with the given form data uuid.
 	 * 
 	 * @param formDataUuid the form data uuid
@@ -202,6 +233,20 @@ public interface InfoService extends OpenmrsService {
 	 * @should return empty list when no queue data with matching formDataUuid
 	 */
 	List<AfyaStatQueueData> getQueueDataByFormDataUuid(final String formDataUuid);
+	
+	/**
+	 * Return all queue data with the given form data uuid and date form is filled.
+	 * 
+	 * @param formDataUuid the form data uuid
+	 * @param dateFormFilled the date form is filled
+	 * @param patientUuid the patientUuid
+	 * @return return queue data with the matching formDataUuid,patientUuid and dateFormFilled
+	 * @should return the queue data with the matching formDataUuid, patientUuid and dateFormFilled
+	 * @should return null when no queue data with matching formDataUuid, patientUuid and
+	 *         dateFormFilled
+	 */
+	AfyaStatQueueData getQueueDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid);
 	
 	/**
 	 * Return all saved archive data.
@@ -410,4 +455,35 @@ public interface InfoService extends OpenmrsService {
 	 * @should return with status 'unknown' if form data with given formDataUuid cannot be traced
 	 */
 	FormInfoStatus getFormDataStatusByFormDataUuid(String formDataUuid);
+	
+	/**
+	 * Re-queue a list of errors so that they can be processed again
+	 * 
+	 * @param errorList
+	 */
+	void reQueueErrors(final @RequestParam(value = "errorList") String errorList);
+	
+	/**
+	 * Purges from the database a list of errors
+	 * 
+	 * @param errorList
+	 */
+	void purgeErrors(final @RequestParam(value = "errorList") String errorList);
+	
+	/**
+	 * Creates from an error item a new registration This bypasses the patient matching process
+	 * 
+	 * @param queueUuid
+	 */
+	void createAsNewRegistration(final @RequestParam(value = "queueUuid") String queueUuid);
+	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Authorized(AfyastatConfig.MODULE_PRIVILEGE)
+	@Transactional
+	public AuditableInfo recordSetPayload(String uuid, String payload);
 }

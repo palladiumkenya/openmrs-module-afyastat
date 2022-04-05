@@ -1,5 +1,10 @@
 package org.openmrs.module.afyastat.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -7,11 +12,6 @@ import org.openmrs.Form;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.afyastat.api.service.InfoService;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 public class Utils {
 	
@@ -101,24 +101,29 @@ public class Utils {
 	 * @param uuid
 	 * @return
 	 */
-	public static boolean afyastatFormAlreadyExists(String uuid) {
+	public static boolean afyastatFormAlreadyExists(String uuid, String formUuid, Long dateFormFilled, String patientUuid) {
 		InfoService infoService = Context.getService(InfoService.class);
 		
 		if (StringUtils.isBlank(uuid)) {
 			return false;
 		}
 		
-		if (infoService.getQueueDataByUuid(uuid) != null) {
+		if (infoService.getQueueDataByUuid(uuid) != null
+		        || infoService.getQueueDataByFormDataUuidDateFormFilledAndPatientUuid(formUuid, dateFormFilled, patientUuid) != null) {
 			return true;
 		}
 		
-		if (infoService.getArchiveDataByUuid(uuid) != null) {
+		if (infoService.getArchiveDataByUuid(uuid) != null
+		        || infoService.getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(formUuid, dateFormFilled,
+		            patientUuid) != null) {
 			return true;
 		}
 		
-		if (infoService.getErrorDataByUuid(uuid) != null) {
+		if (infoService.getErrorDataByUuid(uuid) != null
+		        || infoService.getErrorDataByFormDataUuiDateFormFilledAndPatientUuid(formUuid, dateFormFilled, patientUuid) != null) {
 			return true;
 		}
+		
 		return false;
 	}
 }

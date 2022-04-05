@@ -65,9 +65,13 @@ public class QueueInfoProcessor {
 						if (queueDataHandler.accept(afyaStatQueueData)) {
 							queueDataHandler.process(afyaStatQueueData);
 							queueDataIterator.remove();
-							// archive them after we're done processing the queue data.
-							createArchiveData(afyaStatQueueData, "Queue data processed successfully!");
-							infoService.purgeQueueData(afyaStatQueueData);
+							// archive them after we're done processing the queue data but for demographic update purge.
+							if (afyaStatQueueData.getDiscriminator().equalsIgnoreCase("json-demographics-update")) {
+								infoService.purgeQueueData(afyaStatQueueData);
+							} else {
+								createArchiveData(afyaStatQueueData, "Queue data processed successfully!");
+								infoService.purgeQueueData(afyaStatQueueData);
+							}
 						}
 					}
 					catch (Exception e) {
@@ -88,9 +92,19 @@ public class QueueInfoProcessor {
 							String patientUuid = extractPatientUuidFromPayload(afyaStatQueueData.getPayload());
 							if (patientUuid == null) {
 								afyaStatQueueData.setPatientUuid("");
+							} else {
+								afyaStatQueueData.setPatientUuid(patientUuid);
 							}
-							afyaStatQueueData.setPatientUuid(patientUuid);
 						}
+						if (afyaStatQueueData.getClientName() == null) {
+							String patientName = extractPatientNameFromPayload(afyaStatQueueData.getPayload());
+							if (patientName == null) {
+								afyaStatQueueData.setClientName("");
+							} else {
+								afyaStatQueueData.setClientName(patientName);
+							}
+						}
+						
 						createErrorData(afyaStatQueueData, (StreamProcessorException) e);
 						infoService.purgeQueueData(afyaStatQueueData);
 					}
@@ -155,6 +169,18 @@ public class QueueInfoProcessor {
 	
 	private String extractPatientUuidFromPayload(String payload) {
 		return readAsString(payload, "$['patient']['patient.uuid']");
+	}
+	
+	private String extractPatientNameFromPayload(String payload) {
+		String patientName = "";
+		String familyName = readAsString(payload, "$['patient']['patient.family_name']");
+		patientName += (familyName == null) ? "" : familyName;
+		String givenName = readAsString(payload, "$['patient']['patient.given_name']");
+		patientName += (givenName == null) ? "" : (" " + givenName);
+		String middleName = readAsString(payload, "$['patient']['patient.middle_name']");
+		patientName += (middleName == null) ? "" : (" " + middleName);
+		patientName = patientName.trim();
+		return (patientName);
 	}
 	
 	/**

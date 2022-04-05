@@ -822,7 +822,7 @@ public class DemographicsUpdateQueueInfoHandler implements QueueInfoHandler {
 	private Integer handleEditObsValues(String obsValue) {
 		ArrayNode arrNodeValues = JsonNodeFactory.instance.arrayNode();
 		Integer conceptValue = null;
-		if (obsValue != null) {
+		if (obsValue != null && !obsValue.equalsIgnoreCase("")) {
 			for (String s : obsValue.split("_")) {
 				arrNodeValues.add(s);
 			}

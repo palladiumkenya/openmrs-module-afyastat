@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.afyastat.api.AfyastatService;
 import org.openmrs.module.afyastat.api.db.hibernate.HibernateAfyaStatDAO;
-import org.openmrs.module.afyastat.api.service.MedicQueData;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 
 public class AfyastatServiceImpl extends BaseOpenmrsService implements AfyastatService {
 	
@@ -31,8 +31,8 @@ public class AfyastatServiceImpl extends BaseOpenmrsService implements AfyastatS
 	}
 	
 	@Override
-	public MedicQueData saveQueData(MedicQueData medicQueData) {
-		return queueDataDao.saveQueData(medicQueData);
+	public AfyaStatQueueData saveQueData(AfyaStatQueueData afyaStatQueueData) {
+		return queueDataDao.saveQueData(afyaStatQueueData);
 	}
 	
 	@Override

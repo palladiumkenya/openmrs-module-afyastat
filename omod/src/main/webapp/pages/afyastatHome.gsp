@@ -1,14 +1,15 @@
 <%
     ui.decorateWith("kenyaemr", "standardPage", [layout: "sidebar"])
     def menuItems = [
-            [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to home", href: ui.pageLink("kenyaemr", "userHome")]
+            [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to home", href: ui.pageLink("kenyaemr", "userHome")],
+            [label: "Afyastat - Outgoing Queue", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Afyastat - Outgoing Queue", href: ui.pageLink("afyastat", "afyastatOutgoingQueue")]
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
     ui.includeJavascript("afyastat", "jsonViewer/jquery.json-editor.min.js")
 
-    ui.includeJavascript("kenyaemrorderentry", "bootstrap.min.js")
-    ui.includeCss("kenyaemrorderentry", "bootstrap.min.css")
+    ui.includeJavascript("afyastat", "bootstrap/bootstrap.bundle.min.js")
+    ui.includeCss("afyastat", "bootstrap/bootstrap-iso.css")
     ui.includeCss("afyastat", "jsonViewer/jquery.json-viewer.css")
 %>
 <style>
@@ -49,6 +50,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 #queue-pager li{
     display: inline-block;
 }
+#chk-select-all {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.selectElement {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 .nameColumn {
     width: 260px;
 }
@@ -58,8 +69,15 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 .dateRequestColumn {
     width: 120px;
 }
+.clientNameColumn {
+    width: 120px;
+}
+.selectColumn {
+    width: 40px;
+    padding-left: 5px;
+}
 .actionColumn {
-    width: 250px;
+    width: 350px;
 }
 .sampleStatusColumn {
     width: 150px;
@@ -83,21 +101,49 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border: 1px solid #ddd;
 }
 
-.viewButton {
+.viewPayloadButton {
     background-color: cadetblue;
     color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.viewPayloadButton:hover {
+    background-color: orange;
+    color: black;
+}
+.editPayloadButton {
+    background-color: cadetblue;
+    color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.editPayloadButton:hover {
+    background-color: orange;
+    color: black;
 }
 .mergeButton {
     background-color: cadetblue;
     color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.createButton {
+    background-color: cadetblue;
+    color: white;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .viewButton:hover {
     background-color: steelblue;
     color: white;
 }
 .mergeButton:hover {
-    background-color: steelblue;
-    color: white;
+    background-color: orange;
+    color: black;
+}
+.createButton:hover {
+    background-color: orange;
+    color: black;
 }
 .page-content{
     background: #eee;
@@ -121,9 +167,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
     <div>
         <fieldset>
-            <legend>Queue summary</legend>
+            <legend>Afyastat - Incoming Queue summary</legend>
             <div>
-                <table class="simple-table" width="30%">
+                <table class="simple-table" width="100%">
                     <thead>
                     </thead>
                     <tbody>
@@ -163,10 +209,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                             <div class="ke-panel-content">
                                 <fieldset>
                                     <legend></legend>
-                                    <table class="simple-table" width="90%">
+                                    <table class="simple-table" width="100%">
                                         <thead>
                                         <tr>
-                                            <th class="nameColumn">Patient/UUID</th>
+                                            <th class="clientNameColumn">Client Name</th>
                                             <th class="cccNumberColumn">Discriminator</th>
                                             <th class="sampleTypeColumn">Form</th>
                                             <th class="dateRequestColumn">Date submitted</th>
@@ -200,16 +246,21 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                             <div class="ke-panel-content">
                                     <fieldset>
                                         <legend></legend>
-                                        <table class="simple-table" width="90%">
+                                        <table class="simple-table" width="100%">
                                             <thead>
+
                                             <tr>
-                                                <th class="nameColumn">Error data UUID</th>
+                                                <th class="clientNameColumn">Client Name</th>
                                                 <th class="cccNumberColumn">Discriminator</th>
                                                 <th class="sampleTypeColumn">Form</th>
                                                 <th class="dateRequestColumn">Date processed</th>
                                                 <th class="sampleStatusColumn">Message</th>
                                                 <th class="dateRequestColumn">Provider</th>
-                                                <th class="actionColumn"></th>
+                                                <th class="selectColumn"><input type="checkbox" id="chk-select-all"/></th>
+                                                <th class="actionColumn">
+                                                    <input type="button" id="requeueErrors" value="Re-queue"/>
+                                                    <input type="button" id="deleteErrors" value="Delete"/>
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody id="error-list">
@@ -230,26 +281,50 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         </div>
     </div>
 
-    <div class="modal fade" id="showPayloadDialog" tabindex="-1" role="dialog" aria-labelledby="dateModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header modal-header-primary">
-                    <h5 class="modal-title" id="dateVlModalCenterTitle">Payload</h5>
-                    <button type="button" class="close closeDialog" data-dismiss="modal">&times;</button>
+    <div class="bootstrap-iso">
+        <div class="modal fade" id="showViewPayloadDialog" tabindex="-1" role="dialog" aria-labelledby="backdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="backdropLabel">View Payload</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-view-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <span style="color: firebrick" id="msgBox"></span>
-                    <pre id="json-display"></pre>
+            </div>
+        </div>
+
+        <div class="modal fade" id="showEditPayloadDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="staticBackdropLabel">Edit Payload</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-edit-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="savePayloadButton btn btn-primary">Save and Requeue</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-
 </div>
 
 <script type="text/javascript">
 
+    var selectedErrors = [];
     //On ready
     jq = jQuery;
     jq(function () {
@@ -278,6 +353,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
         var visibleErrorPages = 1;
         var visibleQueuePages = 1;
+
+        var payloadEditor = {};
 
         if (totalErrorPages <= 5) {
             visibleErrorPages = totalErrorPages;
@@ -318,20 +395,138 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             ui.navigate('afyastat', 'mergePatients', { queueUuid: jq(this).val(),  returnUrl: location.href });
         });
 
-        jq(document).on('click','.viewButton',function () {
-            // clear previously entered values
-
-
+        jq(document).on('click','.viewPayloadButton',function () {
             var queueUuid = jq(this).val();
+            console.log("Checking for queue entry with uuid: " + queueUuid);
 
             ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
-                jq('#json-display').jsonViewer(JSON.parse(result.payload),{
+                let payloadObject = [];
+                try {
+                    payloadObject = JSON.parse(result.payload);
+                } catch(ex) {
+                    payloadObject = JSON.parse("{}")
+                }
+                
+                jq('#json-view-display').empty();
+                jq('#json-view-display').jsonViewer(payloadObject,{
                     withQuotes:true,
                     rootCollapsable:true
                 });
             });
 
-            jq('#showPayloadDialog').modal('show');
+            jq('#showViewPayloadDialog').modal('show');
+        });
+
+        jq(document).on('click','.editPayloadButton',function () {
+            var queueUuid = jq(this).val();
+            console.log("Checking for queue entry with uuid: " + queueUuid);
+
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
+                let payloadObject = [];
+                try {
+                    payloadObject = JSON.parse(result.payload);
+                } catch(ex) {
+                    payloadObject = JSON.parse("{}")
+                }
+
+                jq('#json-edit-display').empty();
+                payloadEditor = new JsonEditor('#json-edit-display', payloadObject,{
+                    withQuotes:true,
+                    rootCollapsable:true
+                });
+                jq('.savePayloadButton').val(queueUuid);
+            });
+
+            jq('#showEditPayloadDialog').modal('show');
+        });
+
+        jq(document).on('click','.savePayloadButton',function () {
+            var queueUuid = jq(this).val();
+            console.log("Got the edited entry with uuid: " + queueUuid);
+
+            let newPayload = "";
+            try {
+                newPayload = JSON.stringify(payloadEditor.get());
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'updateMessagePayload', { queueUuid : queueUuid, payload : newPayload}, function (result) {
+                    if(result)
+                    {
+                        console.log("Payload Successfully Edited");
+                        alert("Payload Successfully Edited");
+                        let selectedError = [];
+                        selectedError.push(queueUuid);
+                        let listToSubmit = selectedError.join();
+                        ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                            document.location.reload();
+                        });
+                        jq('#showEditPayloadDialog').modal('hide');
+                    } else {
+                        console.log("Error Editing Payload");
+                        alert("Error Editing Payload");
+                    }
+                });
+            } catch (ex) {
+                console.log("Payload JSON Error: " + ex);
+                alert(ex);
+            }
+        });
+
+        // used to create new registration and bypass any patient matching on the provided patient demographics
+        jq(document).on('click','.createButton',function () {
+            var queueUuid = jq(this).val();
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'createNewRegistration', { queueUuid : queueUuid }, function (result) {
+                document.location.reload();
+            });
+        });
+
+        // population selection list
+        jq(document).on('click','.selectElement',function () {
+            var queueUuid = jq(this).val();
+            if (jq(this).is(":checked")) {
+                selectedErrors.push(queueUuid);
+            }
+            else {
+                 var elemIndex = selectedErrors.indexOf(queueUuid);
+                 if (elemIndex > -1) {
+                    selectedErrors.splice(elemIndex, 1);
+                 }
+                 jq('#chk-select-all').prop('checked', false);
+             }
+        });
+
+        // handle select all
+        jq(document).on('click','#chk-select-all',function () {
+           if(jq(this).is(':checked')) {
+                jq('.selectElement').prop('checked', true);
+                selectedErrors = [];
+           }
+           else {
+                jq('.selectElement').prop('checked', false);
+           }
+
+        });
+
+        // handles button than re-queues errors
+        jq(document).on('click','#requeueErrors',function () {
+            // clear previously entered values
+            //TODO: can we also check if the select all checkbox is checked?
+            var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
+            //selectedErrors
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                document.location.reload();
+            });
+
+        });
+
+        // handles button for deleting errors
+        jq(document).on('click','#deleteErrors',function () {
+            // clear previously entered values
+            //TODO: can we also check if the select all checkbox is checked?
+            var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
+            //selectedErrors
+            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
+                document.location.reload();
+            });
+
         });
     });
 
@@ -341,11 +536,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         for (var i = 0; i < displayRecords.length; i++) {
 
             tr = jq('<tr/>');
-            if (tableId === 'queue') {
-                tr.append("<td>" + (displayRecords[i].clientName != "" ? displayRecords[i].clientName : displayRecords[i].patientUuid) + "</td>");
-            } else {
-                tr.append("<td>" + displayRecords[i].patientUuid + "</td>");
-            }
+            tr.append("<td>" + displayRecords[i].clientName + "</td>");
 
             tr.append("<td>" + displayRecords[i].discriminator + "</td>");
             tr.append("<td>" + displayRecords[i].formName + "</td>");
@@ -357,24 +548,55 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             if (tableId === 'error') {
                 tr.append("<td>" + displayRecords[i].message + "</td>");
             }
-            tr.append("<td>" + displayRecords[i].provider + "</td>");
+            tr.append("<td>" + displayRecords[i].provider + "</td>");           
 
-            var actionTd = jq('<td/>');
+            if (tableId === 'error') {
+                var selectTd = jq('<td/>');
+                var selectCheckbox = jq('<input/>', {
+                    type: 'checkbox',
+                    class: 'selectElement',
+                    value: displayRecords[i].uuid
+                });
 
-            var btnView = jq('<button/>', {
-                text: 'View Payload',
-                class: 'viewButton',
-                value: displayRecords[i].uuid
-            });
-            actionTd.append(btnView);
-            tr.append(actionTd);
-            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration') {
+                selectTd.append(selectCheckbox);
+                tr.append(selectTd);
+
+                var actionTd = jq('<td/>');
+
+                var btnView = jq('<button/>', {
+                    text: 'View',
+                    class: 'viewPayloadButton',
+                    value: displayRecords[i].uuid
+                });
+
+                var btnEdit = jq('<button/>', {
+                    text: 'Edit',
+                    class: 'editPayloadButton',
+                    value: displayRecords[i].uuid
+                });
+
+                actionTd.append(btnView);
+                actionTd.append(btnEdit);
+
+                tr.append(actionTd);
+            }
+            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
                 var btnMerge = jq('<button/>', {
                     text: 'Merge',
                     class: 'mergeButton',
                     value: displayRecords[i].uuid
                 });
                 actionTd.append(btnMerge);
+                tr.append(actionTd);
+            }
+
+            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
+                var btnCreateNewRegistration = jq('<button/>', {
+                    text: 'Register',
+                    class: 'createButton',
+                    value: displayRecords[i].uuid
+                });
+                actionTd.append(btnCreateNewRegistration);
                 tr.append(actionTd);
             }
 

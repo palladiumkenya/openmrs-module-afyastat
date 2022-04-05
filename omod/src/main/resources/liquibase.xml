@@ -51,7 +51,7 @@
                                  referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
 
-   <changeSet id="medic_queue_data_20200723-1444" author="pwangoo">
+   <changeSet id="medic_queue_data_20220310-212106" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="medic_queue_data"/>
@@ -111,6 +111,50 @@
                                 referencedTableName="location" referencedColumnNames="location_id"/>
     </changeSet>
 
+    <changeSet id="medic_queue_data_20220311-1445" author="makombe">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_queue_data"/>
+            <not>
+                <columnExists tableName="medic_queue_data" columnName="date_form_filled"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record epoch date when  the form was filled in Afyastat app.
+        </comment>
+        <addColumn tableName="medic_queue_data" >
+            <column name="date_form_filled" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="medic_queue_data_20220311-100303" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_queue_data"/>
+            <not>
+                <columnExists tableName="medic_queue_data" columnName="client_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record the client name.
+        </comment>
+        <addColumn tableName="medic_queue_data">
+            <column name="client_name" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="makombe" id="index_medic_queue_data_20220315-2348">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_queue_data"/>
+            <not>
+                <indexExists indexName="index_date_form_filled_medic_queue_data" tableName="medic_queue_data"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_date_form_filled_medic_queue_data" tableName="medic_queue_data">
+            <column name="form_data_uuid"/>
+            <column name="date_form_filled"/>
+            <column name="patient_uuid"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet id="medic_archive_data_20200723-1448" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -165,7 +209,51 @@
                                  referencedTableName="medic_data_source" referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="medic_error_data_20200723-1449" author="pwangoo">
+     <changeSet id="medic_archive_data_20220311-1450" author="makombe">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_archive_data"/>
+            <not>
+                <columnExists tableName="medic_archive_data" columnName="date_form_filled"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record epoch date when  the form was filled in Afyastat app.
+        </comment>
+        <addColumn tableName="medic_archive_data" >
+            <column name="date_form_filled" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="medic_queue_data_20220311-130303" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_archive_data"/>
+            <not>
+                <columnExists tableName="medic_archive_data" columnName="client_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record the client name.
+        </comment>
+        <addColumn tableName="medic_archive_data">
+            <column name="client_name" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="makombe" id="index_medic_archive_data_20220315-2339">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_archive_data"/>
+            <not>
+                <indexExists indexName="index_date_form_filled_medic_archive_data" tableName="medic_archive_data"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_date_form_filled_medic_archive_data" tableName="medic_archive_data">
+            <column name="form_data_uuid"/>
+            <column name="date_form_filled"/>
+            <column name="patient_uuid"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20220310-212027" author="pwangoo">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="medic_error_data"/>
@@ -229,6 +317,50 @@
         <addForeignKeyConstraint constraintName="medic_error_data_location"
                                  baseTableName="medic_error_data" baseColumnNames="location"
                                  referencedTableName="location" referencedColumnNames="location_id"/>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20220311-1450" author="makombe">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_error_data"/>
+            <not>
+                <columnExists tableName="medic_error_data" columnName="date_form_filled"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record epoch date when  the form was filled in Afyastat app.
+        </comment>
+        <addColumn tableName="medic_error_data" >
+            <column name="date_form_filled" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="medic_error_data_20220311-120303" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_error_data"/>
+            <not>
+                <columnExists tableName="medic_error_data" columnName="client_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            Adds a column to record the client name.
+        </comment>
+        <addColumn tableName="medic_error_data">
+            <column name="client_name" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="makombe" id="index_medic_error_data_20220315-2337">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="medic_error_data"/>
+            <not>
+                <indexExists indexName="index_date_form_filled_medic_error_data" tableName="medic_error_data"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_date_form_filled_medic_error_data" tableName="medic_error_data">
+            <column name="form_data_uuid"/>
+            <column name="date_form_filled"/>
+            <column name="patient_uuid"/>
+        </createIndex>
     </changeSet>
 
     <changeSet id="medic_notification_data_20200723-1451" author="pwangoo">
@@ -433,9 +565,8 @@
         </insert>
     </changeSet>
 
-
     <!--Adding scheduled task to push contact list to the Medic Mobile system -->
-    <changeSet id="medic_queue_021" author="aojwang">
+    <changeSet id="afyastat-medicOutgoingRegistration-queueing-task-20220225-4" author="aojwang">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*) FROM scheduler_task_config
@@ -446,41 +577,150 @@
         <comment>Inserting processor for pushing records to CHT into 'schedule_task_config' table</comment>
         <insert tableName="scheduler_task_config">
             <column name="name" value="Push Contact list to Medic Mobile CHT system" />
-            <column name="description" value="Push lab requests to Medic Mobile CHT" />
+            <column name="description" value="Push Contact list to Medic Mobile CHT" />
             <column name="schedulable_class" value="org.openmrs.module.afyastat.task.PushContactsToMedicMobileTask" />
             <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
             <column name="start_time" valueDate="2020-04-04T23:59:59" />
-            <column name="repeat_interval" value="3600" />
+            <column name="repeat_interval" value="60" />
             <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
             <column name="created_by" value="1" />
             <column name="start_on_startup" value="1" />
-            <column name="started" value="1" />
+            <column name="started" value="0" />
             <column name="uuid" value="e8e35121-c569-479f-b1d7-6c713fd72198" />
         </insert>
     </changeSet>
 
-    <!--Adding scheduled task to push list of positive but not linked to Mobile system -->
-    <changeSet id="medic_queue_022" author="aojwang">
+    <!--Adding scheduled task to queue list of positive but not linked to Mobile system -->
+    <changeSet id="afyastat-medicOutgoingRegistration-queueing-task-20220225-5" author="aojwang">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*) FROM scheduler_task_config
-                WHERE schedulable_class = 'org.openmrs.module.afyastat.task.PushLinkageListToMedicMobileTask'
-                And name = 'Push positive clients pending linkage to Afyastat'
+                WHERE schedulable_class = 'org.openmrs.module.afyastat.task.QueueLinkageListToMedicMobileTask'
+                And name = 'Queue positive clients pending linkage to Afyastat'
             </sqlCheck>
         </preConditions>
-        <comment>Inserting processor for pushing linkage list into 'schedule_task_config' table</comment>
+        <comment>Inserting processor for queueing linkage list into 'schedule_task_config' table</comment>
         <insert tableName="scheduler_task_config">
-            <column name="name" value="Push positive clients pending linkage to Afyastat" />
-            <column name="description" value="Pushes the list of clients pending linkage to Afyastat" />
-            <column name="schedulable_class" value="org.openmrs.module.afyastat.task.PushLinkageListToMedicMobileTask" />
+            <column name="name" value="Queue positive clients pending linkage to Afyastat" />
+            <column name="description" value="Queues the list of clients pending linkage to Afyastat" />
+            <column name="schedulable_class" value="org.openmrs.module.afyastat.task.QueueLinkageListToMedicMobileTask" />
             <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
             <column name="start_time" valueDate="2021-06-17T23:59:59" />
-            <column name="repeat_interval" value="43200" />
+            <column name="repeat_interval" value="60" />
             <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
             <column name="created_by" value="1" />
             <column name="start_on_startup" value="1" />
-            <column name="started" value="1" />
-            <column name="uuid" value="04779b47-9fa0-4306-bec9-c55c053a3104" />
+            <column name="started" value="0" />
+            <column name="uuid" value="04779c47-9fc0-4306-cec9-c55c053c3104" />
+        </insert>
+    </changeSet>
+
+    <!--Optimizing outgoing registration by saving queue on DB -->
+    <changeSet author="pwaweru" id="afyastat-20220210-5">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="kenyaemr_afyastat_medicoutgoingregistration"/></not>
+        </preConditions>
+        <comment>Create the medicoutgoingregistration table</comment>
+        <createTable tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="patientId" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chtRef" type="varchar(255)" />
+            <column name="kemrRef" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purpose" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="varchar(4096)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="int" defaultValueNumeric="0"/>
+            <column name="uuid" type="char(38)" />
+
+            <column name="creator" defaultValueNumeric="0" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column defaultValueBoolean="false" name="retired" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retired_by" type="int"/>
+            <column name="date_retired" type="datetime"/>
+            <column name="retire_reason" type="varchar(255)"/>
+
+            <column defaultValueBoolean="true" name="voided" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="INT"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="VARCHAR(255)"/>
+
+            <column name="owner" type="int"/>
+        </createTable>
+
+        <createIndex indexName="index_date_created" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="date_created"/>
+        </createIndex>
+        <createIndex indexName="index_patient_id" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="patientId"/>
+        </createIndex>
+        <createIndex indexName="index_status" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="status"/>
+        </createIndex>
+        <createIndex indexName="index_purpose" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="purpose"/>
+        </createIndex>
+        <createIndex indexName="index_kemr_ref" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="kemrRef"/>
+        </createIndex>
+        <createIndex indexName="index_cht_ref" tableName="kenyaemr_afyastat_medicoutgoingregistration">
+            <column name="chtRef"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="pwaweru" id="index_medicoutgoingregistration_20220323-161330">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="kenyaemr_afyastat_medicoutgoingregistration"/>
+            <not>
+                <indexExists indexName="index_purpose_patientid_medicoutgoingregistration" tableName="kenyaemr_afyastat_medicoutgoingregistration"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_purpose_patientid_medicoutgoingregistration" tableName="kenyaemr_afyastat_medicoutgoingregistration" unique="true">
+            <column name="purpose"/>
+            <column name="patientId"/>
+        </createIndex>
+    </changeSet>
+
+    <!--Adding scheduled task to queue contact list to the Medic Mobile system -->
+    <changeSet id="afyastat-medicOutgoingRegistration-queueing-task-20220210-6" author="pwaweru">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.afyastat.task.QueueContactsToMedicMobileTask'
+                And name = 'Queue Contact list to Medic Mobile CHT system'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting processor for queueing records to CHT into 'schedule_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="Queue Contact list to Medic Mobile CHT system" />
+            <column name="description" value="Queue Contact list to Medic Mobile CHT" />
+            <column name="schedulable_class" value="org.openmrs.module.afyastat.task.QueueContactsToMedicMobileTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="2022-01-01T23:59:59" />
+            <column name="repeat_interval" value="60" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="1" />
+            <column name="started" value="0" />
+            <column name="uuid" value="e8f35121-c569-479b-c1d7-6c713fd72198" />
         </insert>
     </changeSet>
 

@@ -13,10 +13,18 @@
  */
 package org.openmrs.module.afyastat.api.db;
 
+import org.openmrs.module.afyastat.model.AuditableInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
 
 /**
  */
 public interface ErrorInfoDao extends InfoDao<ErrorInfo> {
 	
+	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	AuditableInfo recordSetPayload(String uuid, String payload);
 }

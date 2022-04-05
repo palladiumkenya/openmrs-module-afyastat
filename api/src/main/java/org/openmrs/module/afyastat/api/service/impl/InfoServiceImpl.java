@@ -13,29 +13,43 @@
  */
 package org.openmrs.module.afyastat.api.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Person;
-import org.openmrs.Role;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
-import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
-import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.db.AfyaDataSourceDao;
 import org.openmrs.module.afyastat.api.db.AfyaStatQueueDataDao;
+import org.openmrs.module.afyastat.api.db.ArchiveInfoDao;
+import org.openmrs.module.afyastat.api.db.ErrorInfoDao;
 import org.openmrs.module.afyastat.api.db.ErrorMessagesInfoDao;
+import org.openmrs.module.afyastat.api.db.NotificationInfoDao;
 import org.openmrs.module.afyastat.api.service.InfoService;
 import org.openmrs.module.afyastat.api.service.RegistrationInfoService;
 import org.openmrs.module.afyastat.exception.StreamProcessorException;
-import org.openmrs.module.afyastat.model.*;
+import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
+import org.openmrs.module.afyastat.model.AfyaDataSource;
+import org.openmrs.module.afyastat.model.AfyaStatQueueData;
+import org.openmrs.module.afyastat.model.ArchiveInfo;
+import org.openmrs.module.afyastat.model.AuditableInfo;
 import org.openmrs.module.afyastat.model.ErrorInfo;
+import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
+import org.openmrs.module.afyastat.model.FormInfoStatus;
+import org.openmrs.module.afyastat.model.RegistrationInfo;
 import org.openmrs.module.afyastat.model.handler.QueueInfoHandler;
+import org.openmrs.module.kenyaemr.api.KenyaEmrService;
 import org.openmrs.util.HandlerUtil;
-
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  */
@@ -214,6 +228,17 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 	}
 	
 	/**
+	 * Sets the payload of a record
+	 * 
+	 * @param uuid the record uuid
+	 * @param payload the record payload
+	 */
+	@Override
+	public AuditableInfo recordSetPayload(String uuid, String payload) {
+		return (getErrorInfoDao().recordSetPayload(uuid, payload));
+	}
+	
+	/**
 	 * Return the registration error data with the given patientUuid.
 	 * 
 	 * @param patientUuid the error data uuid.
@@ -325,13 +350,34 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 	}
 	
 	@Override
+	public ArchiveInfo getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid) {
+		return getArchiveInfoDao().getDataByFormDataUuidDateFormFilledAndPatientUuid(formDataUuid, dateFormFilled,
+		    patientUuid);
+	}
+	
+	@Override
 	public List<ErrorInfo> getErrorDataByFormDataUuid(final String formDataUuid) {
 		return getErrorInfoDao().getAllDataByFormDataUuid(formDataUuid);
 	}
 	
 	@Override
+	public ErrorInfo getErrorDataByFormDataUuiDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFilled, String patientUuid) {
+		return getErrorInfoDao()
+		        .getDataByFormDataUuidDateFormFilledAndPatientUuid(formDataUuid, dateFormFilled, patientUuid);
+	}
+	
+	@Override
 	public List<AfyaStatQueueData> getQueueDataByFormDataUuid(final String formDataUuid) {
 		return getAfyaStatQueueDataDao().getAllDataByFormDataUuid(formDataUuid);
+	}
+	
+	@Override
+	public AfyaStatQueueData getQueueDataByFormDataUuidDateFormFilledAndPatientUuid(final String formDataUuid,
+	        final Long dateFormFiled, String patientUuid) {
+		return getAfyaStatQueueDataDao().getDataByFormDataUuidDateFormFilledAndPatientUuid(formDataUuid, dateFormFiled,
+		    patientUuid);
 	}
 	
 	/**
@@ -580,9 +626,11 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 		
 		registerTemporaryUuid(submittedPatientUuid, existingPatientUuid);
 		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData(errorInfo);
-		afyaStatQueueData = this.saveQueueData(afyaStatQueueData);
 		this.purgeErrorData(errorInfo);
-		requeued.add(afyaStatQueueData);
+		
+		// add CHT ref to the existing patient if at all it doesn't exist
+		Patient existingPatient = Context.getPatientService().getPatientByUuid(existingPatientUuid);
+		addChtReferenceToExistingPatient(existingPatient, submittedPatientUuid);
 		
 		// Fetch all ErrorData associated with the patient UUID (the one determined to be of a duplicate patient).
 		int countOfErrors = this.countErrorData(submittedPatientUuid).intValue();
@@ -594,6 +642,31 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 			requeued.add(afyaStatQueueData);
 		}
 		return requeued;
+	}
+	
+	/**
+	 * Add CHT reference to a client
+	 * 
+	 * @param existingPatient
+	 * @param submittedPatientUuid
+	 */
+	private void addChtReferenceToExistingPatient(Patient existingPatient, String submittedPatientUuid) {
+		PatientIdentifierType chtPit = Context.getPatientService().getPatientIdentifierTypeByUuid(
+		    AfyaStatMetadata._PatientIdentifierType.CHT_RECORD_UUID);
+		// check if patient already has CHT ref and prefer it over the new one
+		
+		for (PatientIdentifier identifier : existingPatient.getActiveIdentifiers()) {
+			if (identifier.getIdentifierType().equals(chtPit)) { // the patient already has a CHT ref. Do nothing
+				return;
+			}
+		}
+		PatientIdentifier chtRef = new PatientIdentifier();
+		chtRef.setIdentifierType(chtPit);
+		chtRef.setIdentifier(submittedPatientUuid);
+		chtRef.setLocation(Context.getService(KenyaEmrService.class).getDefaultLocation());
+		chtRef.setPatient(existingPatient);
+		Context.getPatientService().savePatientIdentifier(chtRef);
+		
 	}
 	
 	private void registerTemporaryUuid(final String temporaryUuid, final String permanentUuid) {
@@ -619,5 +692,91 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 			formDataStatus.setStatus("unknown");
 		}
 		return formDataStatus;
+	}
+	
+	@Override
+	public void reQueueErrors(String errorList) {
+		if (Context.isAuthenticated()) {
+			
+			if (errorList.equals("all")) {
+				List<ErrorInfo> errors = getAllErrorData();
+				
+				for (ErrorInfo errorData : errors) {
+					AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+					saveQueueData(queueData);
+					purgeErrorData(errorData);
+				}
+			} else {
+				String[] uuidList = errorList.split(",");
+				for (String uuid : uuidList) {
+					ErrorInfo errorData = getErrorDataByUuid(uuid);
+					AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+					saveQueueData(queueData);
+					purgeErrorData(errorData);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void purgeErrors(String errorList) {
+		if (Context.isAuthenticated()) {
+			
+			if (errorList.equals("all")) {
+				List<ErrorInfo> errors = getAllErrorData();
+				
+				for (ErrorInfo errorData : errors) {
+					purgeErrorData(errorData);
+				}
+			} else {
+				String[] uuidList = errorList.split(",");
+				for (String uuid : uuidList) {
+					ErrorInfo errorData = getErrorDataByUuid(uuid);
+					purgeErrorData(errorData);
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void createAsNewRegistration(String queueUuid) {
+		if (Context.isAuthenticated()) {
+			ErrorInfo errorData = getErrorDataByUuid(queueUuid);
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = null;
+			try {
+				jsonNode = objectMapper.readTree(errorData.getPayload());
+			}
+			catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			
+			String submittedPatientUuid = errorData.getPatientUuid();
+			
+			ObjectNode objectNode = (ObjectNode) jsonNode;
+			objectNode.put("skipPatientMatching", "true");
+			
+			AfyaStatQueueData queueData = new AfyaStatQueueData(errorData);
+			queueData.setPayload(objectNode.toString());
+			
+			errorData.setVoided(true);
+			errorData.setVoidReason("To be created as new registration");
+			
+			errorData = saveErrorData(errorData);
+			saveQueueData(queueData);
+			purgeErrorData(errorData);
+			
+			// Fetch all ErrorData associated with the patient UUID (the one determined to be of a duplicate patient).
+			int countOfErrors = countErrorData(submittedPatientUuid).intValue();
+			if (countOfErrors > 0) {
+				List<ErrorInfo> allToRequeue = getPagedErrorData(submittedPatientUuid, 1, countOfErrors);
+				for (ErrorInfo errorData1 : allToRequeue) {
+					AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData(errorData1);
+					afyaStatQueueData = saveQueueData(afyaStatQueueData);
+					saveQueueData(afyaStatQueueData);
+					purgeErrorData(errorData1);
+				}
+			}
+		}
 	}
 }

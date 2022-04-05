@@ -26,6 +26,8 @@ public class ErrorInfo extends AuditableInfo {
 	
 	private Set<ErrorMessagesInfo> errorMessages;
 	
+	private Long dateFormFilled;
+	
 	public ErrorInfo() {
 	}
 	
@@ -56,4 +58,13 @@ public class ErrorInfo extends AuditableInfo {
 	public void setErrorMessages(Set<ErrorMessagesInfo> errorMessages) {
 		this.errorMessages = errorMessages;
 	}
+	
+	public Long getDateFormFilled() {
+		return dateFormFilled;
+	}
+	
+	public void setDateFormFilled(final Long dateFormFilled) {
+		this.dateFormFilled = dateFormFilled;
+	}
+	
 }
