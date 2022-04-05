@@ -118,7 +118,7 @@ public class Utils {
 		
 		if (infoService.getArchiveDataByUuid(uuid) != null
 		        || infoService.getArchiveDataByFormDataUuidDateFormFilledAndPatientUuid(formUuid, dateFormFilled,
-		            patientUuid) != null) {			
+		            patientUuid) != null) {
 			return true;
 		}
 		
