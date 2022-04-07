@@ -1,7 +1,7 @@
 <%
     ui.decorateWith("kenyaemr", "standardPage", [layout: "sidebar"])
     def menuItems = [
-            [label: "Afyastat - Incoming Queue", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Afyastat - Incoming Queue", href: ui.pageLink("afyastat", "afyastatHome")]
+            [label: "Afyastat - Incoming Queue", iconProvider: "afyastat", icon: "incoming-reg-07-32x32.png", label: "Afyastat - Incoming Queue", href: ui.pageLink("afyastat", "afyastatHome")]
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
