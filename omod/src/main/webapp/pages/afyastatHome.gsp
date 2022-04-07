@@ -2,7 +2,7 @@
     ui.decorateWith("kenyaemr", "standardPage", [layout: "sidebar"])
     def menuItems = [
             [label: "Back", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Back to home", href: ui.pageLink("kenyaemr", "userHome")],
-            [label: "Afyastat - Outgoing Queue", iconProvider: "kenyaui", icon: "buttons/back.png", label: "Afyastat - Outgoing Queue", href: ui.pageLink("afyastat", "afyastatOutgoingQueue")]
+            [label: "Afyastat - Outgoing Queue", iconProvider: "afyastat", icon: "outgoing-reg-07-32x32.png", label: "Afyastat - Outgoing Queue", href: ui.pageLink("afyastat", "afyastatOutgoingQueue")]
     ]
 
     ui.includeJavascript("kenyaemrorderentry", "jquery.twbsPagination.min.js")
@@ -258,8 +258,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="dateRequestColumn">Provider</th>
                                                 <th class="selectColumn"><input type="checkbox" id="chk-select-all"/></th>
                                                 <th class="actionColumn">
-                                                    <input type="button" id="requeueErrors" value="Re-queue"/>
-                                                    <input type="button" id="deleteErrors" value="Delete"/>
+                                                    <input type="button" id="requeueErrors" value="Re-queue Selection"/>
+                                                    <input type="button" id="deleteErrors" value="Delete Selection"/>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -508,25 +508,27 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         // handles button than re-queues errors
         jq(document).on('click','#requeueErrors',function () {
             // clear previously entered values
-            //TODO: can we also check if the select all checkbox is checked?
-            var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
-            //selectedErrors
-            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                document.location.reload();
-            });
-
+            if(confirm("Are you sure you want to requeue these queue errors?") == true) {
+                //TODO: can we also check if the select all checkbox is checked?
+                var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
+                //selectedErrors
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                    document.location.reload();
+                });
+            }
         });
 
         // handles button for deleting errors
         jq(document).on('click','#deleteErrors',function () {
             // clear previously entered values
-            //TODO: can we also check if the select all checkbox is checked?
-            var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
-            //selectedErrors
-            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                document.location.reload();
-            });
-
+            if(confirm("Are you sure you want to delete these queue errors?") == true) {
+                //TODO: can we also check if the select all checkbox is checked?
+                var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
+                //selectedErrors
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
+                    document.location.reload();
+                });
+            }
         });
     });
 
