@@ -5,7 +5,7 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 
-public class outgoingRegistrationQueueFragmentController {
+public class OutgoingRegistrationQueueFragmentController {
 	
 	public void controller(@SpringBean KenyaUiUtils kenyaUi, UiUtils ui, PageModel model) {
 		
