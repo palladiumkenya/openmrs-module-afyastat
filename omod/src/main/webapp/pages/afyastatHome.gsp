@@ -258,8 +258,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="dateRequestColumn">Provider</th>
                                                 <th class="selectColumn"><input type="checkbox" id="chk-select-all"/></th>
                                                 <th class="actionColumn">
-                                                    <input type="button" id="requeueErrors" value="Re-queue Selection"/>
-                                                    <input type="button" id="deleteErrors" value="Delete Selection"/>
+                                                    <input type="button" id="requeueErrors" value="Re-queue Selection" disabled/>
+                                                    <input type="button" id="deleteErrors" value="Delete Selection" disabled/>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -476,6 +476,30 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'createNewRegistration', { queueUuid : queueUuid }, function (result) {
                 document.location.reload();
             });
+        });
+
+        //Enable or Disable Requeue and Delete button on incoming queue depending on condition of queue item selection 
+        jq(".selectElement").change(function() {
+            let len = jq('.selectElement:checked').length;
+            if (len > 0) {
+                jq('#requeueErrors').attr('disabled', false);
+                jq('#deleteErrors').attr('disabled', false);
+            } else {
+                jq('#requeueErrors').attr('disabled', true);
+                jq('#deleteErrors').attr('disabled', true);
+            }
+        });
+
+        //Enable or Disable Requeue and Delete button on incoming queue depending on condition of queue item selection 
+        jq("#chk-select-all").change(function() {
+            let len = jq('.selectElement:checked').length;
+            if (len > 0) {
+                jq('#requeueErrors').attr('disabled', false);
+                jq('#deleteErrors').attr('disabled', false);
+            } else {
+                jq('#requeueErrors').attr('disabled', true);
+                jq('#deleteErrors').attr('disabled', true);
+            }
         });
 
         // population selection list
