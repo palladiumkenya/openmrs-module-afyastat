@@ -50,12 +50,22 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 #queue-pager li{
     display: inline-block;
 }
-#chk-select-all {
+#chk-general-select-all {
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-.selectElement {
+#chk-registration-select-all {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.selectGeneralElement {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.selectRegistrationElement {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -192,10 +202,14 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     </div>
 
     <div id="program-tabs" class="ke-tabs">
-        <div class="ke-tabmenu">
-            <div class="ke-tabmenu-item" data-tabid="queue_data">Queue data</div>
 
-            <div class="ke-tabmenu-item" data-tabid="error_queue">Error queue</div>
+        <div class="ke-tabmenu">
+
+            <div class="ke-tabmenu-item" data-tabid="queue_data">Queue Data</div>
+
+            <div class="ke-tabmenu-item" data-tabid="general_error_queue">General Error Queue</div>
+
+            <div class="ke-tabmenu-item" data-tabid="registration_error_queue">Registration Error Queue</div>
 
         </div>
 
@@ -204,7 +218,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 <tr>
                     <td style="width: 99%; vertical-align: top">
                         <div class="ke-panel-frame">
-                            <div class="ke-panel-heading">Queue data</div>
+                            <div class="ke-panel-heading">Queue Data</div>
 
                             <div class="ke-panel-content">
                                 <fieldset>
@@ -236,12 +250,13 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 </tr>
             </table>
         </div>
-        <div class="ke-tab" data-tabid="error_queue">
-            <table id="error-queue-data" cellspacing="0" cellpadding="0" width="100%">
+        
+        <div class="ke-tab" data-tabid="general_error_queue">
+            <table id="general-error-queue-data" cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                     <td style="width: 99%; vertical-align: top">
                         <div class="ke-panel-frame">
-                            <div class="ke-panel-heading">Error queue</div>
+                            <div class="ke-panel-heading">General Error Queue</div>
 
                             <div class="ke-panel-content">
                                     <fieldset>
@@ -256,21 +271,21 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="dateRequestColumn">Date processed</th>
                                                 <th class="sampleStatusColumn">Message</th>
                                                 <th class="dateRequestColumn">Provider</th>
-                                                <th class="selectColumn"><input type="checkbox" id="chk-select-all"/></th>
+                                                <th class="selectColumn"><input type="checkbox" id="chk-general-select-all"/></th>
                                                 <th class="actionColumn">
-                                                    <input type="button" id="requeueErrors" value="Re-queue Selection" disabled/>
-                                                    <input type="button" id="deleteErrors" value="Delete Selection" disabled/>
+                                                    <input type="button" id="requeueGeneralErrors" value="Re-queue Selection" disabled/>
+                                                    <input type="button" id="deleteGeneralErrors" value="Delete Selection" disabled/>
                                                 </th>
                                             </tr>
                                             </thead>
-                                            <tbody id="error-list">
+                                            <tbody id="general-error-list">
 
                                             </tbody>
 
                                         </table>
 
                                         <div id="pager">
-                                            <ul id="errorPagination" class="pagination-sm"></ul>
+                                            <ul id="generalErrorPagination" class="pagination-sm"></ul>
                                         </div>
                                     </fieldset>
                             </div>
@@ -279,9 +294,55 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 </tr>
             </table>
         </div>
+
+        <div class="ke-tab" data-tabid="registration_error_queue">
+            <table id="registration-error-queue-data" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td style="width: 99%; vertical-align: top">
+                        <div class="ke-panel-frame">
+                            <div class="ke-panel-heading">Registration Error Queue</div>
+
+                            <div class="ke-panel-content">
+                                    <fieldset>
+                                        <legend></legend>
+                                        <table class="simple-table" width="100%">
+                                            <thead>
+
+                                            <tr>
+                                                <th class="clientNameColumn">Client Name</th>
+                                                <th class="cccNumberColumn">Discriminator</th>
+                                                <th class="sampleTypeColumn">Form</th>
+                                                <th class="dateRequestColumn">Date processed</th>
+                                                <th class="sampleStatusColumn">Message</th>
+                                                <th class="dateRequestColumn">Provider</th>
+                                                <th class="selectColumn"><input type="checkbox" id="chk-registration-select-all"/></th>
+                                                <th class="actionColumn">
+                                                    <input type="button" id="requeueRegistrationErrors" value="Re-queue Selection" disabled/>
+                                                    <input type="button" id="deleteRegistrationErrors" value="Delete Selection" disabled/>
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="registration-error-list">
+
+                                            </tbody>
+
+                                        </table>
+
+                                        <div id="pager">
+                                            <ul id="registrationErrorPagination" class="pagination-sm"></ul>
+                                        </div>
+                                    </fieldset>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </div>
 
     <div class="bootstrap-iso">
+
         <div class="modal fade" id="showViewPayloadDialog" tabindex="-1" role="dialog" aria-labelledby="backdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                 <div class="modal-content">
@@ -318,48 +379,83 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="showConfirmationBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticConfirmLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="staticConfirmLabel">Please Confirm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-confirm-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="confirmNoButton btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="confirmYesButton btn btn-primary">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
 
 <script type="text/javascript">
 
-    var selectedErrors = [];
+    var selectedGeneralErrors = [];
+    var selectedRegistrationErrors = [];
     //On ready
     jq = jQuery;
     jq(function () {
         // apply pagination
 
-        var errorPaginationDiv = jq('#errorPagination');
+        var generalErrorPaginationDiv = jq('#generalErrorPagination');
+        var registrationErrorPaginationDiv = jq('#registrationErrorPagination');
         var queuePaginationDiv = jq('#queuePagination');
 
-        var errorListDisplayArea = jq('#error-list');
+        var generalErrorListDisplayArea = jq('#general-error-list');
+        var registrationErrorListDisplayArea = jq('#registration-error-list');
         var queueListDisplayArea = jq('#queue-list');
 
-        var numberOfErrorRecords = ${ errorListSize };
+        var numberOfGeneralErrorRecords = ${ generalErrorListSize };
+        var numberOfRegistrationErrorRecords = ${ registrationErrorListSize };
         var numberOfRecordsToProcess = ${ queueListSize };
 
-        var errorRecords = ${ errorList };
+        var generalErrorRecords = ${ generalErrorList };
+        var registrationErrorRecords = ${ registrationErrorList };
         var queueRecords = ${ queueList };
 
-        var errorDataDisplayRecords = [];
+        var generalErrorDataDisplayRecords = [];
+        var registrationErrorDataDisplayRecords = [];
         var queueDataDisplayRecords = [];
 
         var recPerPage = 10;
-        var errorStartPage = 1;
+        var generalErrorStartPage = 1;
+        var registrationErrorStartPage = 1;
         var queueStartPage = 1;
-        var totalErrorPages = Math.ceil(numberOfErrorRecords / recPerPage);
+        var totalGeneralErrorPages = Math.ceil(numberOfGeneralErrorRecords / recPerPage);
+        var totalRegistrationErrorPages = Math.ceil(numberOfRegistrationErrorRecords / recPerPage);
         var totalQueuePages = Math.ceil(numberOfRecordsToProcess / recPerPage);
 
-        var visibleErrorPages = 1;
+        var visibleGeneralErrorPages = 1;
+        var visibleRegistrationErrorPages = 1;
         var visibleQueuePages = 1;
 
         var payloadEditor = {};
 
-        if (totalErrorPages <= 5) {
-            visibleErrorPages = totalErrorPages;
+        if (totalGeneralErrorPages <= 5) {
+            visibleGeneralErrorPages = totalGeneralErrorPages;
         } else {
-            visibleErrorPages = 5;
+            visibleGeneralErrorPages = 5;
+        }
+
+        if (totalRegistrationErrorPages <= 5) {
+            visibleRegistrationErrorPages = totalRegistrationErrorPages;
+        } else {
+            visibleRegistrationErrorPages = 5;
         }
 
         if (totalQueuePages <= 5) {
@@ -373,8 +469,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             apply_pagination(queuePaginationDiv, queueListDisplayArea, totalQueuePages, visibleQueuePages, queueRecords, queueDataDisplayRecords, 'queue', queueStartPage); // records in queue
         }
 
-        if (numberOfErrorRecords > 0) {
-            apply_pagination(errorPaginationDiv, errorListDisplayArea, totalErrorPages, visibleErrorPages, errorRecords, errorDataDisplayRecords, 'error', errorStartPage); // records in error
+        if (numberOfGeneralErrorRecords > 0) {
+            apply_pagination(generalErrorPaginationDiv, generalErrorListDisplayArea, totalGeneralErrorPages, visibleGeneralErrorPages, generalErrorRecords, generalErrorDataDisplayRecords, 'general-error', generalErrorStartPage); // general records in error
+        }
+
+        if (numberOfRegistrationErrorRecords > 0) {
+            apply_pagination(registrationErrorPaginationDiv, registrationErrorListDisplayArea, totalRegistrationErrorPages, visibleRegistrationErrorPages, registrationErrorRecords, registrationErrorDataDisplayRecords, 'registration-error', registrationErrorStartPage); // registration records in error
         }
 
         function apply_pagination(paginationDiv, recordsDisplayArea, totalPages, visiblePages, allRecords, recordsToDisplay, tableId, page) {
@@ -389,6 +489,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     generate_table(recordsToDisplay, recordsDisplayArea, tableId);
                 }
             });
+        }
+
+        function AsyncConfirmYesNo(title, msg, yesFn, noFn) {
+            jq("#staticConfirmLabel").html(title);
+            jq("#json-confirm-display").html(msg);
+            jq(".confirmYesButton").off('click').click(function () {
+                yesFn();
+                jq('#showConfirmationBox').modal("hide");
+            });
+            jq(".confirmNoButton").off('click').click(function () {
+                noFn();
+                jq('#showConfirmationBox').modal("hide");
+            });
+            jq('#showConfirmationBox').modal('show');
         }
 
         jq(document).on('click','.mergeButton',function(){
@@ -479,81 +593,182 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         });
 
         //Enable or Disable Requeue and Delete button on incoming queue depending on condition of queue item selection 
-        jq(".selectElement").change(function() {
-            let len = jq('.selectElement:checked').length;
+        jq(".selectGeneralElement").change(function() {
+            let len = jq('.selectGeneralElement:checked').length;
             if (len > 0) {
-                jq('#requeueErrors').attr('disabled', false);
-                jq('#deleteErrors').attr('disabled', false);
+                jq('#requeueGeneralErrors').attr('disabled', false);
+                jq('#deleteGeneralErrors').attr('disabled', false);
             } else {
-                jq('#requeueErrors').attr('disabled', true);
-                jq('#deleteErrors').attr('disabled', true);
+                jq('#requeueGeneralErrors').attr('disabled', true);
+                jq('#deleteGeneralErrors').attr('disabled', true);
             }
         });
 
         //Enable or Disable Requeue and Delete button on incoming queue depending on condition of queue item selection 
-        jq("#chk-select-all").change(function() {
-            let len = jq('.selectElement:checked').length;
+        jq(".selectRegistrationElement").change(function() {
+            let len = jq('.selectRegistrationElement:checked').length;
             if (len > 0) {
-                jq('#requeueErrors').attr('disabled', false);
-                jq('#deleteErrors').attr('disabled', false);
+                jq('#requeueRegistrationErrors').attr('disabled', false);
+                jq('#deleteRegistrationErrors').attr('disabled', false);
             } else {
-                jq('#requeueErrors').attr('disabled', true);
-                jq('#deleteErrors').attr('disabled', true);
+                jq('#requeueRegistrationErrors').attr('disabled', true);
+                jq('#deleteRegistrationErrors').attr('disabled', true);
             }
         });
 
-        // population selection list
-        jq(document).on('click','.selectElement',function () {
+        //Enable or Disable Requeue and Delete button on incoming queue depending on condition of queue item selection 
+        jq("#chk-general-select-all").change(function() {
+            let len = jq('.selectGeneralElement:checked').length;
+            if (len > 0) {
+                jq('#requeueGeneralErrors').attr('disabled', false);
+                jq('#deleteGeneralErrors').attr('disabled', false);
+            } else {
+                jq('#requeueGeneralErrors').attr('disabled', true);
+                jq('#deleteGeneralErrors').attr('disabled', true);
+            }
+        });
+
+        //Enable or Disable Requeue and Delete button on incoming queue depending on condition of queue item selection 
+        jq("#chk-registration-select-all").change(function() {
+            let len = jq('.selectRegistrationElement:checked').length;
+            if (len > 0) {
+                jq('#requeueRegistrationErrors').attr('disabled', false);
+                jq('#deleteRegistrationErrors').attr('disabled', false);
+            } else {
+                jq('#requeueRegistrationErrors').attr('disabled', true);
+                jq('#deleteRegistrationErrors').attr('disabled', true);
+            }
+        });
+
+        // population general error selection list
+        jq(document).on('click','.selectGeneralElement',function () {
             var queueUuid = jq(this).val();
             if (jq(this).is(":checked")) {
-                selectedErrors.push(queueUuid);
+                selectedGeneralErrors.push(queueUuid);
             }
             else {
-                 var elemIndex = selectedErrors.indexOf(queueUuid);
+                 var elemIndex = selectedGeneralErrors.indexOf(queueUuid);
                  if (elemIndex > -1) {
-                    selectedErrors.splice(elemIndex, 1);
+                    selectedGeneralErrors.splice(elemIndex, 1);
                  }
-                 jq('#chk-select-all').prop('checked', false);
+                 jq('#chk-general-select-all').prop('checked', false);
              }
         });
 
-        // handle select all
-        jq(document).on('click','#chk-select-all',function () {
-           if(jq(this).is(':checked')) {
-                jq('.selectElement').prop('checked', true);
-                selectedErrors = [];
-           }
-           else {
-                jq('.selectElement').prop('checked', false);
-           }
-
+        // population registration error selection list
+        jq(document).on('click','.selectRegistrationElement',function () {
+            var queueUuid = jq(this).val();
+            if (jq(this).is(":checked")) {
+                selectedRegistrationErrors.push(queueUuid);
+            }
+            else {
+                 var elemIndex = selectedRegistrationErrors.indexOf(queueUuid);
+                 if (elemIndex > -1) {
+                    selectedRegistrationErrors.splice(elemIndex, 1);
+                 }
+                 jq('#chk-registration-select-all').prop('checked', false);
+             }
         });
 
-        // handles button than re-queues errors
-        jq(document).on('click','#requeueErrors',function () {
-            // clear previously entered values
-            if(confirm("Are you sure you want to requeue these queue errors?") == true) {
-                //TODO: can we also check if the select all checkbox is checked?
-                var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
-                //selectedErrors
+        // handle general select all
+        jq(document).on('click','#chk-general-select-all',function () {
+            //clear selection list
+            selectedGeneralErrors = [];
+            if(jq(this).is(':checked')) {
+                jq('.selectGeneralElement').prop('checked', true);
+                // populate the list with all elements
+                for (var i = 0; i < generalErrorRecords.length; i++) {
+                    let uuid = generalErrorRecords[i].uuid;
+                    selectedGeneralErrors.push(uuid);
+                }
+            }
+            else {
+                jq('.selectGeneralElement').prop('checked', false);
+            }
+        });
+
+        // handle registration select all
+        jq(document).on('click','#chk-registration-select-all',function () {
+            //clear selection list
+            selectedRegistrationErrors = [];
+            if(jq(this).is(':checked')) {
+                jq('.selectRegistrationElement').prop('checked', true);
+                // populate the list with all elements
+                for (var i = 0; i < registrationErrorRecords.length; i++) {
+                    let uuid = registrationErrorRecords[i].uuid;
+                    selectedRegistrationErrors.push(uuid);
+                }
+            }
+            else {
+                jq('.selectRegistrationElement').prop('checked', false);
+            }
+        });
+
+        // handles button that re-queues general errors
+        jq(document).on('click','#requeueGeneralErrors',function () {
+            AsyncConfirmYesNo("Please Confirm", "Are you sure you want to requeue?", requeueGeneralErrors, () => {});        
+        });
+
+        // re-queues general errors once user confirms
+        function requeueGeneralErrors() {
+            if(selectedGeneralErrors.length > 0) {
+                let listToSubmit = selectedGeneralErrors.join();
                 ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
                     document.location.reload();
                 });
             }
+            jq('#chk-general-select-all').prop('checked', false);
+        }
+
+        // handles button than re-queues registration errors
+        jq(document).on('click','#requeueRegistrationErrors',function () {
+            AsyncConfirmYesNo("Please Confirm", "Are you sure you want to requeue?", requeueRegistrationErrors, () => {});
         });
 
-        // handles button for deleting errors
-        jq(document).on('click','#deleteErrors',function () {
-            // clear previously entered values
-            if(confirm("Are you sure you want to delete these queue errors?") == true) {
-                //TODO: can we also check if the select all checkbox is checked?
-                var listToSubmit = selectedErrors.length > 0 ? selectedErrors.join() : 'all';
-                //selectedErrors
+        // re-queues registration errors once user confirms
+        function requeueRegistrationErrors() {
+            if(selectedRegistrationErrors.length > 0) {
+                let listToSubmit = selectedRegistrationErrors.join();
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                    document.location.reload();
+                });
+            }
+            jq('#chk-registration-select-all').prop('checked', false);
+        }
+
+        // handles button for deleting general errors
+        jq(document).on('click','#deleteGeneralErrors',function () {
+            AsyncConfirmYesNo("Please Confirm", "Are you sure you want to delete?", deleteGeneralErrors, () => {});
+        });
+
+        // deletes general errors once user confirms
+        function deleteGeneralErrors() {
+            if(selectedGeneralErrors.length > 0) {
+                let listToSubmit = selectedGeneralErrors.join();
                 ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
                     document.location.reload();
                 });
             }
+            jq('#chk-general-select-all').prop('checked', false);
+        }
+
+        // handles button for deleting registration errors
+        jq(document).on('click','#deleteRegistrationErrors',function () {
+            AsyncConfirmYesNo("Please Confirm", "Are you sure you want to delete?", deleteRegistrationErrors, () => {});
         });
+
+        // deletes registration errors once user confirms
+        function deleteRegistrationErrors() {
+            if(selectedRegistrationErrors.length > 0) {
+                let listToSubmit = selectedRegistrationErrors.join();
+                //selectedRegistrationErrors
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
+                    document.location.reload();
+                });
+            }
+            jq('#chk-registration-select-all').prop('checked', false);
+        }
+
     });
 
     function generate_table(displayRecords, displayObject, tableId) {
@@ -566,21 +781,21 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
             tr.append("<td>" + displayRecords[i].discriminator + "</td>");
             tr.append("<td>" + displayRecords[i].formName + "</td>");
-            if (tableId === 'error') {
+            if (tableId === 'general-error' || tableId === 'registration-error') {
                 tr.append("<td>" + displayRecords[i].dateProcessed + "</td>");
             } else {
                 tr.append("<td>" + displayRecords[i].dateSubmitted + "</td>");
             }
-            if (tableId === 'error') {
+            if (tableId === 'general-error' || tableId === 'registration-error') {
                 tr.append("<td>" + displayRecords[i].message + "</td>");
             }
             tr.append("<td>" + displayRecords[i].provider + "</td>");           
 
-            if (tableId === 'error') {
+            if (tableId === 'general-error') {
                 var selectTd = jq('<td/>');
                 var selectCheckbox = jq('<input/>', {
                     type: 'checkbox',
-                    class: 'selectElement',
+                    class: 'selectGeneralElement',
                     value: displayRecords[i].uuid
                 });
 
@@ -606,7 +821,39 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
                 tr.append(actionTd);
             }
-            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
+
+            if (tableId === 'registration-error') {
+                var selectTd = jq('<td/>');
+                var selectCheckbox = jq('<input/>', {
+                    type: 'checkbox',
+                    class: 'selectRegistrationElement',
+                    value: displayRecords[i].uuid
+                });
+
+                selectTd.append(selectCheckbox);
+                tr.append(selectTd);
+
+                var actionTd = jq('<td/>');
+
+                var btnView = jq('<button/>', {
+                    text: 'View',
+                    class: 'viewPayloadButton',
+                    value: displayRecords[i].uuid
+                });
+
+                var btnEdit = jq('<button/>', {
+                    text: 'Edit',
+                    class: 'editPayloadButton',
+                    value: displayRecords[i].uuid
+                });
+
+                actionTd.append(btnView);
+                actionTd.append(btnEdit);
+
+                tr.append(actionTd);
+            }
+
+            if (tableId === 'registration-error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
                 var btnMerge = jq('<button/>', {
                     text: 'Merge',
                     class: 'mergeButton',
@@ -616,7 +863,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 tr.append(actionTd);
             }
 
-            if (tableId === 'error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
+            if (tableId === 'registration-error' && displayRecords[i].discriminator === 'json-registration' && displayRecords[i].message.includes('Found a patient with similar characteristic')) {
                 var btnCreateNewRegistration = jq('<button/>', {
                     text: 'Register',
                     class: 'createButton',

@@ -100,6 +100,22 @@ public interface InfoDao<T extends Info> extends SingleClassInfoDao<T> {
 	List<T> getPagedData(final String search, final Integer pageNumber, final Integer pageSize);
 	
 	/**
+	 * Get data with matching the discriminator
+	 * 
+	 * @param discriminator the discriminator.
+	 * @return list of data.
+	 */
+	public List<T> getDataByDiscriminator(final String discriminator);
+	
+	/**
+	 * Get all data except matching the discriminator
+	 * 
+	 * @param discriminator the discriminator.
+	 * @return list of data.
+	 */
+	public List<T> getDataExceptByDiscriminator(final String discriminator);
+	
+	/**
 	 * Get the total number of data with matching search term.
 	 * 
 	 * @param search the search term.
