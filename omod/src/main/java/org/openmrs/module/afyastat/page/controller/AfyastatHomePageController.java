@@ -31,9 +31,10 @@ public class AfyastatHomePageController {
 		
 		InfoService infoService = Context.getService(InfoService.class);
 		
+		// Get the data
 		List<AfyaStatQueueData> queueDataList = infoService.getAllQueueData();
-		List<ErrorInfo> allErrors = infoService.getAllErrorData();
-		//Collections.sort(allErrors, new ErrorQueueDateComparator());
+		List<ErrorInfo> allErrors = infoService.getAllErrorsExceptRegistrationErrors();
+		List<ErrorInfo> allRegistrationErrors = infoService.getAllRegistrationErrors();
 		
 		Collections.sort(queueDataList, new Comparator<AfyaStatQueueData>() {
 			
@@ -55,6 +56,8 @@ public class AfyastatHomePageController {
 		});
 		List<SimpleObject> queueList = new ArrayList<SimpleObject>();
 		List<SimpleObject> errorList = new ArrayList<SimpleObject>();
+		List<SimpleObject> registrationErrorList = new ArrayList<SimpleObject>();
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		for (AfyaStatQueueData qObj : queueDataList) {
 			String clientName = qObj.getClientName();
@@ -102,6 +105,22 @@ public class AfyastatHomePageController {
 			errorList.add(errorObject);
 		}
 		
+		for (ErrorInfo eObj : allRegistrationErrors) {
+			List<String> errorMessages = new ArrayList<String>();
+			
+			for (ErrorMessagesInfo info : eObj.getErrorMessages()) {
+				errorMessages.add(info.getMessage());
+			}
+			String clientName = eObj.getClientName();
+			clientName = (clientName == null) ? "" : clientName;
+			SimpleObject errorObject = SimpleObject.create("id", eObj.getId(), "uuid", eObj.getUuid(), "patientUuid", eObj
+			        .getPatientUuid(), "message", StringUtils.join(errorMessages, ", "), "discriminator", eObj
+			        .getDiscriminator(), "provider", eObj.getProvider().getName(), "clientName", clientName,
+			    "dateProcessed", ui.formatDatePretty(eObj.getDateProcessed()), "formName", eObj.getFormName()
+			            .equalsIgnoreCase("Unknown name") ? "Registration" : eObj.getFormName());
+			registrationErrorList.add(errorObject);
+		}
+		
 		Context.addProxyPrivilege(PrivilegeConstants.SQL_LEVEL_ACCESS);
 		DbSessionFactory sf = Context.getRegisteredComponents(DbSessionFactory.class).get(0);
 		
@@ -113,9 +132,14 @@ public class AfyastatHomePageController {
 		Long queueDataTotal = (Long) Context.getAdministrationService().executeSQL(queueData, true).get(0).get(0);
 		
 		model.put("queueList", ui.toJson(queueList));
-		model.put("errorList", ui.toJson(errorList));
 		model.put("queueListSize", queueList.size());
-		model.put("errorListSize", errorList.size());
+		
+		model.put("generalErrorList", ui.toJson(errorList));
+		model.put("generalErrorListSize", errorList.size());
+		
+		model.put("registrationErrorList", ui.toJson(registrationErrorList));
+		model.put("registrationErrorListSize", registrationErrorList.size());
+		
 		model.put("totalErrors", totalErrors.intValue());
 		model.put("registrationErrors", registrationErrors.intValue());
 		model.put("queueData", queueDataTotal.intValue());
