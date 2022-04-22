@@ -128,7 +128,7 @@ public interface InfoService extends OpenmrsService {
 	 * @should return errors except registration error data.
 	 * @should return null when no error data exists.
 	 */
-	public List<ErrorInfo> getAllErrorsExceptRegistrationErrors();
+	public List<ErrorInfo> getAllErrorsExcludingRegistrationErrors();
 	
 	/**
 	 * Return all saved error data.
