@@ -33,7 +33,7 @@ public class AfyastatHomePageController {
 		
 		// Get the data
 		List<AfyaStatQueueData> queueDataList = infoService.getAllQueueData();
-		List<ErrorInfo> allErrors = infoService.getAllErrorsExceptRegistrationErrors();
+		List<ErrorInfo> allErrors = infoService.getAllErrorsExcludingRegistrationErrors();
 		List<ErrorInfo> allRegistrationErrors = infoService.getAllRegistrationErrors();
 		
 		Collections.sort(queueDataList, new Comparator<AfyaStatQueueData>() {

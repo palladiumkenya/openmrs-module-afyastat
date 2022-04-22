@@ -260,6 +260,22 @@ public abstract class HibernateInfoDao<T extends Info> extends HibernateSingleCl
 	}
 	
 	/**
+	 * Get data matching the list of discriminators
+	 * 
+	 * @param discriminators the list of discriminators
+	 * @return list of data.
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<T> getDataByDiscriminator(final List<String> discriminators) {
+		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(mappedClass);
+		for (String discriminator : discriminators) {
+			criteria.add(Restrictions.eq("discriminator", discriminator));
+		}
+		return criteria.list();
+	}
+	
+	/**
 	 * Get all data except matching the discriminator
 	 * 
 	 * @param discriminator the discriminator.
@@ -267,9 +283,25 @@ public abstract class HibernateInfoDao<T extends Info> extends HibernateSingleCl
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> getDataExceptByDiscriminator(final String discriminator) {
+	public List<T> getDataExcludeDiscriminator(final String discriminator) {
 		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.ne("discriminator", discriminator));
+		return criteria.list();
+	}
+	
+	/**
+	 * Get all data except that matching the list of discriminators
+	 * 
+	 * @param discriminators the list of discriminators
+	 * @return list of data.
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<T> getDataExcludeDiscriminator(final List<String> discriminators) {
+		Criteria criteria = getSessionFactory().getCurrentSession().createCriteria(mappedClass);
+		for (String discriminator : discriminators) {
+			criteria.add(Restrictions.ne("discriminator", discriminator));
+		}
 		return criteria.list();
 	}
 	
