@@ -539,6 +539,11 @@ public class MedicDataExchange {
 		patientNode.put("patient.uuid", StringUtils.isNotBlank(kemrUuid) ? kemrUuid : jsonNode.path("fields").path("inputs")
 		        .path("contact").path("_id").getTextValue());
 		
+		patientNode.put("patient.given_name", jsonNode.path("place").path("patient_firstName").getTextValue());
+		patientNode.put("patient.middle_name", jsonNode.path("place").path("patient_middleName").getTextValue());
+		patientNode.put("patient.family_name", jsonNode.path("place").path("patient_familyName").getTextValue());
+		patientNode.put("patient.name", jsonNode.path("place").path("patient_name").getTextValue());
+		
 		List<String> keysToRemove = new ArrayList<String>();
 		if (obsNodes != null) {
 			Iterator<Map.Entry<String, JsonNode>> iterator = obsNodes.getFields();
