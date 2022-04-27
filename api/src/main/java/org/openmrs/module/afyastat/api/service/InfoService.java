@@ -113,6 +113,24 @@ public interface InfoService extends OpenmrsService {
 	ErrorInfo getRegistrationErrorDataByPatientUuid(final String patientUuid);
 	
 	/**
+	 * Return all registration errors
+	 * 
+	 * @return a list of error data.
+	 * @should return registration error data.
+	 * @should return null when no registration error data exists.
+	 */
+	List<ErrorInfo> getAllRegistrationErrors();
+	
+	/**
+	 * Return all errors except registration errors
+	 * 
+	 * @return a list of error data.
+	 * @should return errors except registration error data.
+	 * @should return null when no error data exists.
+	 */
+	public List<ErrorInfo> getAllErrorsExcludingRegistrationErrors();
+	
+	/**
 	 * Return all saved error data.
 	 * 
 	 * @return all saved error data.

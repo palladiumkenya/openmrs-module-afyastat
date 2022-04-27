@@ -258,6 +258,34 @@ public class InfoServiceImpl extends BaseOpenmrsService implements InfoService {
 	}
 	
 	/**
+	 * Return all registration errors
+	 * 
+	 * @return a list of error data.
+	 * @should return registration error data.
+	 * @should return null when no registration error data exists.
+	 */
+	@Override
+	public List<ErrorInfo> getAllRegistrationErrors() {
+		
+		List<ErrorInfo> errors = getErrorInfoDao().getDataByDiscriminator("json-registration");
+		return errors;
+	}
+	
+	/**
+	 * Return all errors except registration errors
+	 * 
+	 * @return a list of error data.
+	 * @should return errors except registration error data.
+	 * @should return null when no error data exists.
+	 */
+	@Override
+	public List<ErrorInfo> getAllErrorsExcludingRegistrationErrors() {
+		
+		List<ErrorInfo> errors = getErrorInfoDao().getDataExcludeDiscriminator("json-registration");
+		return errors;
+	}
+	
+	/**
 	 * Return all saved error data.
 	 * 
 	 * @return all saved error data.
