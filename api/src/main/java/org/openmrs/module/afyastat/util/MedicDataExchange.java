@@ -308,6 +308,32 @@ public class MedicDataExchange {
 	}
 	
 	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
+	        String discriminator, String formUuid, String userString, String clientName) {
+		AfyaDataSource dataSource = dataService.getDataSource(1);
+		Provider provider = Context.getProviderService().getProviderByIdentifier(providerString);
+		User user = Context.getUserService().getUserByUsername(userString);
+		Location location = Context.getLocationService().getLocation(locationId);
+		Form form = Context.getFormService().getFormByUuid(formUuid);
+		
+		AfyaStatQueueData afyaStatQueueData = new AfyaStatQueueData();
+		if (form != null && form.getName() != null) {
+			afyaStatQueueData.setFormName(form.getName());
+		} else {
+			afyaStatQueueData.setFormName("Unknown name");
+		}
+		afyaStatQueueData.setPayload(payload);
+		afyaStatQueueData.setDiscriminator(discriminator);
+		afyaStatQueueData.setPatientUuid(patientUuid);
+		afyaStatQueueData.setFormDataUuid(formUuid);
+		afyaStatQueueData.setClientName(clientName);
+		afyaStatQueueData.setProvider(provider);
+		afyaStatQueueData.setLocation(location);
+		afyaStatQueueData.setDataSource(dataSource);
+		afyaStatQueueData.setCreator(user);
+		afyastatService.saveQueData(afyaStatQueueData);
+	}
+	
+	private void saveMedicDataQueue(String payload, Integer locationId, String providerString, String patientUuid,
 	        String discriminator, String formUuid, String userString, String queueUUID, Long dateFormFilled,
 	        String clientName) {
 		AfyaDataSource dataSource = dataService.getDataSource(1);
@@ -539,6 +565,7 @@ public class MedicDataExchange {
 		patientNode.put("patient.uuid", StringUtils.isNotBlank(kemrUuid) ? kemrUuid : jsonNode.path("fields").path("inputs")
 		        .path("contact").path("_id").getTextValue());
 		
+		// Get the patient name data from payload
 		patientNode.put("patient.given_name", jsonNode.path("place").path("patient_firstName").getTextValue());
 		patientNode.put("patient.middle_name", jsonNode.path("place").path("patient_middleName").getTextValue());
 		patientNode.put("patient.family_name", jsonNode.path("place").path("patient_familyName").getTextValue());
@@ -717,9 +744,11 @@ public class MedicDataExchange {
 	public String addContactListToDataqueue(String resultPayload) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
+		ObjectNode parentPatient = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(resultPayload);
 			jsonNode = (ObjectNode) jsonNode.get("formData");
+			parentPatient = (ObjectNode) jsonNode.get("parent");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -733,7 +762,22 @@ public class MedicDataExchange {
 			        .getTextValue() : "";
 			String providerString = checkProviderNameExists(creator);
 			String userName = confirmUserNameExists(creator);
-			saveMedicDataQueue(payload, locationId, providerString, patientContactUuid, discriminator, "", userName);
+			
+			// Get the patient name from the payload
+			String firstName = jsonNode.get("f_name") != null ? jsonNode.get("f_name").getTextValue() : "";
+			String middleName = jsonNode.get("o_name") != null ? jsonNode.get("o_name").getTextValue() : "";
+			String lastName = jsonNode.get("s_name") != null ? jsonNode.get("s_name").getTextValue() : "";
+			String name = jsonNode.get("patient_name") != null ? jsonNode.get("patient_name").getTextValue() : "";
+			String parentPatientFirstName = jsonNode.get("patient_firstName") != null ? jsonNode.get("patient_firstName")
+			        .getTextValue() : "";
+			String parentPatientFamilyName = jsonNode.get("patient_familyName") != null ? jsonNode.get("patient_familyName")
+			        .getTextValue() : "";
+			String parentPatientMiddleName = jsonNode.get("patient_middleName") != null ? jsonNode.get("patient_middleName")
+			        .getTextValue() : "";
+			String parentPatientName = jsonNode.get("patient_name") != null ? jsonNode.get("patient_name").getTextValue()
+			        : "";
+			
+			saveMedicDataQueue(payload, locationId, providerString, patientContactUuid, discriminator, "", userName, name);
 		}
 		return "Queue data for contact created successfully";
 	}
@@ -823,9 +867,21 @@ public class MedicDataExchange {
 			String creator = jsonNode.path("fields").path("audit_trail").path("created_by") != null
 			        && jsonNode.path("fields").path("audit_trail").path("created_by").getTextValue() != null ? jsonNode
 			        .path("fields").path("audit_trail").path("created_by").getTextValue() : "";
+			
+			// Get the patient name
+			String patientFirstName = jsonNode.path("place").path("s_name").getTextValue();
+			String patientFamilyName = jsonNode.path("place").path("f_name").getTextValue();
+			String patientMiddleName = jsonNode.path("place").path("o_name").getTextValue();
+			String patientName = jsonNode.path("place").path("patient_name").getTextValue();
+			String parentPatientFirstName = jsonNode.path("place").path("parent").path("patient_firstName").getTextValue();
+			String parentPatientFamilyName = jsonNode.path("place").path("parent").path("patient_familyName").getTextValue();
+			String parentPatientMiddleName = jsonNode.path("place").path("parent").path("patient_middleName").getTextValue();
+			String parentPatientName = jsonNode.path("place").path("parent").path("patient_name").getTextValue();
+			
 			String providerString = checkProviderNameExists(creator);
 			String userName = confirmUserNameExists(creator);
-			saveMedicDataQueue(payload, locationId, providerString, patientContactUuid, discriminator, "", userName);
+			saveMedicDataQueue(payload, locationId, providerString, patientContactUuid, discriminator, "", userName,
+			    patientName);
 		}
 		return "Queue data for contact trace created successfully";
 	}
@@ -2183,12 +2239,15 @@ public class MedicDataExchange {
 		String patientGender = jsonNode.get("patient_sex") != null ? jsonNode.get("patient_sex").getTextValue() : "";
 		
 		patientNode.put("patient.uuid", jsonNode.get("_id") != null ? jsonNode.get("_id").getTextValue() : "");
+		
+		// Get patient name details
 		patientNode.put("patient.family_name",
 		    jsonNode.get("patient_familyName") != null ? jsonNode.get("patient_familyName").getTextValue() : "");
 		patientNode.put("patient.given_name", jsonNode.get("patient_firstName") != null ? jsonNode.get("patient_firstName")
 		        .getTextValue() : "");
 		patientNode.put("patient.middle_name",
 		    jsonNode.get("patient_middleName") != null ? jsonNode.get("patient_middleName").getTextValue() : "");
+		
 		patientNode.put("patient.sex", gender(patientGender));
 		
 		if (patientDobKnown != null && patientDobKnown.equalsIgnoreCase("_1066_No_99DCT")
