@@ -540,19 +540,73 @@ public class MedicDataExchange {
 		        .path("contact").path("_id").getTextValue());
 		
 		List<String> keysToRemove = new ArrayList<String>();
+		ObjectNode jsonObsNodes = null;
+		ObjectNode obsGroupNode = null;
+		String jsonObsGroup = null;
 		if (obsNodes != null) {
 			Iterator<Map.Entry<String, JsonNode>> iterator = obsNodes.getFields();
 			while (iterator.hasNext()) {
 				Map.Entry<String, JsonNode> entry = iterator.next();
+				
+				if (entry.getValue() == null || "".equals(entry.getValue().toString())) {
+					keysToRemove.add(entry.getKey());
+				}
+				
 				if (entry.getKey().contains("MULTISELECT")) {
 					if (entry.getValue() != null && !"".equals(entry.getValue().toString())
 					        && !"".equals(entry.getValue().toString())) {
 						obsNodes.put(entry.getKey(), handleMultiSelectFields(entry.getValue().toString().replace(" ", ",")));
 					} else {
-						//obsNodes.remove(entry.getKey());
 						keysToRemove.add(entry.getKey());
 					}
 				}
+				
+				String[] conceptElements = org.apache.commons.lang.StringUtils.split(entry.getKey(), "\\^");
+				if (!StringUtils.isNumeric(conceptElements[0])) // skip if the element is not a concept id
+					continue;
+				int conceptId = Integer.parseInt(conceptElements[0]);
+				Concept concept = Context.getConceptService().getConcept(conceptId);
+				
+				if (concept == null) {
+					log.info("Unable to find Concept for Question with ID:: " + conceptId);
+					
+				} else {
+					
+					if (concept.isSet()) {
+						
+						try {
+							if (entry.getValue().isObject()) {
+								jsonObsNodes = (ObjectNode) mapper.readTree(entry.getValue().toString());
+								jsonObsGroup = new ObjectMapper().writeValueAsString(jsonObsNodes);
+								if (jsonObsGroup != null) {
+									obsGroupNode = (ObjectNode) mapper.readTree(jsonObsGroup);
+								}
+							}
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						if (obsGroupNode != null) {
+							Iterator<Map.Entry<String, JsonNode>> obsGroupIterator = obsGroupNode.getFields();
+							while (obsGroupIterator.hasNext()) {
+								Map.Entry<String, JsonNode> obsGroupEntry = obsGroupIterator.next();
+								
+								if (obsGroupEntry.getKey().contains("MULTISELECT")) {
+									if (obsGroupEntry.getValue() != null && !"".equals(obsGroupEntry.getValue().toString())
+									        && !"".equals(obsGroupEntry.getValue().toString())) {
+										obsGroupNode.put(obsGroupEntry.getKey(), handleMultiSelectFields(obsGroupEntry
+										        .getValue().toString().replace(" ", ",")));
+										obsNodes.put(entry.getKey(), obsGroupNode);
+									}
+								}
+							}
+						}
+						
+					}
+					
+				}
+				
 			}
 		}
 		
@@ -645,6 +699,8 @@ public class MedicDataExchange {
 				}
 				
 				String[] conceptElements = org.apache.commons.lang.StringUtils.split(entry.getKey(), "\\^");
+				if (!StringUtils.isNumeric(conceptElements[0])) // skip if the element is not a concept id
+					continue;
 				int conceptId = Integer.parseInt(conceptElements[0]);
 				Concept concept = Context.getConceptService().getConcept(conceptId);
 				
