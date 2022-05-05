@@ -274,7 +274,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="selectColumn"><input type="checkbox" id="chk-general-select-all"/></th>
                                                 <th class="actionColumn">
                                                     <input type="button" id="requeueGeneralErrors" value="Re-queue Selection" disabled/>
-                                                    <input type="button" id="deleteGeneralErrors" value="Delete Selection" disabled/>
+                                                    <% if(userHasDeleteRole) { %><input type="button" id="deleteGeneralErrors" value="Delete Selection" disabled/><% }%>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -318,7 +318,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="selectColumn"><input type="checkbox" id="chk-registration-select-all"/></th>
                                                 <th class="actionColumn">
                                                     <input type="button" id="requeueRegistrationErrors" value="Re-queue Selection" disabled/>
-                                                    <input type="button" id="deleteRegistrationErrors" value="Delete Selection" disabled/>
+                                                    <% if(userHasDeleteRole) { %><input type="button" id="deleteRegistrationErrors" value="Delete Selection" disabled/><% }%>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -409,6 +409,23 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <div>
                             <span style="padding:2px; display:inline-block;"> <img src="${ui.resourceLink("afyastat", "images/loading.gif")}" /> </span>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="showInfoBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticInfoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="staticInfoLabel">Info</h5>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-info-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="confirmOkButton btn btn-secondary" data-bs-dismiss="modal">OK</button>
                     </div>
                 </div>
             </div>
@@ -518,6 +535,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 jq('#showConfirmationBox').modal("hide");
             });
             jq('#showConfirmationBox').modal('show');
+        }
+
+        function AsyncShowInfo(title, msg, okFn) {
+            jq("#staticInfoLabel").html(title);
+            jq("#json-info-display").html(msg);
+            jq(".confirmOkButton").off('click').click(function () {
+                okFn();
+                jq('#showInfoBox').modal("hide");
+            });
+            jq('#showInfoBox').modal('show');
+        }
+
+        function reloadPage() {
+            document.location.reload();
         }
 
         jq(document).on('click','.mergeButton',function(){
@@ -730,9 +761,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 jq('#showWaitBox').modal('show');
                 let listToSubmit = selectedGeneralErrors.join();
                 ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide');
-                    document.location.reload();
-                });
+                    jq('#showWaitBox').modal('hide').promise().done( function () {
+                        AsyncShowInfo("Success", "Successfully Requeued", reloadPage); 
+                    } )              
+                });               
             }
             jq('#chk-general-select-all').prop('checked', false);
         }
@@ -748,8 +780,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 jq('#showWaitBox').modal('show');
                 let listToSubmit = selectedRegistrationErrors.join();
                 ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide');
-                    document.location.reload();
+                    jq('#showWaitBox').modal('hide').promise().done( function () {
+                        AsyncShowInfo("Success", "Successfully Requeued", reloadPage); 
+                    } )
                 });
             }
             jq('#chk-registration-select-all').prop('checked', false);
@@ -766,8 +799,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 jq('#showWaitBox').modal('show');
                 let listToSubmit = selectedGeneralErrors.join();
                 ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide');
-                    document.location.reload();
+                    jq('#showWaitBox').modal('hide').promise().done( function () {
+                        AsyncShowInfo("Success", "Successfully Deleted", reloadPage); 
+                    } )
                 });
             }
             jq('#chk-general-select-all').prop('checked', false);
@@ -785,8 +819,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 let listToSubmit = selectedRegistrationErrors.join();
                 //selectedRegistrationErrors
                 ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide');
-                    document.location.reload();
+                    jq('#showWaitBox').modal('hide').promise().done( function () {
+                        AsyncShowInfo("Success", "Successfully Deleted", reloadPage); 
+                    } )
                 });
             }
             jq('#chk-registration-select-all').prop('checked', false);
