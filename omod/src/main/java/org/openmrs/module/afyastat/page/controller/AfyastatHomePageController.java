@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.afyastat.api.service.InfoService;
+import org.openmrs.module.afyastat.metadata.AfyastatSecurityMetadata;
 import org.openmrs.module.afyastat.model.AfyaStatQueueData;
 import org.openmrs.module.afyastat.model.ErrorInfo;
 import org.openmrs.module.afyastat.model.ErrorMessagesInfo;
@@ -130,6 +131,11 @@ public class AfyastatHomePageController {
 		Long totalErrors = (Long) Context.getAdministrationService().executeSQL(allErrorsSql, true).get(0).get(0);
 		Long registrationErrors = (Long) Context.getAdministrationService().executeSQL(regStr, true).get(0).get(0);
 		Long queueDataTotal = (Long) Context.getAdministrationService().executeSQL(queueData, true).get(0).get(0);
+		
+		model.put(
+		    "userHasDeleteRole",
+		    (Context.getAuthenticatedUser().containsRole(AfyastatSecurityMetadata._Role.APPLICATION_AFYASTAT_DELETE) || Context
+		            .getAuthenticatedUser().isSuperUser()));
 		
 		model.put("queueList", ui.toJson(queueList));
 		model.put("queueListSize", queueList.size());
