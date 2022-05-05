@@ -23,6 +23,8 @@ public class AfyastatSecurityMetadata extends AbstractMetadataBundle {
 	public static final class _Role {
 		
 		public static final String APPLICATION_AFYASTAT_ADMIN = "Afyastat queue administration";
+		
+		public static final String APPLICATION_AFYASTAT_DELETE = "Afyastat delete queue items";
 	}
 	
 	/**
@@ -33,6 +35,9 @@ public class AfyastatSecurityMetadata extends AbstractMetadataBundle {
 		
 		install(privilege(_Privilege.APP_AFYASTAT_ADMIN, "Able to view action on afyastat queue data"));
 		install(role(_Role.APPLICATION_AFYASTAT_ADMIN, "Can access Afyastat app",
+		    idSet(org.openmrs.module.kenyaemr.metadata.SecurityMetadata._Role.API_PRIVILEGES_VIEW_AND_EDIT),
+		    idSet(_Privilege.APP_AFYASTAT_ADMIN)));
+		install(role(_Role.APPLICATION_AFYASTAT_DELETE, "Can delete Afyastat error queue items",
 		    idSet(org.openmrs.module.kenyaemr.metadata.SecurityMetadata._Role.API_PRIVILEGES_VIEW_AND_EDIT),
 		    idSet(_Privilege.APP_AFYASTAT_ADMIN)));
 	}
