@@ -399,7 +399,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             </div>
         </div>
 
-        <div class="modal fade" id="showWaitBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticConfirmLabel" aria-hidden="true">
+        <div class="modal" id="showWaitBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticConfirmLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header modal-header-primary">
@@ -414,7 +414,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             </div>
         </div>
 
-        <div class="modal fade" id="showInfoBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticInfoLabel" aria-hidden="true">
+        <div class="modal" id="showInfoBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticInfoLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header modal-header-primary">
@@ -477,6 +477,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         var visibleQueuePages = 1;
 
         var payloadEditor = {};
+
+        var sendCount = 0;
 
         if (totalGeneralErrorPages <= 5) {
             visibleGeneralErrorPages = totalGeneralErrorPages;
@@ -759,12 +761,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         function requeueGeneralErrors() {
             if(selectedGeneralErrors.length > 0) {
                 jq('#showWaitBox').modal('show');
-                let listToSubmit = selectedGeneralErrors.join();
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide').promise().done( function () {
-                        AsyncShowInfo("Success", "Successfully Requeued", reloadPage); 
-                    } )              
-                });               
+                requeueAll(selectedGeneralErrors);         
             }
             jq('#chk-general-select-all').prop('checked', false);
         }
@@ -778,12 +775,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         function requeueRegistrationErrors() {
             if(selectedRegistrationErrors.length > 0) {
                 jq('#showWaitBox').modal('show');
-                let listToSubmit = selectedRegistrationErrors.join();
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide').promise().done( function () {
-                        AsyncShowInfo("Success", "Successfully Requeued", reloadPage); 
-                    } )
-                });
+                requeueAll(selectedRegistrationErrors);
             }
             jq('#chk-registration-select-all').prop('checked', false);
         }
@@ -797,12 +789,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         function deleteGeneralErrors() {
             if(selectedGeneralErrors.length > 0) {
                 jq('#showWaitBox').modal('show');
-                let listToSubmit = selectedGeneralErrors.join();
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide').promise().done( function () {
-                        AsyncShowInfo("Success", "Successfully Deleted", reloadPage); 
-                    } )
-                });
+                deleteAll(selectedGeneralErrors);
             }
             jq('#chk-general-select-all').prop('checked', false);
         }
@@ -816,15 +803,64 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         function deleteRegistrationErrors() {
             if(selectedRegistrationErrors.length > 0) {
                 jq('#showWaitBox').modal('show');
-                let listToSubmit = selectedRegistrationErrors.join();
-                //selectedRegistrationErrors
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                    jq('#showWaitBox').modal('hide').promise().done( function () {
-                        AsyncShowInfo("Success", "Successfully Deleted", reloadPage); 
-                    } )
-                });
+                deleteAll(selectedRegistrationErrors);
             }
             jq('#chk-registration-select-all').prop('checked', false);
+        }
+
+        // deletes all the given error items
+        function deleteAll(selectedErrors) {
+            //Delete the selected errors, 10 at a time
+            let count = 10;
+            sendCount = 0;
+            let totalItems = selectedErrors.length;
+            let loopThrough = (totalItems > 0) ? totalItems : 1;
+            let pages = Math.ceil(loopThrough * 1.00 / count * 1.00);
+
+            for (var i = 0; i < pages; i++) {
+                let begin = i * count;
+                let end = begin + count;
+                let sliced = selectedErrors.slice(begin, end);
+                let listToSubmit = sliced.join();
+                // lets delete this page
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
+                    sendCount++;
+                    console.log("Delete items: Finished sending page. Sendcount: " + sendCount);
+                    if(sendCount >= pages)
+                    {
+                        jq('#showWaitBox').modal('hide').promise().done( function () {
+                            AsyncShowInfo("Success", "Successfully Deleted", reloadPage); 
+                        } )
+                    }
+                });
+            }
+        }
+
+        // requeues all the given error items
+        function requeueAll(selectedErrors) {
+            //Requeue the selected errors, 10 at a time
+            let count = 10;
+            sendCount = 0;
+            let totalItems = selectedErrors.length;
+            let loopThrough = (totalItems > 0) ? totalItems : 1;
+            let pages = Math.ceil(loopThrough * 1.00 / count * 1.00);
+
+            for (var i = 0; i < pages; i++) {
+                let begin = i * count;
+                let end = begin + count;
+                let sliced = selectedErrors.slice(begin, end);
+                let listToSubmit = sliced.join();
+                // lets requeue this page
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                    sendCount++;
+                    if(sendCount >= pages)
+                    {
+                        jq('#showWaitBox').modal('hide').promise().done( function () {
+                            AsyncShowInfo("Success", "Successfully Requeued", reloadPage); 
+                        } )
+                    }
+                });
+            }
         }
 
     });
