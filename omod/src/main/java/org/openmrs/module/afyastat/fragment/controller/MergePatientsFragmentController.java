@@ -318,7 +318,7 @@ public class MergePatientsFragmentController {
 	@AppAction("kenyaemr.afyastat.home")
 	public SimpleObject purgeErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
 		//Check that the user has correct role to deletex
-		if (Context.getAuthenticatedUser().containsRole(AfyastatSecurityMetadata._Role.APPLICATION_AFYASTAT_DELETE)
+		if (Context.getAuthenticatedUser().hasRole(AfyastatSecurityMetadata._Role.APPLICATION_AFYASTAT_DELETE)
 		        || Context.getAuthenticatedUser().isSuperUser()) {
 			InfoService service = Context.getService(InfoService.class);
 			service.purgeErrors(errorList);

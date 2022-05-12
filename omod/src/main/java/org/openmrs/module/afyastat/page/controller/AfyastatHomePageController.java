@@ -132,9 +132,8 @@ public class AfyastatHomePageController {
 		Long registrationErrors = (Long) Context.getAdministrationService().executeSQL(regStr, true).get(0).get(0);
 		Long queueDataTotal = (Long) Context.getAdministrationService().executeSQL(queueData, true).get(0).get(0);
 		
-		model.put(
-		    "userHasDeleteRole",
-		    (Context.getAuthenticatedUser().containsRole(AfyastatSecurityMetadata._Role.APPLICATION_AFYASTAT_DELETE) || Context
+		model.put("userHasDeleteRole",
+		    (Context.getAuthenticatedUser().hasRole(AfyastatSecurityMetadata._Role.APPLICATION_AFYASTAT_DELETE) || Context
 		            .getAuthenticatedUser().isSuperUser()));
 		
 		model.put("queueList", ui.toJson(queueList));
