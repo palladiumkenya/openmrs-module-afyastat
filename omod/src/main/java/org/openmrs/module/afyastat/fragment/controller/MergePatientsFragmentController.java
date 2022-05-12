@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.openmrs.module.afyastat.metadata.AfyastatSecurityMetadata;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -316,9 +317,15 @@ public class MergePatientsFragmentController {
 	 */
 	@AppAction("kenyaemr.afyastat.home")
 	public SimpleObject purgeErrors(@RequestParam("errorList") String errorList, UiUtils ui) {
-		InfoService service = Context.getService(InfoService.class);
-		service.purgeErrors(errorList);
-		return SimpleObject.create("status", "success");
+		//Check that the user has correct role to deletex
+		if (Context.getAuthenticatedUser().containsRole(AfyastatSecurityMetadata._Role.APPLICATION_AFYASTAT_DELETE)
+		        || Context.getAuthenticatedUser().isSuperUser()) {
+			InfoService service = Context.getService(InfoService.class);
+			service.purgeErrors(errorList);
+			return SimpleObject.create("status", "success");
+		} else {
+			return SimpleObject.create("status", "error");
+		}
 	}
 	
 	/**

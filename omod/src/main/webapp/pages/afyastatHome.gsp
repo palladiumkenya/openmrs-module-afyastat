@@ -274,7 +274,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="selectColumn"><input type="checkbox" id="chk-general-select-all"/></th>
                                                 <th class="actionColumn">
                                                     <input type="button" id="requeueGeneralErrors" value="Re-queue Selection" disabled/>
-                                                    <input type="button" id="deleteGeneralErrors" value="Delete Selection" disabled/>
+                                                    <% if(userHasDeleteRole) { %><input type="button" id="deleteGeneralErrors" value="Delete Selection" disabled/><% }%>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -318,7 +318,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                                 <th class="selectColumn"><input type="checkbox" id="chk-registration-select-all"/></th>
                                                 <th class="actionColumn">
                                                     <input type="button" id="requeueRegistrationErrors" value="Re-queue Selection" disabled/>
-                                                    <input type="button" id="deleteRegistrationErrors" value="Delete Selection" disabled/>
+                                                    <% if(userHasDeleteRole) { %><input type="button" id="deleteRegistrationErrors" value="Delete Selection" disabled/><% }%>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -399,6 +399,38 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             </div>
         </div>
 
+        <div class="modal" id="showWaitBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticConfirmLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="staticConfirmLabel">Please Wait</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <span style="padding:2px; display:inline-block;"> <img src="${ui.resourceLink("afyastat", "images/loading.gif")}" /> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="showInfoBox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticInfoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-primary">
+                        <h5 class="modal-title" id="staticInfoLabel">Info</h5>
+                    </div>
+                    <div class="modal-body">
+                        <span style="color: firebrick" id="msgBox"></span>
+                        <pre id="json-info-display"></pre>
+                    </div>
+                    <div class="modal-footer modal-footer-primary">
+                        <button type="button" class="confirmOkButton btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -445,6 +477,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         var visibleQueuePages = 1;
 
         var payloadEditor = {};
+
+        var sendCount = 0;
 
         if (totalGeneralErrorPages <= 5) {
             visibleGeneralErrorPages = totalGeneralErrorPages;
@@ -503,6 +537,20 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 jq('#showConfirmationBox').modal("hide");
             });
             jq('#showConfirmationBox').modal('show');
+        }
+
+        function AsyncShowInfo(title, msg, okFn) {
+            jq("#staticInfoLabel").html(title);
+            jq("#json-info-display").html(msg);
+            jq(".confirmOkButton").off('click').click(function () {
+                okFn();
+                jq('#showInfoBox').modal("hide");
+            });
+            jq('#showInfoBox').modal('show');
+        }
+
+        function reloadPage() {
+            document.location.reload();
         }
 
         jq(document).on('click','.mergeButton',function(){
@@ -712,10 +760,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         // re-queues general errors once user confirms
         function requeueGeneralErrors() {
             if(selectedGeneralErrors.length > 0) {
-                let listToSubmit = selectedGeneralErrors.join();
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                    document.location.reload();
-                });
+                jq('#showWaitBox').modal('show');
+                requeueAll(selectedGeneralErrors);         
             }
             jq('#chk-general-select-all').prop('checked', false);
         }
@@ -728,10 +774,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         // re-queues registration errors once user confirms
         function requeueRegistrationErrors() {
             if(selectedRegistrationErrors.length > 0) {
-                let listToSubmit = selectedRegistrationErrors.join();
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
-                    document.location.reload();
-                });
+                jq('#showWaitBox').modal('show');
+                requeueAll(selectedRegistrationErrors);
             }
             jq('#chk-registration-select-all').prop('checked', false);
         }
@@ -744,10 +788,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         // deletes general errors once user confirms
         function deleteGeneralErrors() {
             if(selectedGeneralErrors.length > 0) {
-                let listToSubmit = selectedGeneralErrors.join();
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                    document.location.reload();
-                });
+                jq('#showWaitBox').modal('show');
+                deleteAll(selectedGeneralErrors);
             }
             jq('#chk-general-select-all').prop('checked', false);
         }
@@ -760,13 +802,65 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         // deletes registration errors once user confirms
         function deleteRegistrationErrors() {
             if(selectedRegistrationErrors.length > 0) {
-                let listToSubmit = selectedRegistrationErrors.join();
-                //selectedRegistrationErrors
-                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
-                    document.location.reload();
-                });
+                jq('#showWaitBox').modal('show');
+                deleteAll(selectedRegistrationErrors);
             }
             jq('#chk-registration-select-all').prop('checked', false);
+        }
+
+        // deletes all the given error items
+        function deleteAll(selectedErrors) {
+            //Delete the selected errors, 10 at a time
+            let count = 10;
+            sendCount = 0;
+            let totalItems = selectedErrors.length;
+            let loopThrough = (totalItems > 0) ? totalItems : 1;
+            let pages = Math.ceil(loopThrough * 1.00 / count * 1.00);
+
+            for (var i = 0; i < pages; i++) {
+                let begin = i * count;
+                let end = begin + count;
+                let sliced = selectedErrors.slice(begin, end);
+                let listToSubmit = sliced.join();
+                // lets delete this page
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'purgeErrors', { errorList : listToSubmit }, function (result) {
+                    sendCount++;
+                    console.log("Delete items: Finished sending page. Sendcount: " + sendCount);
+                    if(sendCount >= pages)
+                    {
+                        jq('#showWaitBox').modal('hide').promise().done( function () {
+                            AsyncShowInfo("Success", "Successfully Deleted", reloadPage); 
+                        } )
+                    }
+                });
+            }
+        }
+
+        // requeues all the given error items
+        function requeueAll(selectedErrors) {
+            //Requeue the selected errors, 10 at a time
+            let count = 10;
+            sendCount = 0;
+            let totalItems = selectedErrors.length;
+            let loopThrough = (totalItems > 0) ? totalItems : 1;
+            let pages = Math.ceil(loopThrough * 1.00 / count * 1.00);
+
+            for (var i = 0; i < pages; i++) {
+                let begin = i * count;
+                let end = begin + count;
+                let sliced = selectedErrors.slice(begin, end);
+                let listToSubmit = sliced.join();
+                // lets requeue this page
+                ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'requeueErrors', { errorList : listToSubmit }, function (result) {
+                    sendCount++;
+                    if(sendCount >= pages)
+                    {
+                        jq('#showWaitBox').modal('hide').promise().done( function () {
+                            AsyncShowInfo("Success", "Successfully Requeued", reloadPage); 
+                        } )
+                    }
+                });
+            }
         }
 
     });
