@@ -2010,6 +2010,7 @@ public class MedicDataExchange {
 		options.put(5617, "Spouse");
 		options.put(163565, "Sexual partner");
 		options.put(162221, "Co-wife");
+		options.put(166606, "SNS");
 		
 		if (options.keySet().contains(key)) {
 			return options.get(key);
@@ -2689,7 +2690,9 @@ public class MedicDataExchange {
 		} else if (relType.equalsIgnoreCase("Injectable drug user")) {
 			relTypeUuid = "58da0d1e-9c89-42e9-9412-275cef1e0429";
 		} else if (relType.equalsIgnoreCase("guardian")) {
-			relTypeUuid = "5f115f62-68b7-11e3-94ee-6bef9086de92";
+			relTypeUuid = "5f115f62-68b7-11e3-94ee-6bef9086de92";	
+		}  else if (relType.equalsIgnoreCase("SNS")) {
+			relTypeUuid = "76edc1fe-c5ce-4608-b326-c8ecd1020a73";
 			
 		}
 		return relTypeUuid;

@@ -214,6 +214,8 @@ public class PatientContactRegistrationQueueDataHandler implements QueueInfoHand
 			relTypeConverter = 162221;
 		} else if (relType.equalsIgnoreCase("Injectable drug user")) {
 			relTypeConverter = 157351;
+		} else if (relType.equalsIgnoreCase("SNS")) {
+			relTypeConverter = 166606;
 		}
 		return relTypeConverter;
 	}
