@@ -205,4 +205,12 @@
         <constructor-arg value="afyastat:Afya_stat_96_83px.png" />
         <constructor-arg value="360" />
     </bean>
+
+    <bean id="kenyaemr.app.htlmlToJson" factory-bean="kenyacore.appFactoryBean" factory-method="createInstance">
+        <constructor-arg value="kenyaemr.afyastat.htmlToJson" />
+        <constructor-arg value="HTML to JSON" />
+        <constructor-arg value="afyastat/htmlFormToJsonHome.page" />
+        <constructor-arg value="afyastat:Afya_stat_96_83px.png" />
+        <constructor-arg value="362" />
+    </bean>
 </beans>

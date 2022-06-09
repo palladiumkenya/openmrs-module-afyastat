@@ -2690,8 +2690,8 @@ public class MedicDataExchange {
 		} else if (relType.equalsIgnoreCase("Injectable drug user")) {
 			relTypeUuid = "58da0d1e-9c89-42e9-9412-275cef1e0429";
 		} else if (relType.equalsIgnoreCase("guardian")) {
-			relTypeUuid = "5f115f62-68b7-11e3-94ee-6bef9086de92";	
-		}  else if (relType.equalsIgnoreCase("SNS")) {
+			relTypeUuid = "5f115f62-68b7-11e3-94ee-6bef9086de92";
+		} else if (relType.equalsIgnoreCase("SNS")) {
 			relTypeUuid = "76edc1fe-c5ce-4608-b326-c8ecd1020a73";
 			
 		}
