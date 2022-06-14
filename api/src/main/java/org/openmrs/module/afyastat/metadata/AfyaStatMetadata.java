@@ -44,6 +44,8 @@ public class AfyaStatMetadata extends AbstractMetadataBundle {
 	
 	public static final String AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP = "afyastatContactListTask.lastFetchDateAndTime";
 	
+	public static String GENERATED_HTML_RESOURCE_PATH = "htmlformmigration.resources";
+	
 	public static final class _PatientIdentifierType {
 		
 		public static final String CHT_RECORD_UUID = "c6552b22-f191-4557-a432-1f4df872d473";
@@ -59,6 +61,9 @@ public class AfyaStatMetadata extends AbstractMetadataBundle {
 		install(globalProperty(MEDIC_MOBILE_PWD, "Medic Mobile CHT pwd", null));
 		install(globalProperty(AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP, "The last time contact list was fetched", null));
 		install(globalProperty(AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP, "The last time linkage list was fetched", null));
+		install(globalProperty(GENERATED_HTML_RESOURCE_PATH,
+		    "The resource directory for the html forms. Only used during transition to o3 schema",
+		    "/var/lib/OpenMRS/generatedHtmlForms/"));
 		
 		install(patientIdentifierType("CHT Record Reference UUID", "Record reference UUID from CHT", null, null, null,
 		    PatientIdentifierType.LocationBehavior.NOT_USED, false, _PatientIdentifierType.CHT_RECORD_UUID));

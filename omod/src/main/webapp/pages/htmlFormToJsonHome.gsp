@@ -140,6 +140,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <td>${hfeFormsSize}</td>
                     </tr>
 
+                    <tr>
+                        <td colspan="2"><button type="button" id="generateForms">Generate forms</button> </td>
+                    </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -358,10 +362,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         }
 
         jq(document).on('click','.viewPayloadButton',function () {
-            var queueUuid = jq(this).val();
-            console.log("Checking for queue entry with uuid: " + queueUuid);
+            var formUuid = jq(this).val();
+            console.log("Checking form with uuid: " + formUuid);
 
-            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
+            ui.getFragmentActionAsJson('afyastat', 'htmlFormToJsonSchema', 'getFormSchema', { formUuid : formUuid }, function (result) {
                 let payloadObject = [];
                 try {
                     payloadObject = JSON.parse(result.payload);
@@ -380,10 +384,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         });
 
         jq(document).on('click','.editPayloadButton',function () {
-            var queueUuid = jq(this).val();
-            console.log("Checking for queue entry with uuid: " + queueUuid);
+            var formUuid = jq(this).val();
+            console.log("Checking form with uuid: " + formUuid);
 
-            ui.getFragmentActionAsJson('afyastat', 'mergePatients', 'getMessagePayload', { queueUuid : queueUuid }, function (result) {
+            ui.getFragmentActionAsJson('afyastat', 'htmlFormToJsonSchema', 'getFormSchema', { formUuid : formUuid }, function (result) {
                 let payloadObject = [];
                 try {
                     payloadObject = JSON.parse(result.payload);
@@ -400,6 +404,15 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             });
 
             jq('#showEditPayloadDialog').modal('show');
+        });
+
+        jq(document).on('click','#generateForms',function () {
+
+            console.log("Generating files " );
+
+            ui.getFragmentActionAsJson('afyastat', 'htmlFormToJsonSchema', 'generateForms', function (result) {
+                console.log(result);
+            });
         });
     });
 

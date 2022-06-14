@@ -48,16 +48,16 @@ public class HtmlFormToJsonSchemaModel {
 	public void setDataPoints(Set<HtmlFormDataPoint> dataPoints) {
 		this.dataPoints = dataPoints;
 	}
-
+	
 	public static ObjectNode getBaselineJsonSchema() {
-
+		
 		String baselineJsonSchemaString = "{\"name\":\"POC General Form v1.0\",\"pages\":[{\"label\":\"Encounter details\",\"sections\":[{\"label\":\"Encounter details\",\"isExpanded\":\"true\",\"questions\":[{\"label\":\"Visit date\",\"type\":\"encounterDatetime\",\"questionOptions\":{\"rendering\":\"date\",\"showWeeks\":\"\"},\"id\":\"encounterDate\",\"required\":\"true\"},{\"label\":\"Provider\",\"type\":\"encounterProvider\",\"questionOptions\":{\"rendering\":\"ui-select-extended\"},\"id\":\"provider\",\"required\":\"true\"},{\"label\":\"Location\",\"type\":\"encounterLocation\",\"questionOptions\":{\"rendering\":\"ui-select-extended\"},\"id\":\"location\",\"required\":\"true\"}]}]}],\"processor\":\"EncounterFormProcessor\",\"uuid\":\"xxxx\",\"referencedForms\":[]}";
-
+		
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = null;
 		try {
 			jsonNode = (ObjectNode) mapper.readTree(baselineJsonSchemaString);
-
+			
 		}
 		catch (IOException e) {
 			e.printStackTrace();

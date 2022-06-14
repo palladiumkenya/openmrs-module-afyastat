@@ -1,5 +1,7 @@
 package org.openmrs.module.afyastat.htmltojson;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
@@ -9,26 +11,110 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openmrs.Concept;
 import org.openmrs.Form;
-import org.openmrs.api.ConceptService;
+import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.afyastat.metadata.AfyaStatMetadata;
 import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.kenyacore.form.FormDescriptor;
 import org.openmrs.module.kenyacore.form.FormManager;
 import org.openmrs.module.kenyacore.form.FormUtils;
 import org.openmrs.ui.framework.resource.ResourceFactory;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class HtmlFormUtil {
 	
-	public static ArrayNode getAllForms(FormManager formManager, ResourceFactory resourceFactory) {
+	public static ObjectNode getFormSchemaJson(String formUuid, ResourceFactory resourceFactory) throws IOException {
+		Form form = Context.getFormService().getFormByUuid(formUuid);
+		ObjectNode questions = JsonNodeFactory.instance.objectNode();
+		ArrayNode questionsList = JsonNodeFactory.instance.arrayNode();
 		
-		ConceptService conceptService = Context.getConceptService();
+		String pathToResourceDir = getGeneratedHtmlResourcePath();
+		if (StringUtils.isBlank(pathToResourceDir)) {
+			System.out.println("Please set the resources path for forms migration");
+			return null;
+		}
+		
+		if (form != null) {
+			
+			HtmlForm htmlForm = null;
+			try {
+				htmlForm = FormUtils.getHtmlForm(form, resourceFactory);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if (htmlForm != null) {
+				String formHtml;
+				String generateFileName = generateFileNameFromHtmlForm(form.getName()) + ".html";
+				;
+				generateFileName = pathToResourceDir + generateFileName;
+				
+				System.out.println("Generated file name: " + generateFileName);
+				File file = new File(generateFileName);
+				String content = FileUtils.readFileToString(file, "UTF-8");
+				
+				//formHtml = htmlForm.getXmlData();
+				formHtml = content;
+				Document doc = Jsoup.parse(formHtml);
+				
+				System.out.println("Form name: " + htmlForm.getName());
+				Element htmlform = doc.select("htmlform").first();
+				
+				Elements elementTags = htmlform.select("obs,obsgroup");
+				
+				for (Element element : elementTags) {
+					
+					// check the tag name
+					if (element.normalName().equals("obs")) {
+						//System.out.println("Encountered obs element " + element.attr("conceptId"));
+						boolean isGrouped = false;
+						Elements parents = element.parents();
+						for (Element parent : parents) {
+							
+							if (parent.normalName().equals("obsgroup")) {
+								isGrouped = true;
+								System.out.println("Parent tag: " + parent.tagName());
+							}
+						}
+						
+						if (isGrouped) {
+							System.out.println("Skipping a grouped obs tag");
+							continue;
+						}
+						HtmlFormDataPoint dataPoint = HtmlObsTagExtractor.extractObsTag(element);
+						if (dataPoint == null) {
+							System.out.println("Encountered invalid concept UUID in the form schema. Ignoring the tag ");
+							continue;
+						}
+						HtmlFormObsRenderer renderer = new HtmlFormObsRenderer(dataPoint);
+						ObjectNode obsJson = renderer.render();
+						if (obsJson != null) {
+							questionsList.add(obsJson);
+						}
+					} else if (element.normalName().equals("obsgroup")) {
+						
+						System.out.println("Encountered obsgroup element ");
+						HtmlFormObsGroupRenderer obsGroupRenderer = new HtmlFormObsGroupRenderer(element);
+						ObjectNode groupJson = obsGroupRenderer.render();
+						if (groupJson != null) {
+							questionsList.add(groupJson);
+						}
+					}
+					
+				}
+			}
+		}
+		questions.put("questions", questionsList);
+		return questions;
+	}
+	
+	public static ArrayNode getAllForms(FormManager formManager, ResourceFactory resourceFactory) {
 		
 		List<FormDescriptor> formList = new ArrayList<FormDescriptor>(formManager.getAllFormDescriptors());
 		
@@ -52,9 +138,7 @@ public class HtmlFormUtil {
 		for (FormDescriptor formDescriptor : formList) {
 			String targetUuid = formDescriptor.getTargetUuid();
 			Form form = Context.getFormService().getFormByUuid(targetUuid);
-			/*if (blackList.contains(targetUuid)) {
-				continue;
-			}*/
+			
 			if (form != null) {
 				
 				HtmlForm htmlForm = null;
@@ -90,23 +174,26 @@ public class HtmlFormUtil {
 					Set<HtmlFormDataPoint> dataPoints = new HashSet<HtmlFormDataPoint>();
 					for (Element obsTag : obsTags) {
 						String conceptUUId = obsTag.attr("conceptId");
-						Concept concept = null;
-						if (conceptService.getConceptByUuid(conceptUUId) != null) {
-							concept = conceptService.getConceptByUuid(conceptUUId);
-						} else {
-							concept = conceptService.getConcept(conceptUUId);
-						}
+						
+						Concept concept = getConceptByUuidOrId(conceptUUId);
 						
 						if (concept == null) {
 							System.out.println("Concept UUID Invalid: " + conceptUUId);
 							continue;
 						}
-						String dataType = getConceptDatatype(concept);
 						HtmlFormDataPoint dataPoint = new HtmlFormDataPoint();
-						dataPoint.setConceptUUID(conceptUUId);
+						String requiredField = obsTag.attr("required");
+						if (StringUtils.isNotBlank(requiredField) && requiredField.equals("true")) {
+							dataPoint.setRequiredField(true);
+						}
+						
+						String cUuid = concept.getUuid();
+						//String dataType = getConceptDatatype(concept);
+						dataPoint.setConceptUUID(cUuid);
+						
 						dataPoint.setConceptId(concept.getConceptId());
 						dataPoint.setConceptName(concept.getName().getName());
-						dataPoint.setDataType(dataType);
+						dataPoint.setDataType("obs");
 						dataPoints.add(dataPoint);
 						
 					}
@@ -118,6 +205,79 @@ public class HtmlFormUtil {
 		}
 		
 		return generatedFormList;
+	}
+	
+	public static boolean writeFormsToFileSystem(FormManager formManager, ResourceFactory resourceFactory) {
+		
+		String pathToResourceDir = getGeneratedHtmlResourcePath();
+		if (StringUtils.isBlank(pathToResourceDir)) {
+			System.out.println("Please set the resources path for forms migration");
+			return false;
+		}
+		
+		List<FormDescriptor> formList = new ArrayList<FormDescriptor>(formManager.getAllFormDescriptors());
+		
+		for (FormDescriptor formDescriptor : formList) {
+			String targetUuid = formDescriptor.getTargetUuid();
+			Form form = Context.getFormService().getFormByUuid(targetUuid);
+			String formHtml;
+			String generateFileName;
+			
+			if (form != null) {
+				
+				HtmlForm htmlForm = null;
+				try {
+					htmlForm = FormUtils.getHtmlForm(form, resourceFactory);
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				if (htmlForm != null) {
+					formHtml = htmlForm.getXmlData();
+					generateFileName = generateFileNameFromHtmlForm(form.getName()) + ".html";
+					generateFileName = pathToResourceDir + generateFileName;
+					createFile(generateFileName, formHtml);
+				}
+			}
+			
+		}
+		
+		return true;
+	}
+	
+	public static void createFile(String fileName, String formContent) {
+		try {
+			
+			FileWriter myWriter = new FileWriter(fileName);
+			BufferedWriter output = new BufferedWriter(myWriter);
+			
+			// Writes the string to the file
+			output.write(formContent);
+			output.flush();
+			output.close();
+			System.out.println("Successfully wrote to the file.");
+		}
+		catch (IOException e) {
+			System.out.println("An error occurred while writing to " + fileName);
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Gets concept by ID or UUID
+	 * 
+	 * @param conceptIdentifier
+	 * @return
+	 */
+	public static Concept getConceptByUuidOrId(String conceptIdentifier) {
+		Concept concept = null;
+		if (Context.getConceptService().getConceptByUuid(conceptIdentifier) != null) {
+			concept = Context.getConceptService().getConceptByUuid(conceptIdentifier);
+		} else {
+			concept = Context.getConceptService().getConcept(conceptIdentifier);
+		}
+		return concept;
 	}
 	
 	/**
@@ -143,13 +303,49 @@ public class HtmlFormUtil {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * Return concept UUID for a concept
+	 * 
 	 * @param concept
 	 * @return
 	 */
 	public static String getConceptUuid(Concept concept) {
 		return concept.getUuid();
 	}
+	
+	public static String generateFileNameFromHtmlForm(String formName) {
+		if (StringUtils.isBlank(formName)) {
+			return null;
+		}
+		
+		formName = formName.replaceAll("\\s+", "_");
+		formName = formName.replaceAll("[-+.^:,]", "_");
+		formName = formName.replaceAll("'", "_");
+		formName = formName.replaceAll("\\(", "_");
+		formName = formName.replaceAll("\\)", "_");
+		;
+		formName.toLowerCase();
+		return formName;
+	}
+	
+	public static String getGeneratedHtmlResourcePath() {
+		GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
+		    AfyaStatMetadata.GENERATED_HTML_RESOURCE_PATH);
+		if (globalPropertyObject == null) {
+			return null;
+		}
+		
+		if (globalPropertyObject.getValue() != null) {
+			try {
+				String pathValue = globalPropertyObject.getValue().toString();
+				return pathValue;
+			}
+			catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+	
 }
