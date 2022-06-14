@@ -15,6 +15,7 @@
 package org.openmrs.module.afyastat.metadata;
 
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.metadatadeploy.bundle.AbstractMetadataBundle;
 import org.springframework.stereotype.Component;
 
@@ -61,9 +62,11 @@ public class AfyaStatMetadata extends AbstractMetadataBundle {
 		install(globalProperty(MEDIC_MOBILE_PWD, "Medic Mobile CHT pwd", null));
 		install(globalProperty(AFYASTAT_CONTACT_LIST_LAST_FETCH_TIMESTAMP, "The last time contact list was fetched", null));
 		install(globalProperty(AFYASTAT_LINKAGE_LIST_LAST_FETCH_TIMESTAMP, "The last time linkage list was fetched", null));
-		install(globalProperty(GENERATED_HTML_RESOURCE_PATH,
-		    "The resource directory for the html forms. Only used during transition to o3 schema",
-		    "/var/lib/OpenMRS/generatedHtmlForms/"));
+		if (Context.getAdministrationService().getGlobalPropertyObject(GENERATED_HTML_RESOURCE_PATH) == null) {
+			install(globalProperty(GENERATED_HTML_RESOURCE_PATH,
+			    "The resource directory for the html forms. Only used during transition to o3 schema",
+			    "/opt/tomcat/.OpenMRS/kenyaemr/generatedHtmlForms/"));
+		}
 		
 		install(patientIdentifierType("CHT Record Reference UUID", "Record reference UUID from CHT", null, null, null,
 		    PatientIdentifierType.LocationBehavior.NOT_USED, false, _PatientIdentifierType.CHT_RECORD_UUID));
