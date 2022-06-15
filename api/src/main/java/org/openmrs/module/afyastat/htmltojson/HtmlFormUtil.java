@@ -67,39 +67,62 @@ public class HtmlFormUtil {
 				Element htmlform = doc.select("htmlform").first();
 				
 				Elements elementTags = htmlform.select("obs,obsgroup");
+				Set<String> processedUngroupedCheckedInputs = new HashSet<String>();
 				
 				for (Element element : elementTags) {
 					
 					// check the tag name
 					if (element.normalName().equals("obs")) {
-						//System.out.println("Encountered obs element " + element.attr("conceptId"));
-						boolean isGrouped = false;
-						Elements parents = element.parents();
-						for (Element parent : parents) {
-							
-							if (parent.normalName().equals("obsgroup")) {
-								isGrouped = true;
-								System.out.println("Parent tag: " + parent.tagName());
-							}
-						}
+						boolean isGrouped = obsIsInAGroup(element);
 						
 						if (isGrouped) {
-							System.out.println("Skipping a grouped obs tag");
 							continue;
 						}
-						HtmlFormDataPoint dataPoint = HtmlObsTagExtractor.extractObsTag(element);
-						if (dataPoint == null) {
-							System.out.println("Encountered invalid concept UUID in the form schema. Ignoring the tag ");
-							continue;
-						}
-						HtmlFormObsRenderer renderer = new HtmlFormObsRenderer(dataPoint);
-						ObjectNode obsJson = renderer.render();
-						if (obsJson != null) {
-							questionsList.add(obsJson);
+						
+						// check if an obs is part of a multiselct/checkbox group.
+						
+						String conceptIdAttr = element.attr("conceptId");
+						System.out.println("Concept ID: " + conceptIdAttr);
+						String styleAttr = element.attr("style");
+						Concept questionConcept = getConceptByUuidOrId(conceptIdAttr);
+						
+						if (StringUtils.isNotBlank(styleAttr) && styleAttr.equals("checkbox")
+						        && StringUtils.isNotBlank(conceptIdAttr) && questionConcept != null
+						        && !processedUngroupedCheckedInputs.contains(conceptIdAttr)) {
+							String questionLabel = HtmlFormUtil.extractQuestionLabel(element);
+							String actualConceptUuid = questionConcept.getUuid();
+							Map<String, List<Element>> relatedTags = HtmlUngroupedCheckboxExtractor.getRelatedCheckboxes(
+							    conceptIdAttr, actualConceptUuid, htmlform);
+							
+							List<Element> allRelatedTags = relatedTags.get(actualConceptUuid);
+							if (allRelatedTags == null || allRelatedTags.isEmpty()) {
+								ObjectNode dataPointJson = generateJsonObjectForHtmlDataPoint(element);
+								
+								if (dataPointJson != null) {
+									questionsList.add(dataPointJson);
+								}
+								
+							} else {
+								HtmlFormUngroupedCheckboxRenderer ungroupedCheckboxRenderer = new HtmlFormUngroupedCheckboxRenderer(
+								        actualConceptUuid, allRelatedTags, questionLabel);
+								ObjectNode jsonObj = ungroupedCheckboxRenderer.render();
+								
+								if (jsonObj != null) {
+									questionsList.add(jsonObj);
+								}
+								processedUngroupedCheckedInputs.add(conceptIdAttr);
+								
+							}
+							
+						} else {
+							
+							ObjectNode dataPointJson = generateJsonObjectForHtmlDataPoint(element);
+							
+							if (dataPointJson != null) {
+								questionsList.add(dataPointJson);
+							}
 						}
 					} else if (element.normalName().equals("obsgroup")) {
-						
-						System.out.println("Encountered obsgroup element ");
 						HtmlFormObsGroupRenderer obsGroupRenderer = new HtmlFormObsGroupRenderer(element);
 						ObjectNode groupJson = obsGroupRenderer.render();
 						if (groupJson != null) {
@@ -108,10 +131,31 @@ public class HtmlFormUtil {
 					}
 					
 				}
+				
 			}
 		}
 		questions.put("questions", questionsList);
 		return questions;
+	}
+	
+	/**
+	 * Generate json object for an element
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public static ObjectNode generateJsonObjectForHtmlDataPoint(Element element) {
+		HtmlFormDataPoint dataPoint = HtmlObsTagExtractor.extractObsTag(element);
+		if (dataPoint == null) {
+			System.out.println("Encountered invalid concept UUID in the form schema. Ignoring the tag ");
+			return null;
+		}
+		HtmlFormObsRenderer renderer = new HtmlFormObsRenderer(dataPoint);
+		ObjectNode obsJson = renderer.render();
+		if (obsJson != null) {
+			return obsJson;
+		}
+		return null;
 	}
 	
 	public static ArrayNode getAllForms(FormManager formManager, ResourceFactory resourceFactory) {
@@ -348,4 +392,76 @@ public class HtmlFormUtil {
 		return null;
 	}
 	
+	/**
+	 * Returns a list of Element that have same conceptId attribute, a style='checkbox', and are not
+	 * grouped
+	 * 
+	 * @param similarCheckboxTags
+	 * @return
+	 */
+	public static List<Element> filterRelatedTags(Elements similarCheckboxTags) {
+		List<Element> validChildren = new ArrayList<Element>();
+		for (Element tag : similarCheckboxTags) {
+			boolean isGrouped = false;
+			Elements parents = tag.parents();
+			for (Element parent : parents) {
+				
+				if (parent.normalName().equals("obsgroup")) {
+					isGrouped = true;
+					System.out.println("Parent tag: " + parent.tagName());
+				}
+			}
+			
+			if (!isGrouped) {
+				validChildren.add(tag);
+			}
+		}
+		return validChildren;
+	}
+	
+	/**
+	 * Checks if obs is part of an obsgroup
+	 * 
+	 * @param obs
+	 * @return
+	 */
+	public static boolean obsIsInAGroup(Element obs) {
+		boolean isGrouped = false;
+		Elements parents = obs.parents();
+		for (Element parent : parents) {
+			
+			if (parent.normalName().equals("obsgroup")) {
+				isGrouped = true;
+				break;
+			}
+		}
+		
+		return isGrouped;
+	}
+	
+	/**
+	 * Extract question label for obs
+	 * 
+	 * @param obsTag
+	 * @return
+	 */
+	public static String extractQuestionLabel(Element obsTag) {
+		String inlineObsLabel = obsTag.attr("labelText");
+		String qLabel = "";
+		if (inlineObsLabel != null && StringUtils.isNotBlank(inlineObsLabel)) {
+			qLabel = inlineObsLabel;
+		} else {
+			Element parentElement = obsTag.parent();
+			if (parentElement.normalName().equals("td") && StringUtils.isNotBlank(parentElement.ownText())) {
+				qLabel = parentElement.ownText();
+			} else if (parentElement.normalName().equals("td")) {
+				Element previousTd = parentElement.previousElementSibling();
+				if (previousTd != null && previousTd.normalName().equals("td")
+				        && StringUtils.isNotBlank(previousTd.ownText())) {
+					qLabel = previousTd.ownText();
+				}
+			}
+		}
+		return qLabel;
+	}
 }

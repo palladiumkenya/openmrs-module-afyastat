@@ -23,25 +23,9 @@ public class HtmlObsTagExtractor {
 		HtmlFormDataPoint dataPoint = new HtmlFormDataPoint();
 		String requiredField = obsTag.attr("required");
 		String idAttr = obsTag.attr("id");
-		String inlineObsLabel = obsTag.attr("labelText");
+		String obsLabel = HtmlFormUtil.extractQuestionLabel(obsTag);
 		
-		if (inlineObsLabel != null && StringUtils.isNotBlank(inlineObsLabel)) {
-			dataPoint.setQuestionLabel(inlineObsLabel);
-		} else {
-			Element parentElement = obsTag.parent();
-			//System.out.println("Parent element: " + parentElement.toString());
-			if (parentElement.normalName().equals("td") && StringUtils.isNotBlank(parentElement.ownText())) {
-				dataPoint.setQuestionLabel(parentElement.ownText());
-			} else if (parentElement.normalName().equals("td")) {
-				Element previousTd = parentElement.previousElementSibling();
-				//System.out.println("Previous td element: " + previousTd);
-				
-				if (previousTd != null && previousTd.normalName().equals("td")
-				        && StringUtils.isNotBlank(previousTd.ownText())) {
-					dataPoint.setQuestionLabel(previousTd.ownText());
-				}
-			}
-		}
+		dataPoint.setQuestionLabel(obsLabel);
 		
 		if (StringUtils.isNotBlank(requiredField) && requiredField.equals("true")) {
 			dataPoint.setRequiredField(true);
@@ -52,7 +36,6 @@ public class HtmlObsTagExtractor {
 		}
 		
 		String cUuid = concept.getUuid();
-		//String dataType = getConceptDatatype(concept);
 		dataPoint.setConceptUUID(cUuid);
 		
 		dataPoint.setConceptId(concept.getConceptId());
