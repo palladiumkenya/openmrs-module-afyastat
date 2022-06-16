@@ -51,15 +51,15 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 }
 
 .formName {
-    width: 150px;
+    width: 200px;
 }
 
 .formUuid {
-    width: 120px;
+    width: 200px;
 }
 
 .actionColumn {
-    width: 350px;
+    width: 200px;
 }
 
 .dataPoints {
@@ -86,6 +86,18 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     color: white;
     margin-right: 5px;
     margin-left: 5px;
+}
+
+.writeFormSchemaButton {
+    background-color: cadetblue;
+    color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.writeFormSchemaButton:hover {
+    background-color: orange;
+    color: black;
 }
 .viewPayloadButton:hover {
     background-color: orange;
@@ -141,7 +153,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     </tr>
 
                     <tr>
-                        <td colspan="2"><button type="button" id="generateForms">Generate forms</button> </td>
+                        <td colspan="2"><button class="writeFormSchemaButton" type="button" id="generateForms">Write forms schema</button> <span id="formGenerationOutcome"></span> </td>
                     </tr>
 
                     </tbody>
@@ -172,7 +184,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                                             <tr>
                                                 <th class="formUuid">UUID</th>
                                                 <th class="formName">Name</th>
-                                                <th class="dataPoints">#Data points</th>
+                                                <th class="dataPoints">No of Data points (obs, obsgroup)</th>
 
                                                 <th class="actionColumn">Json Schema</th>
                                             </tr>
@@ -228,7 +240,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     </div>
                     <div class="modal-footer modal-footer-primary">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="savePayloadButton btn btn-primary">Save and Requeue</button>
+                        <button>Download JSON</button>
                     </div>
                 </div>
             </div>
@@ -308,7 +320,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         var totalHfeFormsPages = Math.ceil(numberOfHfeForms / recPerPage);
         var visibleHfeFormsPages = 1;
         var payloadEditor = {};
-        var sendCount = 0;
 
         if (totalHfeFormsPages <= 5) {
             visibleHfeFormsPages = totalHfeFormsPages;
@@ -400,17 +411,17 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     withQuotes:true,
                     rootCollapsable:true
                 });
-                jq('.savePayloadButton').val(queueUuid);
             });
 
             jq('#showEditPayloadDialog').modal('show');
         });
 
         jq(document).on('click','#generateForms',function () {
-
-            console.log("Generating files " );
-
+            jq('#formGenerationOutcome').text('');
             ui.getFragmentActionAsJson('afyastat', 'htmlFormToJsonSchema', 'generateForms', function (result) {
+                var status = result.success === true ? 'HTML form schema generated successfully' : 'There was a problem copying html forms. Please check logs for more information';
+
+                jq('#formGenerationOutcome').text(status);
                 console.log(result);
             });
         });
@@ -436,7 +447,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
             });
 
             var btnEdit = jq('<button/>', {
-                text: 'Edit',
+                text: 'View and copy',
                 class: 'editPayloadButton',
                 value: displayRecords[i].uuid
             });

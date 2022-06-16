@@ -66,7 +66,7 @@ public class HtmlFormObsGroupRenderer {
 		
 		ObjectNode optionsNode = JsonNodeFactory.instance.objectNode();
 		optionsNode.put("concept", groupingConceptUuid);
-		optionsNode.put("rendering", "group");
+		optionsNode.put("rendering", HtmlFormUtil.isRepeat(obsGroupTag) ? "repeat" : "group");
 		obsStub.put("questionOptions", optionsNode);
 		return obsStub;
 	}

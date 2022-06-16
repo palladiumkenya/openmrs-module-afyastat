@@ -57,7 +57,7 @@ public class HtmlFormToJsonSchemaFragmentController {
 	}
 	
 	/**
-	 * Gets message payload
+	 * Copies schema to a directory outside of module
 	 * 
 	 * @param
 	 * @return the summary
@@ -68,7 +68,7 @@ public class HtmlFormToJsonSchemaFragmentController {
 		boolean passed = HtmlFormUtil.writeFormsToFileSystem(formManager, resourceFactory);
 		
 		SimpleObject summary = new SimpleObject();
-		summary.put("sucess", passed);
+		summary.put("success", passed);
 		summary.put("payload", summary.toString());
 		return summary;
 	}

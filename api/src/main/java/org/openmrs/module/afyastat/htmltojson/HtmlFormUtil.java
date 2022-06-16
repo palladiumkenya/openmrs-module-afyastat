@@ -28,6 +28,14 @@ import java.util.*;
 
 public class HtmlFormUtil {
 	
+	/**
+	 * Generate o3 schema from html form schema
+	 * 
+	 * @param formUuid
+	 * @param resourceFactory
+	 * @return
+	 * @throws IOException
+	 */
 	public static ObjectNode getFormSchemaJson(String formUuid, ResourceFactory resourceFactory) throws IOException {
 		Form form = Context.getFormService().getFormByUuid(formUuid);
 		ObjectNode questions = JsonNodeFactory.instance.objectNode();
@@ -55,11 +63,10 @@ public class HtmlFormUtil {
 				;
 				generateFileName = pathToResourceDir + generateFileName;
 				
-				System.out.println("Generated file name: " + generateFileName);
+				System.out.println("Generated file name: " + generateFileName); // makes it easy to find the file in the directory configured to hold the forms outside of code
 				File file = new File(generateFileName);
 				String content = FileUtils.readFileToString(file, "UTF-8");
 				
-				//formHtml = htmlForm.getXmlData();
 				formHtml = content;
 				Document doc = Jsoup.parse(formHtml);
 				
@@ -78,11 +85,9 @@ public class HtmlFormUtil {
 						if (isGrouped) {
 							continue;
 						}
-						
 						// check if an obs is part of a multiselct/checkbox group.
 						
 						String conceptIdAttr = element.attr("conceptId");
-						System.out.println("Concept ID: " + conceptIdAttr);
 						String styleAttr = element.attr("style");
 						Concept questionConcept = getConceptByUuidOrId(conceptIdAttr);
 						
@@ -158,24 +163,22 @@ public class HtmlFormUtil {
 		return null;
 	}
 	
+	/**
+	 * Get a list of all forms
+	 * 
+	 * @param formManager
+	 * @param resourceFactory
+	 * @return
+	 */
 	public static ArrayNode getAllForms(FormManager formManager, ResourceFactory resourceFactory) {
 		
 		List<FormDescriptor> formList = new ArrayList<FormDescriptor>(formManager.getAllFormDescriptors());
 		
 		/**
-		 * The whitelist contains uuid of forms to be processed. TODO: expose the whitelist in a
-		 * configurable object probably through a UI
-		 */
-		List<String> whiteList = Arrays.asList("e958f902-64df-4819-afd4-7fb061f59308",
-		    "37f6bd8d-586a-4169-95fa-5781f987fe62", "59ed8e62-7f1f-40ae-a2e3-eabe350277ce",
-		    "0038a296-62f8-4099-80e5-c9ea7590c157", "22c68f86-bbf0-49ba-b2d1-23fa7ccf0259",
-		    "e4b506c1-7379-42b6-a374-284469cba8da", "83fb6ab2-faec-4d87-a714-93e77a28a201");
-		
-		/**
 		 * The blacklist contains uuids of forms to be skipped during processing. TODO: expose this
 		 * through a UI
 		 */
-		List<String> blackList = Arrays.asList("04295648-7606-11e8-adc0-fa7ae01bbebc");
+		List<String> blackList = new ArrayList<String>(); // form uuids to exclude
 		String formHtml;
 		ArrayNode generatedFormList = JsonNodeFactory.instance.arrayNode();
 		
@@ -183,7 +186,7 @@ public class HtmlFormUtil {
 			String targetUuid = formDescriptor.getTargetUuid();
 			Form form = Context.getFormService().getFormByUuid(targetUuid);
 			
-			if (form != null) {
+			if (form != null && !form.getRetired()) {
 				
 				HtmlForm htmlForm = null;
 				try {
@@ -193,57 +196,22 @@ public class HtmlFormUtil {
 					e.printStackTrace();
 				}
 				
-				if (htmlForm != null /*&& whiteList.contains(targetUuid)*/) {
+				if (htmlForm != null && !blackList.contains(targetUuid)) {
 					System.out.println("Html Form: " + htmlForm.getUuid() + " , Name: " + htmlForm.getName());
 					
-					ObjectNode generatedFormEtl = JsonNodeFactory.instance.objectNode();
-					
-					HtmlFormToJsonSchemaModel schema = new HtmlFormToJsonSchemaModel(targetUuid, htmlForm.getName());
+					ObjectNode formObject = JsonNodeFactory.instance.objectNode();
 					
 					formHtml = htmlForm.getXmlData();
-					generatedFormEtl.put("uuid", targetUuid);
-					generatedFormEtl.put("formName", htmlForm.getName());
+					formObject.put("uuid", targetUuid);
+					formObject.put("formName", htmlForm.getName());
 					
 					Document doc = Jsoup.parse(formHtml);
-					for (Element element : doc.select("repeat")) {
-						element.remove();
-					}
-					
-					for (Element element : doc.select("obsgroup")) {
-						element.remove();
-					}
 					
 					Element htmlform = doc.select("htmlform").first();
-					Elements obsTags = htmlform.select("obs");
-					Set<HtmlFormDataPoint> dataPoints = new HashSet<HtmlFormDataPoint>();
-					for (Element obsTag : obsTags) {
-						String conceptUUId = obsTag.attr("conceptId");
-						
-						Concept concept = getConceptByUuidOrId(conceptUUId);
-						
-						if (concept == null) {
-							System.out.println("Concept UUID Invalid: " + conceptUUId);
-							continue;
-						}
-						HtmlFormDataPoint dataPoint = new HtmlFormDataPoint();
-						String requiredField = obsTag.attr("required");
-						if (StringUtils.isNotBlank(requiredField) && requiredField.equals("true")) {
-							dataPoint.setRequiredField(true);
-						}
-						
-						String cUuid = concept.getUuid();
-						//String dataType = getConceptDatatype(concept);
-						dataPoint.setConceptUUID(cUuid);
-						
-						dataPoint.setConceptId(concept.getConceptId());
-						dataPoint.setConceptName(concept.getName().getName());
-						dataPoint.setDataType("obs");
-						dataPoints.add(dataPoint);
-						
-					}
-					schema.setDataPoints(dataPoints);
-					generatedFormEtl.put("dataPoints", String.valueOf(dataPoints.size()));
-					generatedFormList.add(generatedFormEtl);
+					Elements obsTags = htmlform.select("obs,obsgroup");
+					
+					formObject.put("dataPoints", String.valueOf(obsTags.size()));
+					generatedFormList.add(formObject);
 				}
 			}
 		}
@@ -290,6 +258,12 @@ public class HtmlFormUtil {
 		return true;
 	}
 	
+	/**
+	 * Writes to a file
+	 * 
+	 * @param fileName
+	 * @param formContent
+	 */
 	public static void createFile(String fileName, String formContent) {
 		try {
 			
@@ -300,7 +274,6 @@ public class HtmlFormUtil {
 			output.write(formContent);
 			output.flush();
 			output.close();
-			System.out.println("Successfully wrote to the file.");
 		}
 		catch (IOException e) {
 			System.out.println("An error occurred while writing to " + fileName);
@@ -358,6 +331,12 @@ public class HtmlFormUtil {
 		return concept.getUuid();
 	}
 	
+	/**
+	 * Generates file name from form name as configured in the EMR It removes any special characters
+	 * 
+	 * @param formName
+	 * @return cleaned name
+	 */
 	public static String generateFileNameFromHtmlForm(String formName) {
 		if (StringUtils.isBlank(formName)) {
 			return null;
@@ -366,6 +345,8 @@ public class HtmlFormUtil {
 		formName = formName.replaceAll("\\s+", "_");
 		formName = formName.replaceAll("[-+.^:,]", "_");
 		formName = formName.replaceAll("'", "_");
+		formName = formName.replaceAll("\\\\", "_");
+		formName = formName.replaceAll("\\/", "_");
 		formName = formName.replaceAll("\\(", "_");
 		formName = formName.replaceAll("\\)", "_");
 		;
@@ -373,6 +354,11 @@ public class HtmlFormUtil {
 		return formName;
 	}
 	
+	/**
+	 * Gets the configured path where html form schema are dumped
+	 * 
+	 * @return
+	 */
 	public static String getGeneratedHtmlResourcePath() {
 		GlobalProperty globalPropertyObject = Context.getAdministrationService().getGlobalPropertyObject(
 		    AfyaStatMetadata.GENERATED_HTML_RESOURCE_PATH);
@@ -437,6 +423,26 @@ public class HtmlFormUtil {
 		}
 		
 		return isGrouped;
+	}
+	
+	/**
+	 * Checks if a given obs group is a repeat
+	 * 
+	 * @param obs
+	 * @return
+	 */
+	public static boolean isRepeat(Element obs) {
+		boolean isRepeat = false;
+		Elements parents = obs.parents();
+		for (Element parent : parents) {
+			
+			if (parent.normalName().equals("repeat")) {
+				isRepeat = true;
+				break;
+			}
+		}
+		
+		return isRepeat;
 	}
 	
 	/**
