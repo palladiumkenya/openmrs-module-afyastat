@@ -78,7 +78,7 @@ public class HtmlObsTagExtractor {
 				if (StringUtils.isNotBlank(answerLabels)) {
 					labelsArray = answerLabels.split(",");
 				}
-				
+
 				boolean hasCustomLabels = labelsArray != null && labelsArray.length > 0;
 				for (int i = 0; i < conceptArray.length; i++) {
 					Concept ansConcept = HtmlFormUtil.getConceptByUuidOrId(conceptArray[i].trim());
