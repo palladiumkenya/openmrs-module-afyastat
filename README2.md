@@ -9,6 +9,13 @@ HFE forms in KenyaEMR were used to guide the process and therefore may not cover
 
 The focus has been to generate the equivalent schema for the commonly used HFE tags i.e. obs and obsgroup.
 
+How the code works
+--------------------
+1. The HFE schema for a form is loaded from a file. jsoup, https://jsoup.org/, library is used to read the HFE schema
+2. The code loops through the schema and extracts obs and obsgroup tags using appropriate extractors
+3. Appropriate renderers generate the JSON schema for the tags
+4. A complete array of questions schema is generated
+
 
 What's working
 --------------------
@@ -30,13 +37,11 @@ What's working
 													 answerLabel="Oral Contraceptives Pills" style="checkbox" /><br/>
     <obs conceptId="374AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" answerConceptId="5279AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 													 answerLabel="Injectible" style="checkbox" /><br/>
-
-
-
 What's pending
 ------------
 1. Support for other tags other than obs and obsgroup
 2. Generation of pages and sections - this is all manual
+3. Validations?
 
 Code organization
 -----------------
