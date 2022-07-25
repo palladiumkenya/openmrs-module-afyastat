@@ -17,9 +17,13 @@ jobs:
         port: ${{ secrets.PORT }}
         command_timeout: 200m
         script: |
+          cd apps/github-workflows/kenyaemr-modules
+          sudo rm -rf openmrs-module-afyastat 
+          sudo mkdir openmrs-module-afyastat 
+          sudo chown -R cicd2:cicd2 openmrs-module-afyastat 
           git config --global --add safe.directory /apps/github-workflows/kenyaemr-modules/openmrs-module-afyastat      
           cd /apps/github-workflows/kenyaemr-modules/openmrs-module-afyastat
-          git pull origin master
+          git clone -b master https://github.com/palladiumkenya/openmrs-module-afyastat.git
           git status
           mvn clean install -DskipTests
           sudo rm -rf /var/lib/OpenMRS/modules/afyastat-*.omod
