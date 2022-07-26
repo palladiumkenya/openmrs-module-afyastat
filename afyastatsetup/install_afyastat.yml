@@ -16,6 +16,18 @@
   - name: Copy installation Package 
     shell: "cp -r medic /opt/afyastat"
     
+  - name: Create Folder etc/pihole
+    file: 
+       path: /etc/piholesss/
+       owner: root
+       group: root
+       mode: 0777 
+       recurse: yes
+       state: directory
+       
+  - name: Copy installation Package 
+    shell: "cp -r medic /opt/afyastat"
+    
   - name: Assign rights to directoty 
     shell: "chmod -R 0777 /opt/afyastat/medic"
        
@@ -235,6 +247,15 @@
         backup: yes
     register: etchostsupdate 
     
+  - name: Copy pihole to etc/pihole 
+    shell: "mv --force /opt/afyastat/medic/etc-pihole/ /etc/pihole"
+    
+    #Rename the directory from etc-pihle to etc
+    
+    
+  - name: Assign rights to directoty 
+    shell: "chmod -R 0777 /etc/pihole"
+    
     
     ######################################################################################## 
   - name: Installing Medic-OS
@@ -277,9 +298,9 @@
   - name: Uploading AfyaStat Forms
     shell: python3 -m pip install git+https://github.com/medic/pyxform.git@medic-conf-1.17#egg=pyxform-medic
     
-  - name: Waiting for AfyaStat to Start https://cht.hmislocal.org. Please Wait !!!
+  - name: Waiting for AfyaStat to Start. Please Wait !!!
     uri:
-     url: "https://cht.hmislocal.org"
+     url: "http://localhost:5988"
      status_code: [200,301]
     register: result
     until: result.status == 200
@@ -287,7 +308,7 @@
     delay: 30
 
   - name: Uploading AfyaStat Forms
-    command: medic-conf --url=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@cht.hmislocal.org upload-app-settings delete-all-forms upload-app-forms upload-contact-forms upload-resources upload-custom-translations --accept-self-signed-certs
+    command: medic-conf --url=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@localhost:5988 upload-app-settings delete-all-forms upload-app-forms upload-contact-forms upload-resources upload-custom-translations --accept-self-signed-certs
     args:
      chdir: /opt/afyastat/medic/AfyaStatForms
 
