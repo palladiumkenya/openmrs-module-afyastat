@@ -287,17 +287,12 @@
     delay: 30
 
   - name: Uploading AfyaStat Forms
-    command: medic-conf --url=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@localhost:5988 upload-app-settings delete-all-forms upload-app-forms upload-contact-forms upload-resources upload-custom-translations --accept-self-signed-certs
+    command: medic-conf --url=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@cht.hmislocal.org upload-app-settings delete-all-forms upload-app-forms upload-contact-forms upload-resources upload-custom-translations --accept-self-signed-certs
     args:
      chdir: /opt/afyastat/medic/AfyaStatForms
 
         
   - name: "Show Network Interfaces"
     command: hostname -I
-    #register: details
-    
-    #Edit customlist
-    #192.168.100.6 cht.hmislocal.org
-    #192.168.100.6 dns.hmislocal.org
         
   
