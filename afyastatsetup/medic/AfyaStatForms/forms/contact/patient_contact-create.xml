@@ -1,0 +1,472 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>New Contact</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/data/patient_contact/age_years:jr:constraintMsg">
+            <value>Age must be between 0 and 130</value>
+          </text>
+          <text id="/data/patient_contact/booking_date:jr:constraintMsg">
+            <value>Booking date cannot be in the past</value>
+          </text>
+          <text id="/data/patient_contact/date_of_birth:jr:constraintMsg">
+            <value>Date cannot be in the future.</value>
+          </text>
+          <text id="/data/patient_contact/dob_calendar:jr:constraintMsg">
+            <value>Date must be before today</value>
+          </text>
+          <text id="/data/patient_contact/f_name:jr:constraintMsg">
+            <value>Accepts only alphabets with the first letter capitalized</value>
+          </text>
+          <text id="/data/patient_contact/o_name:jr:constraintMsg">
+            <value>Accepts only alphabets with the first letter capitalized</value>
+          </text>
+          <text id="/data/patient_contact/phone:jr:constraintMsg">
+            <value>Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678</value>
+          </text>
+          <text id="/data/patient_contact/s_name:jr:constraintMsg">
+            <value>Accepts only alphabets with the first letter capitalized</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data delimiter="#" id="contact:patient_contact:create" prefix="J1!contact:patient_contact:create!" version="2022-05-17 14:17:26">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <user>
+              <contact_id/>
+              <facility_id/>
+              <name/>
+              <parent>
+                <kemr_uuid/>
+              </parent>
+            </user>
+          </inputs>
+          <patient_contact>
+            <type>contact</type>
+            <contact_type>person</contact_type>
+            <parent>PARENT</parent>
+            <role>person</role>
+            <record_originator>cht</record_originator>
+            <n_demographics/>
+            <s_name/>
+            <f_name/>
+            <o_name/>
+            <name/>
+            <patient_name/>
+            <sex/>
+            <dob_known/>
+            <dob_calendar/>
+            <age_years/>
+            <ephemeral_years/>
+            <month_today/>
+            <day_today/>
+            <adjusted_yob/>
+            <dob_approx/>
+            <dob_raw/>
+            <dob_iso/>
+            <dob_note/>
+            <age_in_years/>
+            <age_in_months/>
+            <date_of_birth/>
+            <calculated_age/>
+            <head_of_household/>
+            <marital_status_under15/>
+            <marital_status_over15/>
+            <marital_status/>
+            <n_confirm/>
+            <demographics_delimiter/>
+            <n_address/>
+            <physical_address/>
+            <phone/>
+            <address_delimiter/>
+            <n_relationship_details/>
+            <contact_relationship/>
+            <relationship_delimiter/>
+            <ipv_questions/>
+            <ipv_physical/>
+            <ipv_threats/>
+            <ipv_sexual/>
+            <ipv_outcome/>
+            <ipv_outcome_note/>
+            <index_testing_alert/>
+            <living_with_client/>
+            <ipv_delimiter/>
+            <basline_info/>
+            <baseline_hiv_status/>
+            <booking_date/>
+            <pns_approach/>
+            <baseline_delimiter/>
+            <meta tag="hidden">
+              <created_by/>
+              <created_by_person_uuid/>
+              <created_by_place_uuid/>
+            </meta>
+          </patient_contact>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/inputs" relevant="0"/>
+      <bind nodeset="/data/inputs/user/contact_id" type="string"/>
+      <bind nodeset="/data/inputs/user/facility_id" type="string"/>
+      <bind nodeset="/data/inputs/user/name" type="string"/>
+      <bind nodeset="/data/inputs/user/parent/kemr_uuid" type="string"/>
+      <bind nodeset="/data/patient_contact/type" type="string"/>
+      <bind nodeset="/data/patient_contact/contact_type" type="string"/>
+      <bind nodeset="/data/patient_contact/parent" type="string"/>
+      <bind nodeset="/data/patient_contact/role" type="string"/>
+      <bind nodeset="/data/patient_contact/record_originator" type="string"/>
+      <bind nodeset="/data/patient_contact/n_demographics" readonly="true()" type="string"/>
+      <bind constraint="regex(., '^[A-Z]{1}[a-z]{1,14}$')" jr:constraintMsg="jr:itext('/data/patient_contact/s_name:jr:constraintMsg')" nodeset="/data/patient_contact/s_name" required="true()" type="string"/>
+      <bind constraint="regex(., '^[A-Z]{1}[a-z]{1,14}$')" jr:constraintMsg="jr:itext('/data/patient_contact/f_name:jr:constraintMsg')" nodeset="/data/patient_contact/f_name" required="true()" type="string"/>
+      <bind constraint="regex(., '^[A-Z]{1}[a-z]{1,14}$')" jr:constraintMsg="jr:itext('/data/patient_contact/o_name:jr:constraintMsg')" nodeset="/data/patient_contact/o_name" type="string"/>
+      <bind calculate="concat( /data/patient_contact/f_name , ' ',  /data/patient_contact/o_name , ' ',  /data/patient_contact/s_name )" nodeset="/data/patient_contact/name" type="string"/>
+      <bind calculate="../name" nodeset="/data/patient_contact/patient_name" type="string"/>
+      <bind nodeset="/data/patient_contact/sex" required="true()" type="select1"/>
+      <bind nodeset="/data/patient_contact/dob_known" required="true()" type="select1"/>
+      <bind constraint="floor(decimal-date-time(.)) &lt;= floor(decimal-date-time(today())) and floor( difference-in-months( . , today() ) div 12 ) &lt;= 100" jr:constraintMsg="jr:itext('/data/patient_contact/dob_calendar:jr:constraintMsg')" nodeset="/data/patient_contact/dob_calendar" relevant=" /data/patient_contact/dob_known  = 'yes'" required="true()" type="date"/>
+      <bind constraint=". &gt;= 0 and . &lt;= 100" jr:constraintMsg="jr:itext('/data/patient_contact/age_years:jr:constraintMsg')" nodeset="/data/patient_contact/age_years" relevant=" /data/patient_contact/dob_known  != 'yes'" required="true()" type="int"/>
+      <bind calculate="if(format-date-time(today(),&quot;%m&quot;) -  /data/patient_contact/age_years  &lt; 0, format-date-time(today(),&quot;%Y&quot;) -  /data/patient_contact/age_years  - 1, format-date-time(today(),&quot;%Y&quot;) -  /data/patient_contact/age_years )" nodeset="/data/patient_contact/ephemeral_years" type="string"/>
+      <bind calculate="format-date-time(today(),&quot;%m&quot;)" nodeset="/data/patient_contact/month_today" type="string"/>
+      <bind calculate="format-date-time(today(),&quot;%e&quot;)" nodeset="/data/patient_contact/day_today" type="string"/>
+      <bind calculate="if( /data/patient_contact/month_today &gt;= 6 and  /data/patient_contact/day_today &gt;=15, /data/patient_contact/ephemeral_years ,  /data/patient_contact/ephemeral_years -1)" nodeset="/data/patient_contact/adjusted_yob" type="string"/>
+      <bind calculate="date(concat(string( /data/patient_contact/adjusted_yob ),'-','06','-','16'))" nodeset="/data/patient_contact/dob_approx" type="string"/>
+      <bind calculate="if( /data/patient_contact/dob_known  = 'yes',  /data/patient_contact/dob_calendar , /data/patient_contact/dob_approx )" nodeset="/data/patient_contact/dob_raw" type="string"/>
+      <bind calculate="format-date(decimal-date-time(../dob_raw),&quot;%Y-%m-%d&quot;)" nodeset="/data/patient_contact/dob_iso" type="string"/>
+      <bind nodeset="/data/patient_contact/dob_note" readonly="true()" relevant="0" type="string"/>
+      <bind calculate="floor( difference-in-months(  /data/patient_contact/date_of_birth , today() ) div 12 )" nodeset="/data/patient_contact/age_in_years" type="string"/>
+      <bind calculate="difference-in-months(  /data/patient_contact/date_of_birth , today() )" nodeset="/data/patient_contact/age_in_months" type="string"/>
+      <bind calculate=" /data/patient_contact/dob_iso " constraint=". &lt; today()" jr:constraintMsg="jr:itext('/data/patient_contact/date_of_birth:jr:constraintMsg')" nodeset="/data/patient_contact/date_of_birth" type="string"/>
+      <bind calculate="floor( difference-in-months( if( /data/patient_contact/dob_known  = '_1065_Yes_99DCT',  /data/patient_contact/dob_calendar , /data/patient_contact/date_of_birth ), today() ) div 12 )" nodeset="/data/patient_contact/calculated_age" type="string"/>
+      <bind nodeset="/data/patient_contact/head_of_household" type="string"/>
+      <bind nodeset="/data/patient_contact/marital_status_under15" relevant=" /data/patient_contact/calculated_age  &gt;=11 and  /data/patient_contact/calculated_age  &lt;=14" type="select1"/>
+      <bind nodeset="/data/patient_contact/marital_status_over15" relevant=" /data/patient_contact/calculated_age  &gt;=15" type="select1"/>
+      <bind calculate="if( /data/patient_contact/marital_status_under15  != '',  /data/patient_contact/marital_status_under15 , /data/patient_contact/marital_status_over15 )" nodeset="/data/patient_contact/marital_status" type="string"/>
+      <bind nodeset="/data/patient_contact/n_confirm" readonly="true()" relevant="selected( /data/patient_contact/marital_status_under15 ,'married_polygamous') or selected( /data/patient_contact/marital_status_under15 ,'married_monogamous') or 
+selected( /data/patient_contact/marital_status_under15 ,'divorced') or 
+selected( /data/patient_contact/marital_status_under15 ,'widowed') or 
+selected( /data/patient_contact/marital_status_under15 ,'cohabiting')" type="string"/>
+      <bind nodeset="/data/patient_contact/demographics_delimiter" readonly="true()" type="string"/>
+      <bind nodeset="/data/patient_contact/n_address" readonly="true()" type="string"/>
+      <bind nodeset="/data/patient_contact/physical_address" required="false()" type="string"/>
+      <bind constraint="regex(.,'^([+]?[1-9]{3})([0-9]{9})$') or regex(.,'^[0-9]{10}$')" jr:constraintMsg="jr:itext('/data/patient_contact/phone:jr:constraintMsg')" nodeset="/data/patient_contact/phone" required="false()" type="string"/>
+      <bind nodeset="/data/patient_contact/address_delimiter" readonly="true()" type="string"/>
+      <bind nodeset="/data/patient_contact/n_relationship_details" readonly="true()" type="string"/>
+      <bind nodeset="/data/patient_contact/contact_relationship" required="true()" type="select1"/>
+      <bind nodeset="/data/patient_contact/relationship_delimiter" readonly="true()" type="string"/>
+      <bind nodeset="/data/patient_contact/ipv_questions" readonly="true()" relevant="selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')" type="string"/>
+      <bind nodeset="/data/patient_contact/ipv_physical" relevant="selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')" required="true()" type="select1"/>
+      <bind nodeset="/data/patient_contact/ipv_threats" relevant="selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')" required="true()" type="select1"/>
+      <bind nodeset="/data/patient_contact/ipv_sexual" relevant="selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')" required="true()" type="select1"/>
+      <bind calculate="if( /data/patient_contact/ipv_physical ='yes'or  /data/patient_contact/ipv_threats ='yes'or  /data/patient_contact/ipv_sexual ='yes','Yes','No')" nodeset="/data/patient_contact/ipv_outcome" relevant="selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')" type="string"/>
+      <bind nodeset="/data/patient_contact/ipv_outcome_note" readonly="true()" relevant="selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')" type="string"/>
+      <bind nodeset="/data/patient_contact/index_testing_alert" readonly="true()" relevant="((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'Yes'))" type="string"/>
+      <bind nodeset="/data/patient_contact/living_with_client" relevant="((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'No')) or selected( /data/patient_contact/contact_relationship , 'father') or selected( /data/patient_contact/contact_relationship , 'mother') or selected( /data/patient_contact/contact_relationship , 'child') or selected( /data/patient_contact/contact_relationship , 'sibling')" required="true()" type="select1"/>
+      <bind nodeset="/data/patient_contact/ipv_delimiter" readonly="true()" relevant="((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'No')) or selected( /data/patient_contact/contact_relationship , 'father') or selected( /data/patient_contact/contact_relationship , 'mother') or selected( /data/patient_contact/contact_relationship , 'child') or selected( /data/patient_contact/contact_relationship , 'sibling')" type="string"/>
+      <bind nodeset="/data/patient_contact/basline_info" readonly="true()" relevant="((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'No')) or selected( /data/patient_contact/contact_relationship , 'father') or selected( /data/patient_contact/contact_relationship , 'mother') or selected( /data/patient_contact/contact_relationship , 'child') or selected( /data/patient_contact/contact_relationship , 'sibling')" type="string"/>
+      <bind nodeset="/data/patient_contact/baseline_hiv_status" relevant="((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'No')) or selected( /data/patient_contact/contact_relationship , 'father') or selected( /data/patient_contact/contact_relationship , 'mother') or selected( /data/patient_contact/contact_relationship , 'child') or selected( /data/patient_contact/contact_relationship , 'sibling')" required="true()" type="select1"/>
+      <bind constraint="floor(decimal-date-time(.)) &gt;= floor(decimal-date-time(today())) and floor( difference-in-months( . , today() ) div 12 ) &lt;= 100" jr:constraintMsg="jr:itext('/data/patient_contact/booking_date:jr:constraintMsg')" nodeset="/data/patient_contact/booking_date" relevant="(((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'No')) or selected( /data/patient_contact/contact_relationship , 'father') or selected( /data/patient_contact/contact_relationship , 'mother') or selected( /data/patient_contact/contact_relationship , 'child') or selected( /data/patient_contact/contact_relationship , 'sibling')) and (selected( /data/patient_contact/baseline_hiv_status , 'unknown') or selected( /data/patient_contact/baseline_hiv_status , 'negative') or selected( /data/patient_contact/baseline_hiv_status , 'exposed_infant'))" type="date"/>
+      <bind nodeset="/data/patient_contact/pns_approach" relevant="((selected( /data/patient_contact/contact_relationship , 'partner') or selected( /data/patient_contact/contact_relationship , 'spouse')) and selected( /data/patient_contact/ipv_outcome , 'No'))" type="select1"/>
+      <bind nodeset="/data/patient_contact/baseline_delimiter" readonly="true()" type="string"/>
+      <bind calculate="../../../inputs/user/name" nodeset="/data/patient_contact/meta/created_by" type="string"/>
+      <bind calculate="../../../inputs/user/contact_id" nodeset="/data/patient_contact/meta/created_by_person_uuid" type="string"/>
+      <bind calculate="../../../inputs/user/facility_id" nodeset="/data/patient_contact/meta/created_by_place_uuid" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/inputs">
+      <label></label>
+      <group ref="/data/inputs/user">
+        <label></label>
+        <input ref="/data/inputs/user/contact_id">
+          <label></label>
+        </input>
+        <input ref="/data/inputs/user/facility_id">
+          <label></label>
+        </input>
+        <input ref="/data/inputs/user/name">
+          <label></label>
+        </input>
+        <group ref="/data/inputs/user/parent"/>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/patient_contact">
+      <label>Registration Details</label>
+      <input ref="/data/patient_contact/n_demographics">
+        <label>**&lt;span style="color:blue"&gt;Demographics&lt;/span&gt;**</label>
+      </input>
+      <input ref="/data/patient_contact/s_name">
+        <label>Surname</label>
+      </input>
+      <input ref="/data/patient_contact/f_name">
+        <label>First name</label>
+      </input>
+      <input ref="/data/patient_contact/o_name">
+        <label>Other name(s)</label>
+      </input>
+      <select1 ref="/data/patient_contact/sex">
+        <label>Sex</label>
+        <item>
+          <label>Male</label>
+          <value>male</value>
+        </item>
+        <item>
+          <label>Female</label>
+          <value>female</value>
+        </item>
+      </select1>
+      <select1 ref="/data/patient_contact/dob_known">
+        <label>Does <output value=" /data/patient_contact/patient_name "/> know their date of birth?</label>
+        <item>
+          <label>Yes</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/dob_calendar">
+        <label>Date of Birth</label>
+      </input>
+      <input ref="/data/patient_contact/age_years">
+        <label>Estimated Age (years)</label>
+      </input>
+      <input ref="/data/patient_contact/dob_note">
+        <label>DOB ISO: <output value=" /data/patient_contact/dob_iso "/></label>
+      </input>
+      <select1 appearance="minimal" ref="/data/patient_contact/marital_status_under15">
+        <label>Marital status</label>
+        <item>
+          <label>Married polygamous</label>
+          <value>married_polygamous</value>
+        </item>
+        <item>
+          <label>Married monogamous</label>
+          <value>married_monogamous</value>
+        </item>
+        <item>
+          <label>Divorced</label>
+          <value>divorced</value>
+        </item>
+        <item>
+          <label>Widowed</label>
+          <value>widowed</value>
+        </item>
+        <item>
+          <label>Cohabiting</label>
+          <value>cohabiting</value>
+        </item>
+        <item>
+          <label>Single</label>
+          <value>single</value>
+        </item>
+      </select1>
+      <select1 appearance="minimal" ref="/data/patient_contact/marital_status_over15">
+        <label>Marital status</label>
+        <item>
+          <label>Married polygamous</label>
+          <value>married_polygamous</value>
+        </item>
+        <item>
+          <label>Married monogamous</label>
+          <value>married_monogamous</value>
+        </item>
+        <item>
+          <label>Divorced</label>
+          <value>divorced</value>
+        </item>
+        <item>
+          <label>Widowed</label>
+          <value>widowed</value>
+        </item>
+        <item>
+          <label>Cohabiting</label>
+          <value>cohabiting</value>
+        </item>
+        <item>
+          <label>Single</label>
+          <value>single</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/n_confirm">
+        <label>**&lt;span style="color:blue"&gt;Please confirm if this person is married before proceeding&lt;/span&gt;**</label>
+      </input>
+      <input ref="/data/patient_contact/demographics_delimiter">
+        <label>&lt;hr style="margin:0 auto;"&gt;</label>
+      </input>
+      <input ref="/data/patient_contact/n_address">
+        <label>**&lt;span style="color:blue"&gt;Address&lt;/span&gt;**</label>
+      </input>
+      <input ref="/data/patient_contact/physical_address">
+        <label>Physical Address/Landmark</label>
+      </input>
+      <input ref="/data/patient_contact/phone">
+        <label>Phone No.</label>
+        <hint>Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678</hint>
+      </input>
+      <input ref="/data/patient_contact/address_delimiter">
+        <label>&lt;hr style="margin:0 auto;"&gt;</label>
+      </input>
+      <input ref="/data/patient_contact/n_relationship_details">
+        <label>**&lt;span style="color:blue"&gt;Relationship to Client&lt;/span&gt;**</label>
+      </input>
+      <select1 appearance="minimal" ref="/data/patient_contact/contact_relationship">
+        <label>Relationship to client</label>
+        <item>
+          <label>Partner</label>
+          <value>partner</value>
+        </item>
+        <item>
+          <label>Spouse</label>
+          <value>spouse</value>
+        </item>
+        <item>
+          <label>Father</label>
+          <value>father</value>
+        </item>
+        <item>
+          <label>Mother</label>
+          <value>mother</value>
+        </item>
+        <item>
+          <label>Sibling</label>
+          <value>sibling</value>
+        </item>
+        <item>
+          <label>Child</label>
+          <value>child</value>
+        </item>
+        <item>
+          <label>SNS</label>
+          <value>SNS</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/relationship_delimiter">
+        <label>&lt;hr style="margin:0 auto;"&gt;</label>
+      </input>
+      <input ref="/data/patient_contact/ipv_questions">
+        <label>**&lt;span style="color:blue"&gt;IPV screening questions&lt;/span&gt;**</label>
+      </input>
+      <select1 ref="/data/patient_contact/ipv_physical">
+        <label>Has he/she ever hit, kicked, slapped, or otherwise physically hurt you?</label>
+        <item>
+          <label>Yes</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>no</value>
+        </item>
+      </select1>
+      <select1 ref="/data/patient_contact/ipv_threats">
+        <label>Has he/she ever threatened to hurt you?</label>
+        <item>
+          <label>Yes</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>no</value>
+        </item>
+      </select1>
+      <select1 ref="/data/patient_contact/ipv_sexual">
+        <label>Has he/she ever forced you to do something sexually that made you feel uncomfortable?</label>
+        <item>
+          <label>Yes</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>no</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/ipv_outcome_note">
+        <label>&lt;h4 style=&quot;text-align:center;color:green&quot;&gt;IPV screening outcome: <output value=" /data/patient_contact/ipv_outcome "/>&lt;/h4&gt;</label>
+      </input>
+      <input ref="/data/patient_contact/index_testing_alert">
+        <label>&lt;h4 style="text-align:center;color:red;font-weight:bold"&gt;IPV is positive, this contact will not be available for Index testing&lt;/h4&gt;</label>
+      </input>
+      <select1 appearance="minimal" ref="/data/patient_contact/living_with_client">
+        <label>Living with client</label>
+        <item>
+          <label>Yes</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>no</value>
+        </item>
+        <item>
+          <label>Declined to answer</label>
+          <value>na</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/ipv_delimiter">
+        <label>&lt;hr style="margin:0 auto;"&gt;</label>
+      </input>
+      <input ref="/data/patient_contact/basline_info">
+        <label>**&lt;span style="color:blue"&gt;Baseline information&lt;/span&gt;**</label>
+      </input>
+      <select1 ref="/data/patient_contact/baseline_hiv_status">
+        <label>HIV status</label>
+        <item>
+          <label>Unknown</label>
+          <value>unknown</value>
+        </item>
+        <item>
+          <label>Positive</label>
+          <value>positive</value>
+        </item>
+        <item>
+          <label>Negative</label>
+          <value>negative</value>
+        </item>
+        <item>
+          <label>Exposed Infant</label>
+          <value>exposed_infant</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/booking_date">
+        <label>Booking Date</label>
+      </input>
+      <select1 ref="/data/patient_contact/pns_approach">
+        <label>Preferred PNS Approach</label>
+        <item>
+          <label>Dual Referral</label>
+          <value>dual_referral</value>
+        </item>
+        <item>
+          <label>Provider Referral</label>
+          <value>provider_referral</value>
+        </item>
+        <item>
+          <label>Client Referral</label>
+          <value>passive_referral</value>
+        </item>
+        <item>
+          <label>Contract Referral</label>
+          <value>contract_referral</value>
+        </item>
+      </select1>
+      <input ref="/data/patient_contact/baseline_delimiter">
+        <label>&lt;hr style="margin:0 auto;"&gt;</label>
+      </input>
+      <group appearance="hidden" ref="/data/patient_contact/meta">
+        <label></label>
+      </group>
+    </group>
+  </h:body>
+</h:html>

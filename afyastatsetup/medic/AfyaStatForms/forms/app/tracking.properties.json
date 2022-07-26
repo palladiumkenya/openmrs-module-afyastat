@@ -1,0 +1,9 @@
+{
+  "icon": "icon-form-general",
+  "title": "KP LTFU Tracking",
+  "context": {
+    "person": false,
+    "place": true,
+    "expression": "!contact.muted && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && contact.contact_type == 'universal_client' && (user.role === 'kp_peer_educator' || user.role === 'clinician') && (!(summary.screenedToday && summary.lastHtsService !== ''))"
+  }
+}

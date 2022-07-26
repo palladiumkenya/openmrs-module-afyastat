@@ -1,0 +1,10 @@
+{
+        "icon": "icon-form-general",
+        "title": "HTS Retest Form",
+        "context": {
+                "person": false,
+                "place": true,
+                "expression": "(user.role === 'hts_provider' || user.role === 'clinician') && !contact.muted && contact.contact_type === 'universal_client' && contact.record_purpose !== 'linkage' && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && ((((summary.screenedToday && summary.lastHtsService === 'confirmPositiveResult' && summary.hts_latest_form.form_type === 'hts_screening_form') || (summary.screenedToday && summary.hts_latest_form.form_type === 'hts_initial_form' && summary.hts_initial_latest.final_result === '_703_positive_99DCT'))) || ((summary.screenedToday && summary.hts_latest_form.form_type === 'hts_retest_form' && summary.hts_retest_latest.final_result !== '_703_positive_99DCT')))"
+        }
+
+}

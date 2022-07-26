@@ -1,0 +1,298 @@
+---
+- hosts: localhost
+  become_method: sudo
+  become: true
+
+  tasks:
+  - name: Create Folder opt/afyastat/medic
+    file: 
+       path: /opt/afyastat/
+       owner: root
+       group: root
+       mode: 0777 
+       recurse: yes
+       state: directory
+       
+  - name: Copy installation Package 
+    shell: "cp -r medic /opt/afyastat"
+    
+  - name: Assign rights to directoty 
+    shell: "chmod -R 0777 /opt/afyastat/medic"
+       
+  - name: install curl 
+    apt:
+        name: curl
+        state: present
+  - name: Free port 53
+    shell: sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
+    shell: sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
+    shell: systemctl restart systemd-resolved 
+    
+  - debug: var=ansible_enp0s3.ipv4.address  
+  - debug: var=ansible_all_ipv4_addresses
+  - debug: var=ansible_default_ipv4.address
+    
+  - name: Update the /etc/hosts file with dns.hmislocal.org name
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/etc/hosts"
+        line: "{{ ansible_default_ipv4.address }}\tdns.hmislocal.org"
+        state: present
+        backup: yes
+    register: etchostsupdate
+    
+  - name: Update the /etc/hosts file with cht.hmislocal.org name
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/etc/hosts"
+        line: "{{ ansible_default_ipv4.address }}\tcht.hmislocal.org"
+        state: present
+        backup: yes
+    register: etchostsupdate
+    
+    
+  - name: Set DOCKER_COUCHDB_ADMIN_PASSWORD=cb6f4d4b-73cc-4c42-97cb-0db5a631190a
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/etc/environment"
+        line: "DOCKER_COUCHDB_ADMIN_PASSWORD=cb6f4d4b-73cc-4c42-97cb-0db5a631190a"
+        state: present
+        backup: yes
+    register: etchostsupdate
+    
+  - name: Set COUCH_URL=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@localhost:5988/medic
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/etc/environment"
+        line: "COUCH_URL=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@localhost:5988/medic"
+        state: present
+        backup: yes
+    register: etchostsupdate
+    
+  - name: Set COUCH_NODE_NAME=onode@nohost
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/etc/environment"
+        line: "COUCH_NODE_NAME=onode@nohost"
+        state: present
+        backup: yes
+    register: etchostsupdate
+    
+    #- name: Refresh /etc/enviomenyt Sources
+    #shell: source /etc/environment
+    #----------------------------------------------------------------------------------------
+  - name: Concatenating Keys to be used 
+    shell: 
+     cmd: cat hmislocal.key hmislocal.crt > lighttpd.key.and.pem.pem
+     chdir: /opt/afyastat/medic/tls-certs
+    
+  - name: Concatenating Keys to be used 
+    shell: 
+     cmd: cat hmislocal.crt bundle.crt > server.chained.pem
+     chdir: /opt/afyastat/medic/tls-certs
+    
+  - name: Assign rights to directoty 
+    shell: "chmod -R 0777 /opt/afyastat/medic/tls-certs"
+    
+  - name: Copy installation Package 
+    shell: "cp -r medic/tls-certs /etc"
+    
+  - name: Assign rights to directoty 
+    shell: "chmod -R 0777 /etc/tls-certs"
+    
+    
+   # --------------------------------------------------------------------------------------     
+  - name: apt update
+    apt:
+       update-cache: yes
+       
+  - name: apt-get install apt-transport-https ca-certificates curl software-properties-common
+    apt:  
+    
+  - name: Install docker packages
+    remote_user: ubuntu
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    tags:
+      - docker
+  - name: Add Docker s official GPG key
+    remote_user: ubuntu
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+    tags:
+      - docker
+  - name: Verify that we have the key with the fingerprint
+    remote_user: ubuntu
+    apt_key:
+      id: 0EBFCD88
+      state: present
+    tags:
+      - docker
+  - name: Set up the stable repository
+    remote_user: ubuntu
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+      state: present
+      update_cache: yes
+    tags:
+      - docker
+  - name: Update apt packages
+    remote_user: ubuntu
+    apt:
+      update_cache: yes
+    tags:
+      - docker
+  - name: Install docker
+    remote_user: ubuntu
+    apt:
+      name: docker-ce
+      state: present
+      update_cache: yes
+    #notify: Start docker on boot
+    tags:
+      - docker
+  - name: Add remote "ubuntu" user to "docker" group
+    remote_user: ubuntu
+    user:
+      name: "ubuntu"
+      group: "docker"
+      append: yes
+    tags:
+      - docker
+  - name: Install docker-compose
+    remote_user: ubuntu
+    get_url: 
+      url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 'u+x,g+x'
+      
+  - name: Installing Pi-Hole
+    become: true
+    shell:
+        cmd: "docker-compose -f pi-hole-docker-compose.yml up --detach"
+        chdir: /opt/afyastat/medic
+    ####################################################################################    
+  - name: hostname was used instead of path.   replace
+    replace:
+     path: /opt/afyastat/medic/etc-pihole/setupVars.conf
+     regexp: 'DHCP_START=192.168.2.58'
+     replace: 'DHCP_START={{ ansible_default_ipv4.address }}'
+     backup: yes
+        
+  - name: configure Pi Hole DNS & DHCP  - DHCP_ROUTER
+    replace:
+     path: /opt/afyastat/medic/etc-pihole/setupVars.conf
+     regexp: 'DHCP_ROUTER=192.168.2.1'
+     replace: 'DHCP_ROUTER={{ ansible_default_ipv4.gateway }}'
+     backup: yes
+     
+  - name: configure Pi Hole DNS & DHCP  - DHCP_ROUTER
+    replace:
+     path: /opt/afyastat/medic/etc-pihole/setupVars.conf
+     regexp: 'BLOCKING_ENABLED=true'
+     replace: 'BLOCKING_ENABLED=false'
+     backup: yes
+  
+    ###########################################################################################
+    
+  - name: configure Pi Hole static ip on dns
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/opt/afyastat/medic/etc-pihole/custom.list"
+        line: "cht.hmislocal.org {{ ansible_default_ipv4.address }}"
+        state: present
+        backup: yes
+    register: etchostsupdate 
+    
+  - name: configure Pi Hole static ip on dns
+    tags: etchostsupdate
+    become: yes
+    become_user: root
+    lineinfile:
+        path: "/opt/afyastat/medic/etc-pihole/custom.list"
+        line: "dns.hmislocal.org {{ ansible_default_ipv4.address }}"
+        state: present
+        backup: yes
+    register: etchostsupdate 
+    
+    
+    ######################################################################################## 
+  - name: Installing Medic-OS
+    become: true
+    shell:
+        cmd: "docker-compose -f cht-docker-compose-local-host.yml up --detach"
+        chdir: /opt/afyastat/medic
+        
+  - name: Getting Ready, Please to not Turn off or Press any key on the Keyboard, Relax it can take 60 seconds
+    ansible.builtin.pause:
+     minutes: 1
+    
+    #- name: Copy nginx File to Medic-os Container, Relax it can take 60 seconds
+    #shell: docker cp  /opt/afyastat/medic/nginx.conf medic-os:/srv/settings/medic-core/nginx/nginx.conf
+           
+  - name: Get all containers for restart
+    command: docker ps -a 
+    register: docker_images
+
+  - name: Restarting Medic-os container
+    shell: docker restart medic-os
+
+  - name: apt update
+    apt:
+       update-cache: yes
+
+  - name: installing nodejs
+    shell: apt -y install nodejs
+
+  - name: installing NPM
+    shell: apt -y install npm
+    
+  - name: Uploading AfyaStat Forms
+    shell: npm install -g medic-conf@3.6.0 
+  
+  - name: Installing pip AfyaStat Forms
+    shell: apt-get install -y python3-pip  
+    
+    
+  - name: Uploading AfyaStat Forms
+    shell: python3 -m pip install git+https://github.com/medic/pyxform.git@medic-conf-1.17#egg=pyxform-medic
+    
+  - name: Waiting for AfyaStat to Start. Please Wait !!!
+    uri:
+     url: "http://localhost:5988"
+     status_code: [200,301]
+    register: result
+    until: result.status == 200
+    retries: 20
+    delay: 30
+
+  - name: Uploading AfyaStat Forms
+    command: medic-conf --url=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@cht.hmislocal.org upload-app-settings delete-all-forms upload-app-forms upload-contact-forms upload-resources upload-custom-translations --accept-self-signed-certs
+    args:
+     chdir: /opt/afyastat/medic/AfyaStatForms
+
+        
+  - name: "Show Network Interfaces"
+    command: hostname -I
+        
+  
