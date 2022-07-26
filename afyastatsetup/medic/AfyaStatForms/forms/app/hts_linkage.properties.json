@@ -1,9 +1,0 @@
-{
-  "icon": "icon-form-general",
-  "title": "HTS Linkage Form",
-  "context": {
-    "person": false,
-    "place": true,
-    "expression": "(user.role === 'hts_provider' || user.role === 'clinician') && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && !contact.muted && contact.contact_type === 'universal_client' && (summary.hts_retest_latest.final_result == '_703_positive_99DCT' || summary.screenedToday && summary.lastHtsService === 'linkage' || (summary.hts_initial_latest.final_result == '_703_positive_99DCT' && summary.hts_initial_latest.referral_facility === '_164407_otherFacility_99DCT') || contact.record_purpose === 'linkage') && !summary.has_hts_linkage"
-  }
-}

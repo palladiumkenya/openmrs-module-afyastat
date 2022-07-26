@@ -1,9 +1,0 @@
-{
-        "icon": "icon-form-general",
-        "title": "PrEP Treatment Verification",
-        "context": {
-                "person": false,
-                "place": true,
-                "expression": "!contact.muted && contact.patient_birthDate && summary.contactAgeInMonths >= 18 &&  contact.contact_type === 'universal_client' && contact.record_purpose === 'prep_verification' && (user.role === 'kp_case_manager' || user.role === 'clinician') && (!(summary.screenedToday && summary.lastHtsService !== ''))"
-        }
-}

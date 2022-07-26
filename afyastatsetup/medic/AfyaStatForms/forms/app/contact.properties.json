@@ -1,9 +1,0 @@
-{
-  "icon": "icon-form-general",
-  "title": "Contact Form",
-  "context": {
-    "person": false,
-    "place": true,
-    "expression": "!contact.muted && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && contact.contact_type == 'universal_client' && !['prep_verification','treatment_verification','kp_followup'].includes(contact.record_purpose) && (user.role === 'kp_peer_educator' || user.role === 'clinician') && !summary.has_kp_contact_form && (!(summary.screenedToday && summary.lastHtsService !== ''))"
-  }
-}

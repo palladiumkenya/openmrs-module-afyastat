@@ -1,9 +1,0 @@
-{
-  "icon": "icon-form-general",
-  "title": "Start HTS encounter",
-  "context": {
-    "person": false,
-    "place": true,
-    "expression": "(user.role === 'hts_provider' || user.role === 'clinician') && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && contact.contact_type === 'universal_client' && contact.record_purpose !== 'treatment_verification' && !summary.screenedToday && contact.record_purpose !== 'linkage' && (summary.hts_retest_latest.final_result !== '_703_positive_99DCT')"
-  }
-}

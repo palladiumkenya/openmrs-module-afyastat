@@ -1,9 +1,0 @@
-{
-  "icon": "icon-calendar",
-  "title": "Peer Calendar",
-  "context": {
-    "person": false,
-    "place": true,
-    "expression": "!contact.muted && contact.contact_type == 'universal_client' && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && (user.role === 'kp_peer_educator') && (!(summary.screenedToday && summary.lastHtsService !== ''))"
-  }
-}
