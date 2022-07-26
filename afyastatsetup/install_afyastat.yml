@@ -277,9 +277,9 @@
   - name: Uploading AfyaStat Forms
     shell: python3 -m pip install git+https://github.com/medic/pyxform.git@medic-conf-1.17#egg=pyxform-medic
     
-  - name: Waiting for AfyaStat to Start. Please Wait !!!
+  - name: Waiting for AfyaStat to Start https://cht.hmislocal.org. Please Wait !!!
     uri:
-     url: "http://localhost:5988"
+     url: "https://cht.hmislocal.org"
      status_code: [200,301]
     register: result
     until: result.status == 200
