@@ -1,0 +1,9 @@
+{
+        "icon": "icon-form-general",
+        "title": "  HIV Treatment Verification",
+        "context": {
+                "person": false,
+                "place": true,
+                "expression": "!contact.muted && contact.contact_type === 'universal_client' && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && contact.record_purpose === 'treatment_verification' && (user.role === 'kp_case_manager' || user.role === 'clinician') && (!(summary.screenedToday && summary.lastHtsService !== ''))"
+        }
+}

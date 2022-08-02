@@ -1,0 +1,9 @@
+{
+        "icon": "icon-form-general",
+        "title": "HTS client tracing form",
+        "context": {
+                "person": false,
+                "place": true,
+                "expression": "(user.role === 'hts_provider' || user.role === 'clinician') && contact.patient_birthDate && summary.contactAgeInMonths >= 18 && !contact.muted && contact.contact_type == 'universal_client' && (((summary.hts_retest_latest.final_result && summary.hts_retest_latest.final_result === '_703_positive_99DCT' && !summary.hts_client_trace_latest.outcome) || (summary.hts_client_trace_latest.outcome && summary.hts_client_trace_latest.outcome != '_1065_contactedAndLinked_99DCT')) && !summary.has_hts_linkage)"
+        }
+}
