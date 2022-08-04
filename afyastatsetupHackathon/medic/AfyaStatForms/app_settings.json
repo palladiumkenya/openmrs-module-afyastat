@@ -492,7 +492,7 @@
         "cht_client_registration": {
             "relevant_to": "doc.type === 'contact' && doc.contact_type === 'universal_client' && doc.new_registration === 'yes' && (doc.record_originator && doc.record_originator === 'cht')",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",
@@ -508,7 +508,7 @@
         "cht_client_registration_update": {
             "relevant_to": "doc.type === 'contact' && doc.contact_type === 'universal_client' && doc.new_registration === 'false' && (doc.record_originator && doc.record_originator === 'cht')",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",
@@ -523,7 +523,7 @@
         "cht_form_data": {
             "relevant_to": "doc.type === 'data_record' && ['hts_initial_form','hts_retest_form','hts_referral','hts_linkage','hiv_treatment_verification','contact','prep_treatment_verification','tracking','hts_client_tracing'].includes(doc.form)",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",
@@ -539,7 +539,7 @@
         "cht_kp_peer_calendar_form_data": {
             "relevant_to": "doc.type === 'data_record' && doc.form === 'peer_calendar'",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",
@@ -555,7 +555,7 @@
         "cht_hts_screening_form": {
             "relevant_to": "doc.type === 'data_record' && ['hts_screening_form'].includes(doc.form) && (doc.fields.hts_service !== 'confirmPositiveResult' && doc.fields.hts_service !== 'linkage')",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",
@@ -571,7 +571,7 @@
         "cht_contact_listing": {
             "relevant_to": "doc.type === 'contact' && doc.contact_type === 'patient_contact' && doc.record_originator === 'cht'",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",
@@ -586,7 +586,7 @@
         "contact_follow_up": {
             "relevant_to": "doc.type === 'data_record' && doc.form === 'contact_follow_up'",
             "destination": {
-                "base_url": "https://localhost:8080/",
+                "base_url": "http://localhost:8080/",
                 "auth": {
                     "type": "basic",
                     "username": "admin",

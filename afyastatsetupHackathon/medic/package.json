@@ -1,0 +1,25 @@
+{
+  "name": "cht-couchdb-listener-covid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@medic/eslint-config": "^1.1.0",
+    "eslint": "^6.8.0"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "level": "^6.0.1",
+    "pouchdb-adapter-http": "^7.1.1",
+    "pouchdb-core": "^7.1.1",
+    "pouchdb-mapreduce": "^7.1.1",
+    "uuid": "^7.0.3"
+  }
+}

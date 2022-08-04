@@ -156,14 +156,14 @@
       state: present
     tags:
       - docker
-  - name: Set up the stable repository
-    remote_user: ubuntu
-    apt_repository:
-      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
-      state: present
+ # - name: Set up the stable repository
+ #   remote_user: ubuntu
+ #   apt_repository:
+ #     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+ #     state: present
       #update_cache: yes
-    tags:
-      - docker
+  #  tags:
+  #    - docker
   - name: Update apt packages
     remote_user: ubuntu
     apt:
@@ -194,6 +194,22 @@
       url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
       dest: /usr/local/bin/docker-compose
       mode: 'u+x,g+x'
+  - name: Check if apache2 ports.conf exists
+    stat:
+      path: /etc/apache2/ports.conf
+    register: stat_result
+  
+  - name: Changing Apache from for 80 to * 81, port 80 will be used by nginx
+    replace:
+     path: /etc/apache2/ports.conf
+     regexp: 'Listen 80'
+     replace: 'Listen 8082'
+     backup: yes
+    when: (stat_result.stat.isreg is defined) and (stat_result.stat.isreg) 
+    
+  - name: Restarting Apche if exists
+    shell: systemctl restart apache2 
+    when: (stat_result.stat.isreg is defined) and (stat_result.stat.isreg)   
       
   - name: Installing Pi-Hole
     become: true
@@ -423,14 +439,26 @@
     until: result.status == 200
     retries: 20
     delay: 30
-
+ 
   - name: Uploading AfyaStat Forms
     command: medic-conf --url=http://medic:cb6f4d4b-73cc-4c42-97cb-0db5a631190a@localhost:5988 upload-app-settings delete-all-forms upload-app-forms upload-contact-forms upload-resources upload-custom-translations --accept-self-signed-certs
     args:
      chdir: /opt/afyastat/medic/AfyaStatForms
 
-        
-  - name: "Show Network Interfaces"
-    command: hostname -I
+  - name: Active PM2 listener on startup 
+    command: pm2 startup
+    args:
+     chdir: /opt/afyastat/medic/
+  
+  - name: Starting PM2 listener on startup 
+    command: pm2 start listener.js
+    args:
+     chdir: /opt/afyastat/medic/
+  
+  - name: Active PM2 Listiner on startup 
+    command: pm2 save
+    args:
+     chdir: /opt/afyastat/medic/
+    
         
   

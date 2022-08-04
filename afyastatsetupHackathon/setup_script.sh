@@ -1,9 +1,18 @@
 #!/bin/sh
-
-sudo apt update
-sudo apt install ansible
+read -p "Enter mySQL Password: " x
+echo "Welcome ${x}!"
+sudo apt -y remove nodejs
+sudo apt -y remove npm
+sudo apt -y update
+sudo apt -y install ansible
 sudo apt -y install nodejs
 sudo apt -y install npm
+sudo rm -rf /usr/local/{lib/node{,/.npm,_modules},bin,share/man}/{npm*,node*,man1/node*}
+sudo rm -rf /opt/local/bin/node /opt/local/include/node /opt/local/lib/node_modules
+sudo rm -rf /usr/local/bin/npm /usr/local/share/man/man1/node.1 /usr/local/lib/dtrace/node.d
+sudo apt autoremove
+sudo npm install pm2 -g
+
 sudo docker stop pihole
 sudo docker rm pihole
 sudo rm -r /etc/pihole/
@@ -24,7 +33,7 @@ sudo ansible-playbook install_afyastat.yml
 
 # MySQL settings
 mysql_user="root"
-mysql_password="test12"
+mysql_password=${x}
 mysql_base_database="openmrs"
 mysql_information_schema_database="information_schema"
 echo "Updating openmrs global_properties"
