@@ -1,0 +1,603 @@
+{
+    "locales": [
+        {
+            "code": "en",
+            "name": "English"
+        },
+        {
+            "code": "es",
+            "name": "Español (Spanish)"
+        },
+        {
+            "code": "fr",
+            "name": "Français (French)"
+        },
+        {
+            "code": "ne",
+            "name": "नेपाली (Nepali)"
+        },
+        {
+            "code": "sw",
+            "name": "Kiswahili (Swahili)"
+        }
+    ],
+    "locale": "en",
+    "locale_outgoing": "en",
+    "date_format": "D MMM, YYYY",
+    "reported_date_format": "DD-MMM-YYYY HH:mm:ss",
+    "forms_only_mode": false,
+    "place_hierarchy_types": [
+        "health_facility",
+        "patient_support_group",
+        "patient_contact",
+        "universal_client"
+    ],
+    "default_responses": {
+        "start_date": ""
+    },
+    "district_admins_access_unallocated_messages": false,
+    "public_access": false,
+    "default_country_code": "1",
+    "gateway_number": "+13125551212",
+    "kujua-reporting": [
+        {
+            "code": "VPD",
+            "reporting_freq": "weekly"
+        }
+    ],
+    "schedule_morning_hours": 0,
+    "schedule_morning_minutes": 0,
+    "schedule_evening_hours": 23,
+    "schedule_evening_minutes": 0,
+    "synthetic_date": "",
+    "contact_display_short": "clinic.name",
+    "roles": {
+        "data_entry": {
+            "name": "usertype.data-entry"
+        },
+        "analytics": {
+            "name": "usertype.analytics"
+        },
+        "gateway": {
+            "name": "usertype.gateway"
+        },
+        "program_officer": {
+            "name": "usertype.program-officer"
+        },
+        "crfo": {
+            "name": "usertype.crfo"
+        },
+        "chw_supervisor": {
+            "name": "usertype.chw-supervisor",
+            "offline": true
+        },
+        "chw": {
+            "name": "usertype.chw",
+            "offline": true
+        },
+        "kp_case_manager": {
+            "name": "usertype.kp_case_manager",
+            "offline": true
+        },
+        "kp_peer_educator": {
+            "name": "usertype.kp_peer_educator",
+            "offline": true
+        },
+        "hts_provider": {
+            "name": "usertype.hts_provider",
+            "offline": true
+        },
+        "clinician": {
+            "name": "usertype.clinician",
+            "offline": true
+        }
+    },
+    "permissions": {
+        "can_access_gateway_api": [
+            "gateway"
+        ],
+        "can_bulk_delete_reports": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_configure": [
+            "program_officer",
+            "crfo"
+        ],
+        "can_create_people": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_create_places": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_create_records": [
+            "data_entry",
+            "gateway",
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_create_users": [
+            "program_officer"
+        ],
+        "can_delete_contacts": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_delete_messages": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_delete_reports": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_delete_users": [
+            "program_officer"
+        ],
+        "can_edit": [
+            "gateway",
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_edit_profile": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_edit_verification": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_export_all": [
+            "program_officer",
+            "crfo"
+        ],
+        "can_export_contacts": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_export_feedback": [
+            "program_officer"
+        ],
+        "can_export_messages": [
+            "analytics",
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_log_out_on_android": [
+            "kp_case_manager",
+            "kp_peer_educator",
+            "clinician"
+        ],
+        "can_update_places": [
+            "program_officer",
+            "chw_supervisor",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_update_reports": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_update_users": [
+            "program_officer",
+            "kp_case_manager"
+        ],
+        "can_export_dhis": [
+            "national_admin",
+            "crfo"
+        ],
+        "can_verify_reports": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_view_analytics": [
+            "analytics",
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_view_analytics_tab": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_view_call_action": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_view_contacts": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_view_contacts_tab": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_view_last_visited_date": [],
+        "can_view_message_action": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_view_messages": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_view_messages_tab": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_view_outgoing_messages": [
+            "program_officer"
+        ],
+        "can_view_reports": [
+            "program_officer",
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider",
+            "clinician"
+        ],
+        "can_view_reports_tab": [
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_view_tasks": [
+            "chw_supervisor",
+            "chw",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_view_tasks_tab": [
+            "chw_supervisor"
+        ],
+        "can_view_unallocated_data_records": [
+            "gateway",
+            "program_officer",
+            "chw_supervisor"
+        ],
+        "can_view_users": [
+            "program_officer",
+            "kp_case_manager",
+            "kp_peer_educator",
+            "hts_provider"
+        ],
+        "can_write_wealth_quintiles": [],
+        "can_aggregate_targets": [
+            "chw_supervisor"
+        ]
+    },
+    "changes_controller": {
+        "reiterate_changes": true,
+        "changes_limit": 100,
+        "debounce_interval": 200
+    },
+    "uhc": {
+        "contacts_default_sort": "",
+        "visit_count": {
+            "month_start_date": 1,
+            "visit_count_goal": 0
+        }
+    },
+    "death_reporting": {
+        "mark_deceased_forms": [
+            "death_report"
+        ],
+        "date_field": "fields.death_details.date_of_death",
+        "undo_deceased_forms": [
+            "undo_death_report"
+        ]
+    },
+    "contact_types": [
+        {
+            "id": "ahealth_facility",
+            "name_key": "contact.type.district_hospital",
+            "group_key": "contact.type.district_hospital.plural",
+            "create_key": "contact.type.district_hospital.new",
+            "edit_key": "contact.type.place.edit",
+            "icon": "medic-district-hospital",
+            "create_form": "form:contact:health_facility:create",
+            "edit_form": "form:contact:health_facility:edit"
+        },
+        {
+            "id": "bfacility_employee",
+            "name_key": "contact.type.facility_employee",
+            "group_key": "contact.type.facility_employee.plural",
+            "create_key": "contact.type.facility_employee.new",
+            "edit_key": "contact.type.facility_employee.edit",
+            "parents": [
+                "ahealth_facility",
+                "patient_support_group"
+            ],
+            "icon": "medic-person",
+            "create_form": "form:contact:facility_employee:create",
+            "edit_form": "form:contact:facility_employee:edit",
+            "person": true
+        },
+        {
+            "id": "patient_support_group",
+            "name_key": "contact.type.assigned_group",
+            "group_key": "contact.type.assigned_group.plural",
+            "create_key": "contact.type.assigned_group.new",
+            "edit_key": "contact.type.health_center.edit",
+            "parents": [
+                "ahealth_facility"
+            ],
+            "icon": "medic-health-center",
+            "create_form": "form:contact:patient_support_group:create",
+            "edit_form": "form:contact:patient_support_group:edit"
+        },
+        {
+            "id": "universal_client",
+            "name_key": "contact.type.clinic",
+            "group_key": "contact.type.clinic.plural",
+            "create_key": "contact.type.clinic.new",
+            "edit_key": "contact.type.place.edit",
+            "parents": [
+                "patient_support_group",
+                "ahealth_facility"
+            ],
+            "icon": "medic-person",
+            "create_form": "form:contact:universal_client:create",
+            "edit_form": "form:contact:universal_client:edit"
+        },
+        {
+            "id": "patient_contact",
+            "name_key": "contact.type.person",
+            "group_key": "contact.type.person.plural",
+            "create_key": "contact.type.person.new",
+            "edit_key": "contact.type.person.edit",
+            "primary_contact_key": "clinic.field.contact",
+            "parents": [
+                "universal_client"
+            ],
+            "icon": "listed-contact",
+            "create_form": "form:contact:patient_contact:create",
+            "edit_form": "form:contact:patient_contact:edit",
+            "person": true
+        }
+    ],
+    "setup_complete": true,
+    "contact_summary": "var ContactSummary = {}; !function(e,t){if('object'==typeof exports&&'object'==typeof module)module.exports=t();else if('function'==typeof define&&define.amd)define([],t);else{var n=t();for(var i in n)('object'==typeof exports?exports:e)[i]=n[i]}}(ContactSummary,(function(){return function(e){var t={};function n(i){if(t[i])return t[i].exports;var r=t[i]={i:i,l:!1,exports:{}};return e[i].call(r.exports,r,r.exports,n),r.l=!0,r.exports}return n.m=e,n.c=t,n.d=function(e,t,i){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:i})},n.r=function(e){'undefined'!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:'Module'}),Object.defineProperty(e,'__esModule',{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&'object'==typeof e&&e&&e.__esModule)return e;var i=Object.create(null);if(n.r(i),Object.defineProperty(i,'default',{enumerable:!0,value:e}),2&t&&'string'!=typeof e)for(var r in e)n.d(i,r,function(t){return e[t]}.bind(null,r));return i},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,'a',t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p='',n(n.s=0)}([function(e,t,n){var i=n(1),r=n(5);e.exports=r(i,contact,reports)},function(e,t,n){const i=n(2),{today:r,getNewestReport:s,isAlive:a,isReadyForNewPregnancy:o,isReadyForDelivery:l,getLastScreeningDate:u,getLastScreeningFormDateCreated:c,getField:d,getAgeInMonths:h}=i,f=contact,_=lineage,m=reports,p={alive:a(f),muted:!1,show_pregnancy_form:o(f,m),show_delivery_form:l(f,m),has_hts_initial:m.some(e=>'hts_initial_form'===e.form||'hts_retest_form'===e.form),has_hts_referral:m.some(e=>'hts_referral'===e.form),has_kp_contact_form:m.some(e=>'contact'===e.form),has_hts_linkage:m.some(e=>'hts_linkage'===e.form),has_hts_contact_followup:m.some(e=>'hts_client_tracing'===e.form)},y=s(m,['hts_initial_form','hts_retest_form']),g=s(m,['hts_initial_form','hts_retest_form','hts_screening_form']),v=s(m,['hts_retest_form']),w=s(m,['hts_initial_form']),k=s(m,['hts_client_tracing']),D=s(m,['contact']);let b=null,M=null,S=null;const T=s(m,['hts_screening_form']);T&&(b=u(T),M=c(T),S=d(T,'hts_service')||'');const Y=b?r.diff(b,'days'):null,O=M?r.diff(M,'days'):null;p.screenedToday=0===Y,p.contactAgeInMonths=h(f),p.contactAgeInYears=Math.floor(h(f)/12),null!==g&&null!==Y&&Y>0&&(null!==O&&0!==O||(p.screenedToday=!0)),p.lastHtsService=S,p.pocHtsScreening=0===O,p.hts_initial={population_type:d(y,'observation._164930_populationType_99DCT')||'',key_population_type:d(y,'observation._160581_kpTypeMULTISELECT_99DCT')||d(y,'observation._160581_kpTypeMaleMULTISELECT_99DCT')||'',priority_population_type:d(y,'observation._160581_priorityTypeMULTISELECT_99DCT')||'',disability:d(y,'observation._164951_disability_99DCT')||'',disability_type:d(y,'observation._162558_disabilityTypeMULTISELECT_99DCT')||'',ever_tested:d(y,'observation._164401_everTestedByProvider_99DCT')||'',previous_settings:d(y,'observation.test_setting')||'',previous_hiv_self_test:d(y,'observation._164952_HasClientdoneHIVselfTestInlast12months_99DCT')||'',duration_since_last_test:d(y,'observation._159813_durationSinceLastTest_99DCT')||''},p.hts_retest_latest={final_result:d(v,'observation._159427_finalResults_99DCT')||'',test_date:d(v,'encounter_date')||''},p.hts_initial_latest={final_result:d(w,'observation._159427_finalResults_99DCT')||'',referral_facility:d(w,'observation._160481_referralFacility_99DCT')||''},p.hts_latest_consent={consent:d(y,'observation._1710_clientConsented_99DCT')||'',eligibility:d(y,'observation._162699_eligibleForTesting_99DCT')||''},p.hts_latest_form={form_type:g?g.form:''},p.kpif_contact={contact_date:d(D,'encounter_date')||''},p.hts_client_trace_latest={outcome:d(k,'observation._159811_outcome_99DCT')||''};let x='';if(f.parent&&_[0])for(let e=0;e<4;e++){const t=_[e];if(null!==t&&'contact_type'in t&&'ahealth_facility'===t.contact_type){x=t.name;break}}p.thisFacilityName=x;const N=[{appliesToType:'bfacility_employee',label:'Role',value:f.role,width:4},{appliesToType:'bfacility_employee',appliesIf:function(){return f.parent&&_[0]},label:'client.facility',value:_,filter:'lineage'},{appliesToType:'patient_contact',label:'contact.age',value:f.date_of_birth,width:4,filter:'age'},{appliesToType:'patient_contact',label:'contact.sex',value:'contact.sex.'+f.sex,translate:!0,width:4},{appliesToType:'patient_contact',label:'person.field.phone',value:f.phone,width:4},{appliesToType:'patient_contact',label:'person.field.physical_address',value:f.physical_address,width:4},{appliesToType:'patient_contact',label:'person.field.relation_to_index',value:f.contact_relationship,width:4},{appliesToType:'patient_contact',label:'person.field.booking_date',value:f.booking_date,width:4},{appliesToType:'patient_contact',label:'person.field.ipv_outcome',value:f.ipv_outcome,width:4},{appliesToType:'patient_contact',label:'person.field.pns_approach',value:f.pns_approach,width:4},{appliesToType:'patient_contact',label:'contact.index.relationship',value:_,filter:'lineage'},{appliesToType:'universal_client',label:'contact.age',value:f.patient_birthDate,filter:'age',width:4},{appliesToType:'universal_client',label:'contact.sex',value:'contact.sex.'+f.patient_sex,translate:!0,width:4},{appliesToType:'universal_client',label:'contact.phone',value:f.patient_telephone,width:4},{appliesToType:'universal_client',label:'person.address.county',value:f.patient_county,width:4},{appliesToType:'universal_client',label:'person.address.sub_county',value:f.patient_subcounty,width:4},{appliesToType:'universal_client',label:'person.address.ward',value:f.patient_ward,width:4},{appliesToType:'universal_client',label:'person.address.village',value:f.patient_village,width:4},{appliesToType:'universal_client',label:'person.address.landmark',value:f.patient_landmark,width:8},{appliesToType:'universal_client',appliesIf:function(){return f.relation_uuid},label:'Related Client',value:`<a href='/#/contacts/${f.relation?f.relation._id:f.relation_uuid}'>${f.relation_name}</a>`,width:4,filter:'safeHtml'},{appliesToType:'universal_client',appliesIf:function(){return f.relation_uuid},label:'Relationship',value:f.relation_type,width:4},{appliesToType:'universal_client',appliesIf:function(){return f.parent&&_[0]},label:'client.facility',value:_,filter:'lineage'},{appliesToType:'universal_client',appliesIf:function(){return f.record_purpose&&'linkage'===f.record_purpose},label:'Service Alert',value:'<p style=\\'color: red;font-weight: bold\\'>This client originated from the EMR and is due for linkage </p>',width:12,filter:'safeHtml'},{appliesToType:'universal_client',label:'contact.notes',value:f.notes,width:12},{appliesToType:'patient_support_group',appliesIf:function(){return f.parent&&_[0]},label:'client.facility',value:_,filter:'lineage'}];f.short_name&&N.unshift({appliesToType:'person',label:'contact.short_name',value:f.short_name,width:4});const C=[{label:'HIV Testing profile',appliesToType:'universal_client',appliesIf:function(){return!0},fields:function(){const e=[];let t,n,i,r,a,o,l,u;const c=s(m,['hts_initial_form','hts_retest_form']);if(c&&(t=d(c,'encounter_date'),n=d(c,'observation._159427_finalResults_99DCT'),l=d(c,'observation._160592_consentForPns_99DCT'),n&&('_703_positive_99DCT'===n?i='Positive':'_664_negative_99DCT'===n?i='Negative':'_1138_inconclusive_99DCT'===n&&(i='Inconclusive')),l&&('_1065_yes_99DCT'===l?u='Yes':'_1066_no_99DCT'===l&&(u='No'))),c&&(e.push({label:'client.last_tested',value:t||'contact.profile.value.unknown',filter:t?'simpleDate':'',translate:!t,width:4},{label:'client.last_test_result',value:i,width:4},{label:'Consented for PNS',value:u,width:4}),'Positive'===i)){const t=s(m,['hts_linkage']);r=d(t,'encounter_date'),a=d(t,'observation._162724_facilityLinkedTo_99DCT'),o=d(t,'observation._162053_cccNumber_99DCT'),e.push({label:'client.date_linked',value:r||'<p style=\\'color: red;font-weight: bold;\\'>NOT YET LINKED</p>',filter:r?'simpleDate':'',translate:!r,width:4},{label:'client.facility_linked',value:a,width:4},{label:'client.ccc_number',value:o,width:4})}return e}},{label:'Contacts registered in EMR',appliesToType:'universal_client',appliesIf:function(){return f.transitioned_contacts&&f.transitioned_contacts.length>0},fields:function(){const e=[],t=f.transitioned_contacts;e.push({label:'Name',value:'',width:4},{label:'Relationship',value:'',width:8});for(const n of t)e.push({label:'',value:`<a href='/#/contacts/${n.contact_uuid}'>${n.contact_name}</a>`,width:4,filter:'safeHtml'},{label:'',value:n.contact_relation_type,width:8});return e}}];e.exports={context:p,cards:C,fields:N}},function(e,t,n){const i=n(3),r=i().startOf('day'),s=['pregnancy'],a=['pregnancy_home_visit'],o=['delivery'],l=['pregnancy','pregnancy_home_visit','pregnancy_danger_sign','pregannacy_danger_sign_follow_up'],u=(e,t)=>['fields',...(t||'').split('.')].reduce((e,t)=>{if(void 0!==e)return e[t]},e);function c(e,t,n,i){return e.filter((function(e){return t.includes(e.form)&&e.reported_date>=n&&e.reported_date<=i}))}function d(e,t){let n;return e.forEach((function(e){(function(e){return!!(e.form&&e.fields&&e.reported_date)})(e)&&t.includes(e.form)&&(!n||e.reported_date>n.reported_date)&&(n=e)})),n}function h(e){return k(e)&&u(e,'lmp_date_8601')&&i(u(e,'lmp_date_8601'))}function f(e,t){let n=h(t),r=t.reported_date;return Y(e,t).forEach((function(e){const t=D(s=e)&&u(s,'lmp_date_8601')&&i(u(s,'lmp_date_8601'));var s;e.reported_date>r&&'yes'===u(e,'lmp_updated')&&(r=e.reported_date,n=t)})),n}function _(e,t){const n=f(e,t);if(n)return n.clone().add(280,'days')}function m(e){return b(e)&&u(e,'delivery_outcome.delivery_date')&&i(u(e,'delivery_outcome.delivery_date'))}function p(e){const t=[];if('yes'===u(e,'t_danger_signs_referral_follow_up')){const n=u(e,'danger_signs');if(n)for(const e in n)'yes'===n[e]&&'r_danger_sign_present'!==e&&t.push(e)}return t}function y(e,t){const n=function(e){const t=[];if(!k(e))return[];if('yes'===u(e,'risk_factors.r_risk_factor_present')){'yes'===u(e,'risk_factors.risk_factors_history.first_pregnancy')&&t.push('first_pregnancy'),'yes'===u(e,'risk_factors.risk_factors_history.previous_miscarriage')&&t.push('previous_miscarriage');const n=u(e,'risk_factors.risk_factors_present.primary_condition'),i=u(e,'risk_factors.risk_factors_present.secondary_condition');n?t.push(...n.split(' ')):i&&t.push(...i.split(' '))}return t}(t);return Y(e,t).forEach((function(e){n.push(...function(e){const t=[];if(!D(e))return[];if('yes'===u(e,'anc_visits_hf.risk_factors.r_risk_factor_present')){const n=u(e,'anc_visits_hf.risk_factors.new_risks');n&&t.push(...n.split(' '))}return t}(e))})),n}function g(e){let t;return e&&k(e)?t=u(e,'risk_factors.risk_factors_present.additional_risk'):e&&D(e)&&(t=u(e,'anc_visits_hf.risk_factors.additional_risk')),t}function v(e,t){const n=[],i=g(t);return i&&n.push(i),Y(e,t).forEach((function(e){const t=g(e);t&&n.push(t)})),n}function w(e){return e&&!e.date_of_death}function k(e){return e&&s.includes(e.form)}function D(e){return e&&a.includes(e.form)}function b(e){return e&&o.includes(e.form)}function M(e,t,n){if('person'!==e.type||!w(e)||!k(n))return!1;const i=(f(t,n)||n.reported_date)>r.clone().subtract(294,'day'),s=T(t,n,42).length>0,a=function(e,t){return e.filter((function(e){return k(e)&&e.reported_date>t.reported_date}))}(t,n).length>0;return i&&!s&&!a&&!S(t,n,'abortion')&&!S(t,n,'miscarriage')}function S(e,t,n){const i=d(Y(e,t),a);if(i&&u(i,'pregnancy_summary.visit_option')===n)return i}function T(e,t,n){return e.filter((function(e){return b(e)&&e.reported_date>t.reported_date&&(!n||e.reported_date>=r.clone().subtract(n,'days'))}))}function Y(e,t){let n=h(t);return n||(n=i(t.reported_date)),e.filter((function(e){return D(e)&&e.reported_date>t.reported_date&&i(e.reported_date)<n.clone().add(294,'days')}))}e.exports={today:r,MAX_DAYS_IN_PREGNANCY:294,isHighRiskPregnancy:function(e,t){return y(e,t).length||v(e,t).length||p(t).length},getNewestReport:d,getSubsequentPregnancyFollowUps:Y,getSubsequentDeliveries:T,isAlive:w,isPregnant:function(e){return e.some(e=>M(e))},isActivePregnancy:M,countANCFacilityVisits:function(e,t){let n=0;const i=Y(e,t);return u(t,'anc_visits_hf.anc_visits_hf_past')&&!isNaN(u(t,'anc_visits_hf.anc_visits_hf_past.visited_hf_count'))&&(n+=parseInt(u(t,'anc_visits_hf.anc_visits_hf_past.visited_hf_count'))),n+=i.reduce((function(e,t){const n=u(t,'anc_visits_hf.anc_visits_hf_past');return n?(e+='yes'===n.last_visit_attended&&1,isNaN(n.visited_hf_count)?e:e+('yes'===n.report_other_visits&&parseInt(n.visited_hf_count))):0}),0),n},knowsHIVStatusInPast3Months:function(e){let t=!1;return c(e,s,r.clone().subtract(3,'months'),r).forEach((function(e){'yes'===u(e,'pregnancy_new_or_current.hiv_status.hiv_status_know')&&(t=!0)})),t},getAllRiskFactors:y,getAllRiskFactorExtra:v,getDangerSignCodes:p,getLatestDangerSignsForPregnancy:function(e,t){if(!t)return[];let n=f(e,t);n||(n=i(t.reported_date));const r=c(e,l,n.toDate(),n.clone().add(294,'days').toDate()),s=[];r.forEach(e=>{D(e)?'yes'===u(e,'pregnancy_summary.visit_option')&&s.push(e):s.push(e)});const a=d(s,l);return a?p(a):[]},getNextANCVisitDate:function(e,t){let n=u(t,'t_pregnancy_follow_up_date'),r=t.reported_date;return Y(e,t).forEach((function(e){e.reported_date>r&&u(e,'t_pregnancy_follow_up_date')&&(r=e.reported_date,n=u(e,'t_pregnancy_follow_up_date'))})),i(n)},isReadyForNewPregnancy:function(e,t){if('person'!==e.type)return!1;const n=d(t,s),a=d(t,o);if(!n&&!a)return!0;if(n){if(!a||a.reported_date<n.reported_date){let e=f(t,n);if(e||(e=i(n.reported_date)),e<r.clone().subtract(294,'day'))return!0;if(S(t,n,'abortion')||S(t,n,'miscarriage'))return!0}else if(n&&S(t,n,'abortion')||S(t,n,'miscarriage'))return!0}else if(a&&m(a)<r.clone().subtract(42,'day'))return!0;return!1},isReadyForDelivery:function(e,t){if('person'!==e.type)return!1;const n=d(t,s),a=d(t,o);if(!n&&!a)return!0;if(a&&(!n||a.reported_date>n.reported_date))return m(a)<r.clone().subtract(7,'months');if(n&&k(n)){const e=f(t,n);if(e){const i=_(t,n);return r.isBetween(e.clone().add(6,'months'),i.clone().add(6,'weeks'))}return i(n.reported_date).clone().startOf('day').add(322,'days').isSameOrBefore(r)}return!1},getMostRecentLMPDateForPregnancy:f,getMostRecentEDDForPregnancy:_,getDeliveryDate:m,getFormArraySubmittedInWindow:c,getRecentANCVisitWithEvent:S,getLastScreeningDate:function(e){return u(e,'encounter_date')&&i(u(e,'encounter_date'))},getLastScreeningFormDateCreated:function(e){return u(e,'audit_trail.date_created')&&i(u(e,'audit_trail.date_created'))},getField:u,getAgeInMonths:function(e){let t,n;if(console.log('Contact object:::::::::::::::::'+e.patient_birthDate),e.patient_birthDate&&''!==e.patient_birthDate)return t=new Date(e.patient_birthDate),n=new Date(Date.now()-t.getTime()),12*Math.abs(n.getFullYear()-1970)+n.getMonth()}}},function(e,t,n){(function(e){e.exports=function(){'use strict';var t,n;function i(){return t.apply(null,arguments)}function r(e){return e instanceof Array||'[object Array]'===Object.prototype.toString.call(e)}function s(e){return null!=e&&'[object Object]'===Object.prototype.toString.call(e)}function a(e,t){return Object.prototype.hasOwnProperty.call(e,t)}function o(e){if(Object.getOwnPropertyNames)return 0===Object.getOwnPropertyNames(e).length;var t;for(t in e)if(a(e,t))return!1;return!0}function l(e){return void 0===e}function u(e){return'number'==typeof e||'[object Number]'===Object.prototype.toString.call(e)}function c(e){return e instanceof Date||'[object Date]'===Object.prototype.toString.call(e)}function d(e,t){var n,i=[];for(n=0;n<e.length;++n)i.push(t(e[n],n));return i}function h(e,t){for(var n in t)a(t,n)&&(e[n]=t[n]);return a(t,'toString')&&(e.toString=t.toString),a(t,'valueOf')&&(e.valueOf=t.valueOf),e}function f(e,t,n,i){return Mt(e,t,n,i,!0).utc()}function _(e){return null==e._pf&&(e._pf={empty:!1,unusedTokens:[],unusedInput:[],overflow:-2,charsLeftOver:0,nullInput:!1,invalidEra:null,invalidMonth:null,invalidFormat:!1,userInvalidated:!1,iso:!1,parsedDateParts:[],era:null,meridiem:null,rfc2822:!1,weekdayMismatch:!1}),e._pf}function m(e){if(null==e._isValid){var t=_(e),i=n.call(t.parsedDateParts,(function(e){return null!=e})),r=!isNaN(e._d.getTime())&&t.overflow<0&&!t.empty&&!t.invalidEra&&!t.invalidMonth&&!t.invalidWeekday&&!t.weekdayMismatch&&!t.nullInput&&!t.invalidFormat&&!t.userInvalidated&&(!t.meridiem||t.meridiem&&i);if(e._strict&&(r=r&&0===t.charsLeftOver&&0===t.unusedTokens.length&&void 0===t.bigHour),null!=Object.isFrozen&&Object.isFrozen(e))return r;e._isValid=r}return e._isValid}function p(e){var t=f(NaN);return null!=e?h(_(t),e):_(t).userInvalidated=!0,t}n=Array.prototype.some?Array.prototype.some:function(e){var t,n=Object(this),i=n.length>>>0;for(t=0;t<i;t++)if(t in n&&e.call(this,n[t],t,n))return!0;return!1};var y=i.momentProperties=[],g=!1;function v(e,t){var n,i,r;if(l(t._isAMomentObject)||(e._isAMomentObject=t._isAMomentObject),l(t._i)||(e._i=t._i),l(t._f)||(e._f=t._f),l(t._l)||(e._l=t._l),l(t._strict)||(e._strict=t._strict),l(t._tzm)||(e._tzm=t._tzm),l(t._isUTC)||(e._isUTC=t._isUTC),l(t._offset)||(e._offset=t._offset),l(t._pf)||(e._pf=_(t)),l(t._locale)||(e._locale=t._locale),y.length>0)for(n=0;n<y.length;n++)l(r=t[i=y[n]])||(e[i]=r);return e}function w(e){v(this,e),this._d=new Date(null!=e._d?e._d.getTime():NaN),this.isValid()||(this._d=new Date(NaN)),!1===g&&(g=!0,i.updateOffset(this),g=!1)}function k(e){return e instanceof w||null!=e&&null!=e._isAMomentObject}function D(e){!1===i.suppressDeprecationWarnings&&'undefined'!=typeof console&&console.warn&&console.warn('Deprecation warning: '+e)}function b(e,t){var n=!0;return h((function(){if(null!=i.deprecationHandler&&i.deprecationHandler(null,e),n){var r,s,o,l=[];for(s=0;s<arguments.length;s++){if(r='','object'==typeof arguments[s]){for(o in r+='\\n['+s+'] ',arguments[0])a(arguments[0],o)&&(r+=o+': '+arguments[0][o]+', ');r=r.slice(0,-2)}else r=arguments[s];l.push(r)}D(e+'\\nArguments: '+Array.prototype.slice.call(l).join('')+'\\n'+(new Error).stack),n=!1}return t.apply(this,arguments)}),t)}var M,S={};function T(e,t){null!=i.deprecationHandler&&i.deprecationHandler(e,t),S[e]||(D(t),S[e]=!0)}function Y(e){return'undefined'!=typeof Function&&e instanceof Function||'[object Function]'===Object.prototype.toString.call(e)}function O(e,t){var n,i=h({},e);for(n in t)a(t,n)&&(s(e[n])&&s(t[n])?(i[n]={},h(i[n],e[n]),h(i[n],t[n])):null!=t[n]?i[n]=t[n]:delete i[n]);for(n in e)a(e,n)&&!a(t,n)&&s(e[n])&&(i[n]=h({},i[n]));return i}function x(e){null!=e&&this.set(e)}function N(e,t,n){var i=''+Math.abs(e),r=t-i.length;return(e>=0?n?'+':'':'-')+Math.pow(10,Math.max(0,r)).toString().substr(1)+i}i.suppressDeprecationWarnings=!1,i.deprecationHandler=null,M=Object.keys?Object.keys:function(e){var t,n=[];for(t in e)a(e,t)&&n.push(t);return n};var C=/(\\[[^\\[]*\\])|(\\\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,P=/(\\[[^\\[]*\\])|(\\\\)?(LTS|LT|LL?L?L?|l{1,4})/g,R={},W={};function F(e,t,n,i){var r=i;'string'==typeof i&&(r=function(){return this[i]()}),e&&(W[e]=r),t&&(W[t[0]]=function(){return N(r.apply(this,arguments),t[1],t[2])}),n&&(W[n]=function(){return this.localeData().ordinal(r.apply(this,arguments),e)})}function H(e,t){return e.isValid()?(t=L(t,e.localeData()),R[t]=R[t]||function(e){var t,n,i,r=e.match(C);for(t=0,n=r.length;t<n;t++)W[r[t]]?r[t]=W[r[t]]:r[t]=(i=r[t]).match(/\\[[\\s\\S]/)?i.replace(/^\\[|\\]$/g,''):i.replace(/\\\\/g,'');return function(t){var i,s='';for(i=0;i<n;i++)s+=Y(r[i])?r[i].call(t,e):r[i];return s}}(t),R[t](e)):e.localeData().invalidDate()}function L(e,t){var n=5;function i(e){return t.longDateFormat(e)||e}for(P.lastIndex=0;n>=0&&P.test(e);)e=e.replace(P,i),P.lastIndex=0,n-=1;return e}var E={};function U(e,t){var n=e.toLowerCase();E[n]=E[n+'s']=E[t]=e}function I(e){return'string'==typeof e?E[e]||E[e.toLowerCase()]:void 0}function A(e){var t,n,i={};for(n in e)a(e,n)&&(t=I(n))&&(i[t]=e[n]);return i}var V={};function j(e,t){V[e]=t}function G(e){return e%4==0&&e%100!=0||e%400==0}function Z(e){return e<0?Math.ceil(e)||0:Math.floor(e)}function z(e){var t=+e,n=0;return 0!==t&&isFinite(t)&&(n=Z(t)),n}function $(e,t){return function(n){return null!=n?(B(this,e,n),i.updateOffset(this,t),this):q(this,e)}}function q(e,t){return e.isValid()?e._d['get'+(e._isUTC?'UTC':'')+t]():NaN}function B(e,t,n){e.isValid()&&!isNaN(n)&&('FullYear'===t&&G(e.year())&&1===e.month()&&29===e.date()?(n=z(n),e._d['set'+(e._isUTC?'UTC':'')+t](n,e.month(),ke(n,e.month()))):e._d['set'+(e._isUTC?'UTC':'')+t](n))}var J,Q=/\\d/,X=/\\d\\d/,K=/\\d{3}/,ee=/\\d{4}/,te=/[+-]?\\d{6}/,ne=/\\d\\d?/,ie=/\\d\\d\\d\\d?/,re=/\\d\\d\\d\\d\\d\\d?/,se=/\\d{1,3}/,ae=/\\d{1,4}/,oe=/[+-]?\\d{1,6}/,le=/\\d+/,ue=/[+-]?\\d+/,ce=/Z|[+-]\\d\\d:?\\d\\d/gi,de=/Z|[+-]\\d\\d(?::?\\d\\d)?/gi,he=/[0-9]{0,256}['a-z\\u00A0-\\u05FF\\u0700-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFF07\\uFF10-\\uFFEF]{1,256}|[\\u0600-\\u06FF\\/]{1,256}(\\s*?[\\u0600-\\u06FF]{1,256}){1,2}/i;function fe(e,t,n){J[e]=Y(t)?t:function(e,i){return e&&n?n:t}}function _e(e,t){return a(J,e)?J[e](t._strict,t._locale):new RegExp(me(e.replace('\\\\','').replace(/\\\\(\\[)|\\\\(\\])|\\[([^\\]\\[]*)\\]|\\\\(.)/g,(function(e,t,n,i,r){return t||n||i||r}))))}function me(e){return e.replace(/[-\\/\\\\^$*+?.()|[\\]{}]/g,'\\\\$&')}J={};var pe,ye={};function ge(e,t){var n,i=t;for('string'==typeof e&&(e=[e]),u(t)&&(i=function(e,n){n[t]=z(e)}),n=0;n<e.length;n++)ye[e[n]]=i}function ve(e,t){ge(e,(function(e,n,i,r){i._w=i._w||{},t(e,i._w,i,r)}))}function we(e,t,n){null!=t&&a(ye,e)&&ye[e](t,n._a,n,e)}function ke(e,t){if(isNaN(e)||isNaN(t))return NaN;var n,i=(t%(n=12)+n)%n;return e+=(t-i)/12,1===i?G(e)?29:28:31-i%7%2}pe=Array.prototype.indexOf?Array.prototype.indexOf:function(e){var t;for(t=0;t<this.length;++t)if(this[t]===e)return t;return-1},F('M',['MM',2],'Mo',(function(){return this.month()+1})),F('MMM',0,0,(function(e){return this.localeData().monthsShort(this,e)})),F('MMMM',0,0,(function(e){return this.localeData().months(this,e)})),U('month','M'),j('month',8),fe('M',ne),fe('MM',ne,X),fe('MMM',(function(e,t){return t.monthsShortRegex(e)})),fe('MMMM',(function(e,t){return t.monthsRegex(e)})),ge(['M','MM'],(function(e,t){t[1]=z(e)-1})),ge(['MMM','MMMM'],(function(e,t,n,i){var r=n._locale.monthsParse(e,i,n._strict);null!=r?t[1]=r:_(n).invalidMonth=e}));var De='January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),be='Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),Me=/D[oD]?(\\[[^\\[\\]]*\\]|\\s)+MMMM?/,Se=he,Te=he;function Ye(e,t,n){var i,r,s,a=e.toLocaleLowerCase();if(!this._monthsParse)for(this._monthsParse=[],this._longMonthsParse=[],this._shortMonthsParse=[],i=0;i<12;++i)s=f([2e3,i]),this._shortMonthsParse[i]=this.monthsShort(s,'').toLocaleLowerCase(),this._longMonthsParse[i]=this.months(s,'').toLocaleLowerCase();return n?'MMM'===t?-1!==(r=pe.call(this._shortMonthsParse,a))?r:null:-1!==(r=pe.call(this._longMonthsParse,a))?r:null:'MMM'===t?-1!==(r=pe.call(this._shortMonthsParse,a))||-1!==(r=pe.call(this._longMonthsParse,a))?r:null:-1!==(r=pe.call(this._longMonthsParse,a))||-1!==(r=pe.call(this._shortMonthsParse,a))?r:null}function Oe(e,t){var n;if(!e.isValid())return e;if('string'==typeof t)if(/^\\d+$/.test(t))t=z(t);else if(!u(t=e.localeData().monthsParse(t)))return e;return n=Math.min(e.date(),ke(e.year(),t)),e._d['set'+(e._isUTC?'UTC':'')+'Month'](t,n),e}function xe(e){return null!=e?(Oe(this,e),i.updateOffset(this,!0),this):q(this,'Month')}function Ne(){function e(e,t){return t.length-e.length}var t,n,i=[],r=[],s=[];for(t=0;t<12;t++)n=f([2e3,t]),i.push(this.monthsShort(n,'')),r.push(this.months(n,'')),s.push(this.months(n,'')),s.push(this.monthsShort(n,''));for(i.sort(e),r.sort(e),s.sort(e),t=0;t<12;t++)i[t]=me(i[t]),r[t]=me(r[t]);for(t=0;t<24;t++)s[t]=me(s[t]);this._monthsRegex=new RegExp('^('+s.join('|')+')','i'),this._monthsShortRegex=this._monthsRegex,this._monthsStrictRegex=new RegExp('^('+r.join('|')+')','i'),this._monthsShortStrictRegex=new RegExp('^('+i.join('|')+')','i')}function Ce(e){return G(e)?366:365}F('Y',0,0,(function(){var e=this.year();return e<=9999?N(e,4):'+'+e})),F(0,['YY',2],0,(function(){return this.year()%100})),F(0,['YYYY',4],0,'year'),F(0,['YYYYY',5],0,'year'),F(0,['YYYYYY',6,!0],0,'year'),U('year','y'),j('year',1),fe('Y',ue),fe('YY',ne,X),fe('YYYY',ae,ee),fe('YYYYY',oe,te),fe('YYYYYY',oe,te),ge(['YYYYY','YYYYYY'],0),ge('YYYY',(function(e,t){t[0]=2===e.length?i.parseTwoDigitYear(e):z(e)})),ge('YY',(function(e,t){t[0]=i.parseTwoDigitYear(e)})),ge('Y',(function(e,t){t[0]=parseInt(e,10)})),i.parseTwoDigitYear=function(e){return z(e)+(z(e)>68?1900:2e3)};var Pe=$('FullYear',!0);function Re(e,t,n,i,r,s,a){var o;return e<100&&e>=0?(o=new Date(e+400,t,n,i,r,s,a),isFinite(o.getFullYear())&&o.setFullYear(e)):o=new Date(e,t,n,i,r,s,a),o}function We(e){var t,n;return e<100&&e>=0?((n=Array.prototype.slice.call(arguments))[0]=e+400,t=new Date(Date.UTC.apply(null,n)),isFinite(t.getUTCFullYear())&&t.setUTCFullYear(e)):t=new Date(Date.UTC.apply(null,arguments)),t}function Fe(e,t,n){var i=7+t-n;return-(7+We(e,0,i).getUTCDay()-t)%7+i-1}function He(e,t,n,i,r){var s,a,o=1+7*(t-1)+(7+n-i)%7+Fe(e,i,r);return o<=0?a=Ce(s=e-1)+o:o>Ce(e)?(s=e+1,a=o-Ce(e)):(s=e,a=o),{year:s,dayOfYear:a}}function Le(e,t,n){var i,r,s=Fe(e.year(),t,n),a=Math.floor((e.dayOfYear()-s-1)/7)+1;return a<1?i=a+Ee(r=e.year()-1,t,n):a>Ee(e.year(),t,n)?(i=a-Ee(e.year(),t,n),r=e.year()+1):(r=e.year(),i=a),{week:i,year:r}}function Ee(e,t,n){var i=Fe(e,t,n),r=Fe(e+1,t,n);return(Ce(e)-i+r)/7}function Ue(e,t){return e.slice(t,7).concat(e.slice(0,t))}F('w',['ww',2],'wo','week'),F('W',['WW',2],'Wo','isoWeek'),U('week','w'),U('isoWeek','W'),j('week',5),j('isoWeek',5),fe('w',ne),fe('ww',ne,X),fe('W',ne),fe('WW',ne,X),ve(['w','ww','W','WW'],(function(e,t,n,i){t[i.substr(0,1)]=z(e)})),F('d',0,'do','day'),F('dd',0,0,(function(e){return this.localeData().weekdaysMin(this,e)})),F('ddd',0,0,(function(e){return this.localeData().weekdaysShort(this,e)})),F('dddd',0,0,(function(e){return this.localeData().weekdays(this,e)})),F('e',0,0,'weekday'),F('E',0,0,'isoWeekday'),U('day','d'),U('weekday','e'),U('isoWeekday','E'),j('day',11),j('weekday',11),j('isoWeekday',11),fe('d',ne),fe('e',ne),fe('E',ne),fe('dd',(function(e,t){return t.weekdaysMinRegex(e)})),fe('ddd',(function(e,t){return t.weekdaysShortRegex(e)})),fe('dddd',(function(e,t){return t.weekdaysRegex(e)})),ve(['dd','ddd','dddd'],(function(e,t,n,i){var r=n._locale.weekdaysParse(e,i,n._strict);null!=r?t.d=r:_(n).invalidWeekday=e})),ve(['d','e','E'],(function(e,t,n,i){t[i]=z(e)}));var Ie='Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),Ae='Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),Ve='Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),je=he,Ge=he,Ze=he;function ze(e,t,n){var i,r,s,a=e.toLocaleLowerCase();if(!this._weekdaysParse)for(this._weekdaysParse=[],this._shortWeekdaysParse=[],this._minWeekdaysParse=[],i=0;i<7;++i)s=f([2e3,1]).day(i),this._minWeekdaysParse[i]=this.weekdaysMin(s,'').toLocaleLowerCase(),this._shortWeekdaysParse[i]=this.weekdaysShort(s,'').toLocaleLowerCase(),this._weekdaysParse[i]=this.weekdays(s,'').toLocaleLowerCase();return n?'dddd'===t?-1!==(r=pe.call(this._weekdaysParse,a))?r:null:'ddd'===t?-1!==(r=pe.call(this._shortWeekdaysParse,a))?r:null:-1!==(r=pe.call(this._minWeekdaysParse,a))?r:null:'dddd'===t?-1!==(r=pe.call(this._weekdaysParse,a))||-1!==(r=pe.call(this._shortWeekdaysParse,a))||-1!==(r=pe.call(this._minWeekdaysParse,a))?r:null:'ddd'===t?-1!==(r=pe.call(this._shortWeekdaysParse,a))||-1!==(r=pe.call(this._weekdaysParse,a))||-1!==(r=pe.call(this._minWeekdaysParse,a))?r:null:-1!==(r=pe.call(this._minWeekdaysParse,a))||-1!==(r=pe.call(this._weekdaysParse,a))||-1!==(r=pe.call(this._shortWeekdaysParse,a))?r:null}function $e(){function e(e,t){return t.length-e.length}var t,n,i,r,s,a=[],o=[],l=[],u=[];for(t=0;t<7;t++)n=f([2e3,1]).day(t),i=me(this.weekdaysMin(n,'')),r=me(this.weekdaysShort(n,'')),s=me(this.weekdays(n,'')),a.push(i),o.push(r),l.push(s),u.push(i),u.push(r),u.push(s);a.sort(e),o.sort(e),l.sort(e),u.sort(e),this._weekdaysRegex=new RegExp('^('+u.join('|')+')','i'),this._weekdaysShortRegex=this._weekdaysRegex,this._weekdaysMinRegex=this._weekdaysRegex,this._weekdaysStrictRegex=new RegExp('^('+l.join('|')+')','i'),this._weekdaysShortStrictRegex=new RegExp('^('+o.join('|')+')','i'),this._weekdaysMinStrictRegex=new RegExp('^('+a.join('|')+')','i')}function qe(){return this.hours()%12||12}function Be(e,t){F(e,0,0,(function(){return this.localeData().meridiem(this.hours(),this.minutes(),t)}))}function Je(e,t){return t._meridiemParse}F('H',['HH',2],0,'hour'),F('h',['hh',2],0,qe),F('k',['kk',2],0,(function(){return this.hours()||24})),F('hmm',0,0,(function(){return''+qe.apply(this)+N(this.minutes(),2)})),F('hmmss',0,0,(function(){return''+qe.apply(this)+N(this.minutes(),2)+N(this.seconds(),2)})),F('Hmm',0,0,(function(){return''+this.hours()+N(this.minutes(),2)})),F('Hmmss',0,0,(function(){return''+this.hours()+N(this.minutes(),2)+N(this.seconds(),2)})),Be('a',!0),Be('A',!1),U('hour','h'),j('hour',13),fe('a',Je),fe('A',Je),fe('H',ne),fe('h',ne),fe('k',ne),fe('HH',ne,X),fe('hh',ne,X),fe('kk',ne,X),fe('hmm',ie),fe('hmmss',re),fe('Hmm',ie),fe('Hmmss',re),ge(['H','HH'],3),ge(['k','kk'],(function(e,t,n){var i=z(e);t[3]=24===i?0:i})),ge(['a','A'],(function(e,t,n){n._isPm=n._locale.isPM(e),n._meridiem=e})),ge(['h','hh'],(function(e,t,n){t[3]=z(e),_(n).bigHour=!0})),ge('hmm',(function(e,t,n){var i=e.length-2;t[3]=z(e.substr(0,i)),t[4]=z(e.substr(i)),_(n).bigHour=!0})),ge('hmmss',(function(e,t,n){var i=e.length-4,r=e.length-2;t[3]=z(e.substr(0,i)),t[4]=z(e.substr(i,2)),t[5]=z(e.substr(r)),_(n).bigHour=!0})),ge('Hmm',(function(e,t,n){var i=e.length-2;t[3]=z(e.substr(0,i)),t[4]=z(e.substr(i))})),ge('Hmmss',(function(e,t,n){var i=e.length-4,r=e.length-2;t[3]=z(e.substr(0,i)),t[4]=z(e.substr(i,2)),t[5]=z(e.substr(r))}));var Qe,Xe=$('Hours',!0),Ke={calendar:{sameDay:'[Today at] LT',nextDay:'[Tomorrow at] LT',nextWeek:'dddd [at] LT',lastDay:'[Yesterday at] LT',lastWeek:'[Last] dddd [at] LT',sameElse:'L'},longDateFormat:{LTS:'h:mm:ss A',LT:'h:mm A',L:'MM/DD/YYYY',LL:'MMMM D, YYYY',LLL:'MMMM D, YYYY h:mm A',LLLL:'dddd, MMMM D, YYYY h:mm A'},invalidDate:'Invalid date',ordinal:'%d',dayOfMonthOrdinalParse:/\\d{1,2}/,relativeTime:{future:'in %s',past:'%s ago',s:'a few seconds',ss:'%d seconds',m:'a minute',mm:'%d minutes',h:'an hour',hh:'%d hours',d:'a day',dd:'%d days',w:'a week',ww:'%d weeks',M:'a month',MM:'%d months',y:'a year',yy:'%d years'},months:De,monthsShort:be,week:{dow:0,doy:6},weekdays:Ie,weekdaysMin:Ve,weekdaysShort:Ae,meridiemParse:/[ap]\\.?m?\\.?/i},et={},tt={};function nt(e,t){var n,i=Math.min(e.length,t.length);for(n=0;n<i;n+=1)if(e[n]!==t[n])return n;return i}function it(e){return e?e.toLowerCase().replace('_','-'):e}function rt(t){var n=null;if(void 0===et[t]&&void 0!==e&&e&&e.exports)try{n=Qe._abbr,function(){var e=new Error('Cannot find module \\'undefined\\'');throw e.code='MODULE_NOT_FOUND',e}(),st(n)}catch(e){et[t]=null}return et[t]}function st(e,t){var n;return e&&((n=l(t)?ot(e):at(e,t))?Qe=n:'undefined'!=typeof console&&console.warn&&console.warn('Locale '+e+' not found. Did you forget to load it?')),Qe._abbr}function at(e,t){if(null!==t){var n,i=Ke;if(t.abbr=e,null!=et[e])T('defineLocaleOverride','use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info.'),i=et[e]._config;else if(null!=t.parentLocale)if(null!=et[t.parentLocale])i=et[t.parentLocale]._config;else{if(null==(n=rt(t.parentLocale)))return tt[t.parentLocale]||(tt[t.parentLocale]=[]),tt[t.parentLocale].push({name:e,config:t}),null;i=n._config}return et[e]=new x(O(i,t)),tt[e]&&tt[e].forEach((function(e){at(e.name,e.config)})),st(e),et[e]}return delete et[e],null}function ot(e){var t;if(e&&e._locale&&e._locale._abbr&&(e=e._locale._abbr),!e)return Qe;if(!r(e)){if(t=rt(e))return t;e=[e]}return function(e){for(var t,n,i,r,s=0;s<e.length;){for(t=(r=it(e[s]).split('-')).length,n=(n=it(e[s+1]))?n.split('-'):null;t>0;){if(i=rt(r.slice(0,t).join('-')))return i;if(n&&n.length>=t&&nt(r,n)>=t-1)break;t--}s++}return Qe}(e)}function lt(e){var t,n=e._a;return n&&-2===_(e).overflow&&(t=n[1]<0||n[1]>11?1:n[2]<1||n[2]>ke(n[0],n[1])?2:n[3]<0||n[3]>24||24===n[3]&&(0!==n[4]||0!==n[5]||0!==n[6])?3:n[4]<0||n[4]>59?4:n[5]<0||n[5]>59?5:n[6]<0||n[6]>999?6:-1,_(e)._overflowDayOfYear&&(t<0||t>2)&&(t=2),_(e)._overflowWeeks&&-1===t&&(t=7),_(e)._overflowWeekday&&-1===t&&(t=8),_(e).overflow=t),e}var ut=/^\\s*((?:[+-]\\d{6}|\\d{4})-(?:\\d\\d-\\d\\d|W\\d\\d-\\d|W\\d\\d|\\d\\d\\d|\\d\\d))(?:(T| )(\\d\\d(?::\\d\\d(?::\\d\\d(?:[.,]\\d+)?)?)?)([+-]\\d\\d(?::?\\d\\d)?|\\s*Z)?)?$/,ct=/^\\s*((?:[+-]\\d{6}|\\d{4})(?:\\d\\d\\d\\d|W\\d\\d\\d|W\\d\\d|\\d\\d\\d|\\d\\d|))(?:(T| )(\\d\\d(?:\\d\\d(?:\\d\\d(?:[.,]\\d+)?)?)?)([+-]\\d\\d(?::?\\d\\d)?|\\s*Z)?)?$/,dt=/Z|[+-]\\d\\d(?::?\\d\\d)?/,ht=[['YYYYYY-MM-DD',/[+-]\\d{6}-\\d\\d-\\d\\d/],['YYYY-MM-DD',/\\d{4}-\\d\\d-\\d\\d/],['GGGG-[W]WW-E',/\\d{4}-W\\d\\d-\\d/],['GGGG-[W]WW',/\\d{4}-W\\d\\d/,!1],['YYYY-DDD',/\\d{4}-\\d{3}/],['YYYY-MM',/\\d{4}-\\d\\d/,!1],['YYYYYYMMDD',/[+-]\\d{10}/],['YYYYMMDD',/\\d{8}/],['GGGG[W]WWE',/\\d{4}W\\d{3}/],['GGGG[W]WW',/\\d{4}W\\d{2}/,!1],['YYYYDDD',/\\d{7}/],['YYYYMM',/\\d{6}/,!1],['YYYY',/\\d{4}/,!1]],ft=[['HH:mm:ss.SSSS',/\\d\\d:\\d\\d:\\d\\d\\.\\d+/],['HH:mm:ss,SSSS',/\\d\\d:\\d\\d:\\d\\d,\\d+/],['HH:mm:ss',/\\d\\d:\\d\\d:\\d\\d/],['HH:mm',/\\d\\d:\\d\\d/],['HHmmss.SSSS',/\\d\\d\\d\\d\\d\\d\\.\\d+/],['HHmmss,SSSS',/\\d\\d\\d\\d\\d\\d,\\d+/],['HHmmss',/\\d\\d\\d\\d\\d\\d/],['HHmm',/\\d\\d\\d\\d/],['HH',/\\d\\d/]],_t=/^\\/?Date\\((-?\\d+)/i,mt=/^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\\s)?(\\d{1,2})\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s(\\d{2,4})\\s(\\d\\d):(\\d\\d)(?::(\\d\\d))?\\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\\d{4}))$/,pt={UT:0,GMT:0,EDT:-240,EST:-300,CDT:-300,CST:-360,MDT:-360,MST:-420,PDT:-420,PST:-480};function yt(e){var t,n,i,r,s,a,o=e._i,l=ut.exec(o)||ct.exec(o);if(l){for(_(e).iso=!0,t=0,n=ht.length;t<n;t++)if(ht[t][1].exec(l[1])){r=ht[t][0],i=!1!==ht[t][2];break}if(null==r)return void(e._isValid=!1);if(l[3]){for(t=0,n=ft.length;t<n;t++)if(ft[t][1].exec(l[3])){s=(l[2]||' ')+ft[t][0];break}if(null==s)return void(e._isValid=!1)}if(!i&&null!=s)return void(e._isValid=!1);if(l[4]){if(!dt.exec(l[4]))return void(e._isValid=!1);a='Z'}e._f=r+(s||'')+(a||''),Dt(e)}else e._isValid=!1}function gt(e){var t=parseInt(e,10);return t<=49?2e3+t:t<=999?1900+t:t}function vt(e){var t,n,i,r,s,a,o,l,u=mt.exec(e._i.replace(/\\([^)]*\\)|[\\n\\t]/g,' ').replace(/(\\s\\s+)/g,' ').replace(/^\\s\\s*/,'').replace(/\\s\\s*$/,''));if(u){if(n=u[4],i=u[3],r=u[2],s=u[5],a=u[6],o=u[7],l=[gt(n),be.indexOf(i),parseInt(r,10),parseInt(s,10),parseInt(a,10)],o&&l.push(parseInt(o,10)),t=l,!function(e,t,n){return!e||Ae.indexOf(e)===new Date(t[0],t[1],t[2]).getDay()||(_(n).weekdayMismatch=!0,n._isValid=!1,!1)}(u[1],t,e))return;e._a=t,e._tzm=function(e,t,n){if(e)return pt[e];if(t)return 0;var i=parseInt(n,10),r=i%100;return(i-r)/100*60+r}(u[8],u[9],u[10]),e._d=We.apply(null,e._a),e._d.setUTCMinutes(e._d.getUTCMinutes()-e._tzm),_(e).rfc2822=!0}else e._isValid=!1}function wt(e,t,n){return null!=e?e:null!=t?t:n}function kt(e){var t,n,r,s,a,o=[];if(!e._d){for(r=function(e){var t=new Date(i.now());return e._useUTC?[t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()]:[t.getFullYear(),t.getMonth(),t.getDate()]}(e),e._w&&null==e._a[2]&&null==e._a[1]&&function(e){var t,n,i,r,s,a,o,l,u;null!=(t=e._w).GG||null!=t.W||null!=t.E?(s=1,a=4,n=wt(t.GG,e._a[0],Le(St(),1,4).year),i=wt(t.W,1),((r=wt(t.E,1))<1||r>7)&&(l=!0)):(s=e._locale._week.dow,a=e._locale._week.doy,u=Le(St(),s,a),n=wt(t.gg,e._a[0],u.year),i=wt(t.w,u.week),null!=t.d?((r=t.d)<0||r>6)&&(l=!0):null!=t.e?(r=t.e+s,(t.e<0||t.e>6)&&(l=!0)):r=s),i<1||i>Ee(n,s,a)?_(e)._overflowWeeks=!0:null!=l?_(e)._overflowWeekday=!0:(o=He(n,i,r,s,a),e._a[0]=o.year,e._dayOfYear=o.dayOfYear)}(e),null!=e._dayOfYear&&(a=wt(e._a[0],r[0]),(e._dayOfYear>Ce(a)||0===e._dayOfYear)&&(_(e)._overflowDayOfYear=!0),n=We(a,0,e._dayOfYear),e._a[1]=n.getUTCMonth(),e._a[2]=n.getUTCDate()),t=0;t<3&&null==e._a[t];++t)e._a[t]=o[t]=r[t];for(;t<7;t++)e._a[t]=o[t]=null==e._a[t]?2===t?1:0:e._a[t];24===e._a[3]&&0===e._a[4]&&0===e._a[5]&&0===e._a[6]&&(e._nextDay=!0,e._a[3]=0),e._d=(e._useUTC?We:Re).apply(null,o),s=e._useUTC?e._d.getUTCDay():e._d.getDay(),null!=e._tzm&&e._d.setUTCMinutes(e._d.getUTCMinutes()-e._tzm),e._nextDay&&(e._a[3]=24),e._w&&void 0!==e._w.d&&e._w.d!==s&&(_(e).weekdayMismatch=!0)}}function Dt(e){if(e._f!==i.ISO_8601)if(e._f!==i.RFC_2822){e._a=[],_(e).empty=!0;var t,n,r,s,a,o,l=''+e._i,u=l.length,c=0;for(r=L(e._f,e._locale).match(C)||[],t=0;t<r.length;t++)s=r[t],(n=(l.match(_e(s,e))||[])[0])&&((a=l.substr(0,l.indexOf(n))).length>0&&_(e).unusedInput.push(a),l=l.slice(l.indexOf(n)+n.length),c+=n.length),W[s]?(n?_(e).empty=!1:_(e).unusedTokens.push(s),we(s,n,e)):e._strict&&!n&&_(e).unusedTokens.push(s);_(e).charsLeftOver=u-c,l.length>0&&_(e).unusedInput.push(l),e._a[3]<=12&&!0===_(e).bigHour&&e._a[3]>0&&(_(e).bigHour=void 0),_(e).parsedDateParts=e._a.slice(0),_(e).meridiem=e._meridiem,e._a[3]=function(e,t,n){var i;return null==n?t:null!=e.meridiemHour?e.meridiemHour(t,n):null!=e.isPM?((i=e.isPM(n))&&t<12&&(t+=12),i||12!==t||(t=0),t):t}(e._locale,e._a[3],e._meridiem),null!==(o=_(e).era)&&(e._a[0]=e._locale.erasConvertYear(o,e._a[0])),kt(e),lt(e)}else vt(e);else yt(e)}function bt(e){var t=e._i,n=e._f;return e._locale=e._locale||ot(e._l),null===t||void 0===n&&''===t?p({nullInput:!0}):('string'==typeof t&&(e._i=t=e._locale.preparse(t)),k(t)?new w(lt(t)):(c(t)?e._d=t:r(n)?function(e){var t,n,i,r,s,a,o=!1;if(0===e._f.length)return _(e).invalidFormat=!0,void(e._d=new Date(NaN));for(r=0;r<e._f.length;r++)s=0,a=!1,t=v({},e),null!=e._useUTC&&(t._useUTC=e._useUTC),t._f=e._f[r],Dt(t),m(t)&&(a=!0),s+=_(t).charsLeftOver,s+=10*_(t).unusedTokens.length,_(t).score=s,o?s<i&&(i=s,n=t):(null==i||s<i||a)&&(i=s,n=t,a&&(o=!0));h(e,n||t)}(e):n?Dt(e):function(e){var t=e._i;l(t)?e._d=new Date(i.now()):c(t)?e._d=new Date(t.valueOf()):'string'==typeof t?function(e){var t=_t.exec(e._i);null===t?(yt(e),!1===e._isValid&&(delete e._isValid,vt(e),!1===e._isValid&&(delete e._isValid,e._strict?e._isValid=!1:i.createFromInputFallback(e)))):e._d=new Date(+t[1])}(e):r(t)?(e._a=d(t.slice(0),(function(e){return parseInt(e,10)})),kt(e)):s(t)?function(e){if(!e._d){var t=A(e._i),n=void 0===t.day?t.date:t.day;e._a=d([t.year,t.month,n,t.hour,t.minute,t.second,t.millisecond],(function(e){return e&&parseInt(e,10)})),kt(e)}}(e):u(t)?e._d=new Date(t):i.createFromInputFallback(e)}(e),m(e)||(e._d=null),e))}function Mt(e,t,n,i,a){var l,u={};return!0!==t&&!1!==t||(i=t,t=void 0),!0!==n&&!1!==n||(i=n,n=void 0),(s(e)&&o(e)||r(e)&&0===e.length)&&(e=void 0),u._isAMomentObject=!0,u._useUTC=u._isUTC=a,u._l=n,u._i=e,u._f=t,u._strict=i,(l=new w(lt(bt(u))))._nextDay&&(l.add(1,'d'),l._nextDay=void 0),l}function St(e,t,n,i){return Mt(e,t,n,i,!1)}i.createFromInputFallback=b('value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are discouraged and will be removed in an upcoming major release. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.',(function(e){e._d=new Date(e._i+(e._useUTC?' UTC':''))})),i.ISO_8601=function(){},i.RFC_2822=function(){};var Tt=b('moment().min is deprecated, use moment.max instead. http://momentjs.com/guides/#/warnings/min-max/',(function(){var e=St.apply(null,arguments);return this.isValid()&&e.isValid()?e<this?this:e:p()})),Yt=b('moment().max is deprecated, use moment.min instead. http://momentjs.com/guides/#/warnings/min-max/',(function(){var e=St.apply(null,arguments);return this.isValid()&&e.isValid()?e>this?this:e:p()}));function Ot(e,t){var n,i;if(1===t.length&&r(t[0])&&(t=t[0]),!t.length)return St();for(n=t[0],i=1;i<t.length;++i)t[i].isValid()&&!t[i][e](n)||(n=t[i]);return n}var xt=['year','quarter','month','week','day','hour','minute','second','millisecond'];function Nt(e){var t=A(e),n=t.year||0,i=t.quarter||0,r=t.month||0,s=t.week||t.isoWeek||0,o=t.day||0,l=t.hour||0,u=t.minute||0,c=t.second||0,d=t.millisecond||0;this._isValid=function(e){var t,n,i=!1;for(t in e)if(a(e,t)&&(-1===pe.call(xt,t)||null!=e[t]&&isNaN(e[t])))return!1;for(n=0;n<xt.length;++n)if(e[xt[n]]){if(i)return!1;parseFloat(e[xt[n]])!==z(e[xt[n]])&&(i=!0)}return!0}(t),this._milliseconds=+d+1e3*c+6e4*u+1e3*l*60*60,this._days=+o+7*s,this._months=+r+3*i+12*n,this._data={},this._locale=ot(),this._bubble()}function Ct(e){return e instanceof Nt}function Pt(e){return e<0?-1*Math.round(-1*e):Math.round(e)}function Rt(e,t){F(e,0,0,(function(){var e=this.utcOffset(),n='+';return e<0&&(e=-e,n='-'),n+N(~~(e/60),2)+t+N(~~e%60,2)}))}Rt('Z',':'),Rt('ZZ',''),fe('Z',de),fe('ZZ',de),ge(['Z','ZZ'],(function(e,t,n){n._useUTC=!0,n._tzm=Ft(de,e)}));var Wt=/([\\+\\-]|\\d\\d)/gi;function Ft(e,t){var n,i,r=(t||'').match(e);return null===r?null:0===(i=60*(n=((r[r.length-1]||[])+'').match(Wt)||['-',0,0])[1]+z(n[2]))?0:'+'===n[0]?i:-i}function Ht(e,t){var n,r;return t._isUTC?(n=t.clone(),r=(k(e)||c(e)?e.valueOf():St(e).valueOf())-n.valueOf(),n._d.setTime(n._d.valueOf()+r),i.updateOffset(n,!1),n):St(e).local()}function Lt(e){return-Math.round(e._d.getTimezoneOffset())}function Et(){return!!this.isValid()&&this._isUTC&&0===this._offset}i.updateOffset=function(){};var Ut=/^(-|\\+)?(?:(\\d*)[. ])?(\\d+):(\\d+)(?::(\\d+)(\\.\\d*)?)?$/,It=/^(-|\\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;function At(e,t){var n,i,r,s,o,l,c=e,d=null;return Ct(e)?c={ms:e._milliseconds,d:e._days,M:e._months}:u(e)||!isNaN(+e)?(c={},t?c[t]=+e:c.milliseconds=+e):(d=Ut.exec(e))?(n='-'===d[1]?-1:1,c={y:0,d:z(d[2])*n,h:z(d[3])*n,m:z(d[4])*n,s:z(d[5])*n,ms:z(Pt(1e3*d[6]))*n}):(d=It.exec(e))?(n='-'===d[1]?-1:1,c={y:Vt(d[2],n),M:Vt(d[3],n),w:Vt(d[4],n),d:Vt(d[5],n),h:Vt(d[6],n),m:Vt(d[7],n),s:Vt(d[8],n)}):null==c?c={}:'object'==typeof c&&('from'in c||'to'in c)&&(s=St(c.from),o=St(c.to),r=s.isValid()&&o.isValid()?(o=Ht(o,s),s.isBefore(o)?l=jt(s,o):((l=jt(o,s)).milliseconds=-l.milliseconds,l.months=-l.months),l):{milliseconds:0,months:0},(c={}).ms=r.milliseconds,c.M=r.months),i=new Nt(c),Ct(e)&&a(e,'_locale')&&(i._locale=e._locale),Ct(e)&&a(e,'_isValid')&&(i._isValid=e._isValid),i}function Vt(e,t){var n=e&&parseFloat(e.replace(',','.'));return(isNaN(n)?0:n)*t}function jt(e,t){var n={};return n.months=t.month()-e.month()+12*(t.year()-e.year()),e.clone().add(n.months,'M').isAfter(t)&&--n.months,n.milliseconds=+t-+e.clone().add(n.months,'M'),n}function Gt(e,t){return function(n,i){var r;return null===i||isNaN(+i)||(T(t,'moment().'+t+'(period, number) is deprecated. Please use moment().'+t+'(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info.'),r=n,n=i,i=r),Zt(this,At(n,i),e),this}}function Zt(e,t,n,r){var s=t._milliseconds,a=Pt(t._days),o=Pt(t._months);e.isValid()&&(r=null==r||r,o&&Oe(e,q(e,'Month')+o*n),a&&B(e,'Date',q(e,'Date')+a*n),s&&e._d.setTime(e._d.valueOf()+s*n),r&&i.updateOffset(e,a||o))}At.fn=Nt.prototype,At.invalid=function(){return At(NaN)};var zt=Gt(1,'add'),$t=Gt(-1,'subtract');function qt(e){return'string'==typeof e||e instanceof String}function Bt(e){return k(e)||c(e)||qt(e)||u(e)||function(e){var t=r(e),n=!1;return t&&(n=0===e.filter((function(t){return!u(t)&&qt(e)})).length),t&&n}(e)||function(e){var t,n,i=s(e)&&!o(e),r=!1,l=['years','year','y','months','month','M','days','day','d','dates','date','D','hours','hour','h','minutes','minute','m','seconds','second','s','milliseconds','millisecond','ms'];for(t=0;t<l.length;t+=1)n=l[t],r=r||a(e,n);return i&&r}(e)||null==e}function Jt(e){var t,n=s(e)&&!o(e),i=!1,r=['sameDay','nextDay','lastDay','nextWeek','lastWeek','sameElse'];for(t=0;t<r.length;t+=1)i=i||a(e,r[t]);return n&&i}function Qt(e,t){if(e.date()<t.date())return-Qt(t,e);var n=12*(t.year()-e.year())+(t.month()-e.month()),i=e.clone().add(n,'months');return-(n+(t-i<0?(t-i)/(i-e.clone().add(n-1,'months')):(t-i)/(e.clone().add(n+1,'months')-i)))||0}function Xt(e){var t;return void 0===e?this._locale._abbr:(null!=(t=ot(e))&&(this._locale=t),this)}i.defaultFormat='YYYY-MM-DDTHH:mm:ssZ',i.defaultFormatUtc='YYYY-MM-DDTHH:mm:ss[Z]';var Kt=b('moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',(function(e){return void 0===e?this.localeData():this.locale(e)}));function en(){return this._locale}function tn(e,t){return(e%t+t)%t}function nn(e,t,n){return e<100&&e>=0?new Date(e+400,t,n)-126227808e5:new Date(e,t,n).valueOf()}function rn(e,t,n){return e<100&&e>=0?Date.UTC(e+400,t,n)-126227808e5:Date.UTC(e,t,n)}function sn(e,t){return t.erasAbbrRegex(e)}function an(){var e,t,n=[],i=[],r=[],s=[],a=this.eras();for(e=0,t=a.length;e<t;++e)i.push(me(a[e].name)),n.push(me(a[e].abbr)),r.push(me(a[e].narrow)),s.push(me(a[e].name)),s.push(me(a[e].abbr)),s.push(me(a[e].narrow));this._erasRegex=new RegExp('^('+s.join('|')+')','i'),this._erasNameRegex=new RegExp('^('+i.join('|')+')','i'),this._erasAbbrRegex=new RegExp('^('+n.join('|')+')','i'),this._erasNarrowRegex=new RegExp('^('+r.join('|')+')','i')}function on(e,t){F(0,[e,e.length],0,t)}function ln(e,t,n,i,r){var s;return null==e?Le(this,i,r).year:(t>(s=Ee(e,i,r))&&(t=s),un.call(this,e,t,n,i,r))}function un(e,t,n,i,r){var s=He(e,t,n,i,r),a=We(s.year,0,s.dayOfYear);return this.year(a.getUTCFullYear()),this.month(a.getUTCMonth()),this.date(a.getUTCDate()),this}F('N',0,0,'eraAbbr'),F('NN',0,0,'eraAbbr'),F('NNN',0,0,'eraAbbr'),F('NNNN',0,0,'eraName'),F('NNNNN',0,0,'eraNarrow'),F('y',['y',1],'yo','eraYear'),F('y',['yy',2],0,'eraYear'),F('y',['yyy',3],0,'eraYear'),F('y',['yyyy',4],0,'eraYear'),fe('N',sn),fe('NN',sn),fe('NNN',sn),fe('NNNN',(function(e,t){return t.erasNameRegex(e)})),fe('NNNNN',(function(e,t){return t.erasNarrowRegex(e)})),ge(['N','NN','NNN','NNNN','NNNNN'],(function(e,t,n,i){var r=n._locale.erasParse(e,i,n._strict);r?_(n).era=r:_(n).invalidEra=e})),fe('y',le),fe('yy',le),fe('yyy',le),fe('yyyy',le),fe('yo',(function(e,t){return t._eraYearOrdinalRegex||le})),ge(['y','yy','yyy','yyyy'],0),ge(['yo'],(function(e,t,n,i){var r;n._locale._eraYearOrdinalRegex&&(r=e.match(n._locale._eraYearOrdinalRegex)),n._locale.eraYearOrdinalParse?t[0]=n._locale.eraYearOrdinalParse(e,r):t[0]=parseInt(e,10)})),F(0,['gg',2],0,(function(){return this.weekYear()%100})),F(0,['GG',2],0,(function(){return this.isoWeekYear()%100})),on('gggg','weekYear'),on('ggggg','weekYear'),on('GGGG','isoWeekYear'),on('GGGGG','isoWeekYear'),U('weekYear','gg'),U('isoWeekYear','GG'),j('weekYear',1),j('isoWeekYear',1),fe('G',ue),fe('g',ue),fe('GG',ne,X),fe('gg',ne,X),fe('GGGG',ae,ee),fe('gggg',ae,ee),fe('GGGGG',oe,te),fe('ggggg',oe,te),ve(['gggg','ggggg','GGGG','GGGGG'],(function(e,t,n,i){t[i.substr(0,2)]=z(e)})),ve(['gg','GG'],(function(e,t,n,r){t[r]=i.parseTwoDigitYear(e)})),F('Q',0,'Qo','quarter'),U('quarter','Q'),j('quarter',7),fe('Q',Q),ge('Q',(function(e,t){t[1]=3*(z(e)-1)})),F('D',['DD',2],'Do','date'),U('date','D'),j('date',9),fe('D',ne),fe('DD',ne,X),fe('Do',(function(e,t){return e?t._dayOfMonthOrdinalParse||t._ordinalParse:t._dayOfMonthOrdinalParseLenient})),ge(['D','DD'],2),ge('Do',(function(e,t){t[2]=z(e.match(ne)[0])}));var cn=$('Date',!0);F('DDD',['DDDD',3],'DDDo','dayOfYear'),U('dayOfYear','DDD'),j('dayOfYear',4),fe('DDD',se),fe('DDDD',K),ge(['DDD','DDDD'],(function(e,t,n){n._dayOfYear=z(e)})),F('m',['mm',2],0,'minute'),U('minute','m'),j('minute',14),fe('m',ne),fe('mm',ne,X),ge(['m','mm'],4);var dn=$('Minutes',!1);F('s',['ss',2],0,'second'),U('second','s'),j('second',15),fe('s',ne),fe('ss',ne,X),ge(['s','ss'],5);var hn,fn,_n=$('Seconds',!1);for(F('S',0,0,(function(){return~~(this.millisecond()/100)})),F(0,['SS',2],0,(function(){return~~(this.millisecond()/10)})),F(0,['SSS',3],0,'millisecond'),F(0,['SSSS',4],0,(function(){return 10*this.millisecond()})),F(0,['SSSSS',5],0,(function(){return 100*this.millisecond()})),F(0,['SSSSSS',6],0,(function(){return 1e3*this.millisecond()})),F(0,['SSSSSSS',7],0,(function(){return 1e4*this.millisecond()})),F(0,['SSSSSSSS',8],0,(function(){return 1e5*this.millisecond()})),F(0,['SSSSSSSSS',9],0,(function(){return 1e6*this.millisecond()})),U('millisecond','ms'),j('millisecond',16),fe('S',se,Q),fe('SS',se,X),fe('SSS',se,K),hn='SSSS';hn.length<=9;hn+='S')fe(hn,le);function mn(e,t){t[6]=z(1e3*('0.'+e))}for(hn='S';hn.length<=9;hn+='S')ge(hn,mn);fn=$('Milliseconds',!1),F('z',0,0,'zoneAbbr'),F('zz',0,0,'zoneName');var pn=w.prototype;function yn(e){return e}pn.add=zt,pn.calendar=function(e,t){1===arguments.length&&(Bt(arguments[0])?(e=arguments[0],t=void 0):Jt(arguments[0])&&(t=arguments[0],e=void 0));var n=e||St(),r=Ht(n,this).startOf('day'),s=i.calendarFormat(this,r)||'sameElse',a=t&&(Y(t[s])?t[s].call(this,n):t[s]);return this.format(a||this.localeData().calendar(s,this,St(n)))},pn.clone=function(){return new w(this)},pn.diff=function(e,t,n){var i,r,s;if(!this.isValid())return NaN;if(!(i=Ht(e,this)).isValid())return NaN;switch(r=6e4*(i.utcOffset()-this.utcOffset()),t=I(t)){case'year':s=Qt(this,i)/12;break;case'month':s=Qt(this,i);break;case'quarter':s=Qt(this,i)/3;break;case'second':s=(this-i)/1e3;break;case'minute':s=(this-i)/6e4;break;case'hour':s=(this-i)/36e5;break;case'day':s=(this-i-r)/864e5;break;case'week':s=(this-i-r)/6048e5;break;default:s=this-i}return n?s:Z(s)},pn.endOf=function(e){var t,n;if(void 0===(e=I(e))||'millisecond'===e||!this.isValid())return this;switch(n=this._isUTC?rn:nn,e){case'year':t=n(this.year()+1,0,1)-1;break;case'quarter':t=n(this.year(),this.month()-this.month()%3+3,1)-1;break;case'month':t=n(this.year(),this.month()+1,1)-1;break;case'week':t=n(this.year(),this.month(),this.date()-this.weekday()+7)-1;break;case'isoWeek':t=n(this.year(),this.month(),this.date()-(this.isoWeekday()-1)+7)-1;break;case'day':case'date':t=n(this.year(),this.month(),this.date()+1)-1;break;case'hour':t=this._d.valueOf(),t+=36e5-tn(t+(this._isUTC?0:6e4*this.utcOffset()),36e5)-1;break;case'minute':t=this._d.valueOf(),t+=6e4-tn(t,6e4)-1;break;case'second':t=this._d.valueOf(),t+=1e3-tn(t,1e3)-1}return this._d.setTime(t),i.updateOffset(this,!0),this},pn.format=function(e){e||(e=this.isUtc()?i.defaultFormatUtc:i.defaultFormat);var t=H(this,e);return this.localeData().postformat(t)},pn.from=function(e,t){return this.isValid()&&(k(e)&&e.isValid()||St(e).isValid())?At({to:this,from:e}).locale(this.locale()).humanize(!t):this.localeData().invalidDate()},pn.fromNow=function(e){return this.from(St(),e)},pn.to=function(e,t){return this.isValid()&&(k(e)&&e.isValid()||St(e).isValid())?At({from:this,to:e}).locale(this.locale()).humanize(!t):this.localeData().invalidDate()},pn.toNow=function(e){return this.to(St(),e)},pn.get=function(e){return Y(this[e=I(e)])?this[e]():this},pn.invalidAt=function(){return _(this).overflow},pn.isAfter=function(e,t){var n=k(e)?e:St(e);return!(!this.isValid()||!n.isValid())&&('millisecond'===(t=I(t)||'millisecond')?this.valueOf()>n.valueOf():n.valueOf()<this.clone().startOf(t).valueOf())},pn.isBefore=function(e,t){var n=k(e)?e:St(e);return!(!this.isValid()||!n.isValid())&&('millisecond'===(t=I(t)||'millisecond')?this.valueOf()<n.valueOf():this.clone().endOf(t).valueOf()<n.valueOf())},pn.isBetween=function(e,t,n,i){var r=k(e)?e:St(e),s=k(t)?t:St(t);return!!(this.isValid()&&r.isValid()&&s.isValid())&&(('('===(i=i||'()')[0]?this.isAfter(r,n):!this.isBefore(r,n))&&(')'===i[1]?this.isBefore(s,n):!this.isAfter(s,n)))},pn.isSame=function(e,t){var n,i=k(e)?e:St(e);return!(!this.isValid()||!i.isValid())&&('millisecond'===(t=I(t)||'millisecond')?this.valueOf()===i.valueOf():(n=i.valueOf(),this.clone().startOf(t).valueOf()<=n&&n<=this.clone().endOf(t).valueOf()))},pn.isSameOrAfter=function(e,t){return this.isSame(e,t)||this.isAfter(e,t)},pn.isSameOrBefore=function(e,t){return this.isSame(e,t)||this.isBefore(e,t)},pn.isValid=function(){return m(this)},pn.lang=Kt,pn.locale=Xt,pn.localeData=en,pn.max=Yt,pn.min=Tt,pn.parsingFlags=function(){return h({},_(this))},pn.set=function(e,t){if('object'==typeof e){var n,i=function(e){var t,n=[];for(t in e)a(e,t)&&n.push({unit:t,priority:V[t]});return n.sort((function(e,t){return e.priority-t.priority})),n}(e=A(e));for(n=0;n<i.length;n++)this[i[n].unit](e[i[n].unit])}else if(Y(this[e=I(e)]))return this[e](t);return this},pn.startOf=function(e){var t,n;if(void 0===(e=I(e))||'millisecond'===e||!this.isValid())return this;switch(n=this._isUTC?rn:nn,e){case'year':t=n(this.year(),0,1);break;case'quarter':t=n(this.year(),this.month()-this.month()%3,1);break;case'month':t=n(this.year(),this.month(),1);break;case'week':t=n(this.year(),this.month(),this.date()-this.weekday());break;case'isoWeek':t=n(this.year(),this.month(),this.date()-(this.isoWeekday()-1));break;case'day':case'date':t=n(this.year(),this.month(),this.date());break;case'hour':t=this._d.valueOf(),t-=tn(t+(this._isUTC?0:6e4*this.utcOffset()),36e5);break;case'minute':t=this._d.valueOf(),t-=tn(t,6e4);break;case'second':t=this._d.valueOf(),t-=tn(t,1e3)}return this._d.setTime(t),i.updateOffset(this,!0),this},pn.subtract=$t,pn.toArray=function(){var e=this;return[e.year(),e.month(),e.date(),e.hour(),e.minute(),e.second(),e.millisecond()]},pn.toObject=function(){var e=this;return{years:e.year(),months:e.month(),date:e.date(),hours:e.hours(),minutes:e.minutes(),seconds:e.seconds(),milliseconds:e.milliseconds()}},pn.toDate=function(){return new Date(this.valueOf())},pn.toISOString=function(e){if(!this.isValid())return null;var t=!0!==e,n=t?this.clone().utc():this;return n.year()<0||n.year()>9999?H(n,t?'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]':'YYYYYY-MM-DD[T]HH:mm:ss.SSSZ'):Y(Date.prototype.toISOString)?t?this.toDate().toISOString():new Date(this.valueOf()+60*this.utcOffset()*1e3).toISOString().replace('Z',H(n,'Z')):H(n,t?'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]':'YYYY-MM-DD[T]HH:mm:ss.SSSZ')},pn.inspect=function(){if(!this.isValid())return'moment.invalid(/* '+this._i+' */)';var e,t,n,i='moment',r='';return this.isLocal()||(i=0===this.utcOffset()?'moment.utc':'moment.parseZone',r='Z'),e='['+i+'(\"]',t=0<=this.year()&&this.year()<=9999?'YYYY':'YYYYYY',n=r+'[\")]',this.format(e+t+'-MM-DD[T]HH:mm:ss.SSS'+n)},'undefined'!=typeof Symbol&&null!=Symbol.for&&(pn[Symbol.for('nodejs.util.inspect.custom')]=function(){return'Moment<'+this.format()+'>'}),pn.toJSON=function(){return this.isValid()?this.toISOString():null},pn.toString=function(){return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ')},pn.unix=function(){return Math.floor(this.valueOf()/1e3)},pn.valueOf=function(){return this._d.valueOf()-6e4*(this._offset||0)},pn.creationData=function(){return{input:this._i,format:this._f,locale:this._locale,isUTC:this._isUTC,strict:this._strict}},pn.eraName=function(){var e,t,n,i=this.localeData().eras();for(e=0,t=i.length;e<t;++e){if(n=this.startOf('day').valueOf(),i[e].since<=n&&n<=i[e].until)return i[e].name;if(i[e].until<=n&&n<=i[e].since)return i[e].name}return''},pn.eraNarrow=function(){var e,t,n,i=this.localeData().eras();for(e=0,t=i.length;e<t;++e){if(n=this.startOf('day').valueOf(),i[e].since<=n&&n<=i[e].until)return i[e].narrow;if(i[e].until<=n&&n<=i[e].since)return i[e].narrow}return''},pn.eraAbbr=function(){var e,t,n,i=this.localeData().eras();for(e=0,t=i.length;e<t;++e){if(n=this.startOf('day').valueOf(),i[e].since<=n&&n<=i[e].until)return i[e].abbr;if(i[e].until<=n&&n<=i[e].since)return i[e].abbr}return''},pn.eraYear=function(){var e,t,n,r,s=this.localeData().eras();for(e=0,t=s.length;e<t;++e)if(n=s[e].since<=s[e].until?1:-1,r=this.startOf('day').valueOf(),s[e].since<=r&&r<=s[e].until||s[e].until<=r&&r<=s[e].since)return(this.year()-i(s[e].since).year())*n+s[e].offset;return this.year()},pn.year=Pe,pn.isLeapYear=function(){return G(this.year())},pn.weekYear=function(e){return ln.call(this,e,this.week(),this.weekday(),this.localeData()._week.dow,this.localeData()._week.doy)},pn.isoWeekYear=function(e){return ln.call(this,e,this.isoWeek(),this.isoWeekday(),1,4)},pn.quarter=pn.quarters=function(e){return null==e?Math.ceil((this.month()+1)/3):this.month(3*(e-1)+this.month()%3)},pn.month=xe,pn.daysInMonth=function(){return ke(this.year(),this.month())},pn.week=pn.weeks=function(e){var t=this.localeData().week(this);return null==e?t:this.add(7*(e-t),'d')},pn.isoWeek=pn.isoWeeks=function(e){var t=Le(this,1,4).week;return null==e?t:this.add(7*(e-t),'d')},pn.weeksInYear=function(){var e=this.localeData()._week;return Ee(this.year(),e.dow,e.doy)},pn.weeksInWeekYear=function(){var e=this.localeData()._week;return Ee(this.weekYear(),e.dow,e.doy)},pn.isoWeeksInYear=function(){return Ee(this.year(),1,4)},pn.isoWeeksInISOWeekYear=function(){return Ee(this.isoWeekYear(),1,4)},pn.date=cn,pn.day=pn.days=function(e){if(!this.isValid())return null!=e?this:NaN;var t=this._isUTC?this._d.getUTCDay():this._d.getDay();return null!=e?(e=function(e,t){return'string'!=typeof e?e:isNaN(e)?'number'==typeof(e=t.weekdaysParse(e))?e:null:parseInt(e,10)}(e,this.localeData()),this.add(e-t,'d')):t},pn.weekday=function(e){if(!this.isValid())return null!=e?this:NaN;var t=(this.day()+7-this.localeData()._week.dow)%7;return null==e?t:this.add(e-t,'d')},pn.isoWeekday=function(e){if(!this.isValid())return null!=e?this:NaN;if(null!=e){var t=function(e,t){return'string'==typeof e?t.weekdaysParse(e)%7||7:isNaN(e)?null:e}(e,this.localeData());return this.day(this.day()%7?t:t-7)}return this.day()||7},pn.dayOfYear=function(e){var t=Math.round((this.clone().startOf('day')-this.clone().startOf('year'))/864e5)+1;return null==e?t:this.add(e-t,'d')},pn.hour=pn.hours=Xe,pn.minute=pn.minutes=dn,pn.second=pn.seconds=_n,pn.millisecond=pn.milliseconds=fn,pn.utcOffset=function(e,t,n){var r,s=this._offset||0;if(!this.isValid())return null!=e?this:NaN;if(null!=e){if('string'==typeof e){if(null===(e=Ft(de,e)))return this}else Math.abs(e)<16&&!n&&(e*=60);return!this._isUTC&&t&&(r=Lt(this)),this._offset=e,this._isUTC=!0,null!=r&&this.add(r,'m'),s!==e&&(!t||this._changeInProgress?Zt(this,At(e-s,'m'),1,!1):this._changeInProgress||(this._changeInProgress=!0,i.updateOffset(this,!0),this._changeInProgress=null)),this}return this._isUTC?s:Lt(this)},pn.utc=function(e){return this.utcOffset(0,e)},pn.local=function(e){return this._isUTC&&(this.utcOffset(0,e),this._isUTC=!1,e&&this.subtract(Lt(this),'m')),this},pn.parseZone=function(){if(null!=this._tzm)this.utcOffset(this._tzm,!1,!0);else if('string'==typeof this._i){var e=Ft(ce,this._i);null!=e?this.utcOffset(e):this.utcOffset(0,!0)}return this},pn.hasAlignedHourOffset=function(e){return!!this.isValid()&&(e=e?St(e).utcOffset():0,(this.utcOffset()-e)%60==0)},pn.isDST=function(){return this.utcOffset()>this.clone().month(0).utcOffset()||this.utcOffset()>this.clone().month(5).utcOffset()},pn.isLocal=function(){return!!this.isValid()&&!this._isUTC},pn.isUtcOffset=function(){return!!this.isValid()&&this._isUTC},pn.isUtc=Et,pn.isUTC=Et,pn.zoneAbbr=function(){return this._isUTC?'UTC':''},pn.zoneName=function(){return this._isUTC?'Coordinated Universal Time':''},pn.dates=b('dates accessor is deprecated. Use date instead.',cn),pn.months=b('months accessor is deprecated. Use month instead',xe),pn.years=b('years accessor is deprecated. Use year instead',Pe),pn.zone=b('moment().zone is deprecated, use moment().utcOffset instead. http://momentjs.com/guides/#/warnings/zone/',(function(e,t){return null!=e?('string'!=typeof e&&(e=-e),this.utcOffset(e,t),this):-this.utcOffset()})),pn.isDSTShifted=b('isDSTShifted is deprecated. See http://momentjs.com/guides/#/warnings/dst-shifted/ for more information',(function(){if(!l(this._isDSTShifted))return this._isDSTShifted;var e,t={};return v(t,this),(t=bt(t))._a?(e=t._isUTC?f(t._a):St(t._a),this._isDSTShifted=this.isValid()&&function(e,t,n){var i,r=Math.min(e.length,t.length),s=Math.abs(e.length-t.length),a=0;for(i=0;i<r;i++)(n&&e[i]!==t[i]||!n&&z(e[i])!==z(t[i]))&&a++;return a+s}(t._a,e.toArray())>0):this._isDSTShifted=!1,this._isDSTShifted}));var gn=x.prototype;function vn(e,t,n,i){var r=ot(),s=f().set(i,t);return r[n](s,e)}function wn(e,t,n){if(u(e)&&(t=e,e=void 0),e=e||'',null!=t)return vn(e,t,n,'month');var i,r=[];for(i=0;i<12;i++)r[i]=vn(e,i,n,'month');return r}function kn(e,t,n,i){'boolean'==typeof e?(u(t)&&(n=t,t=void 0),t=t||''):(n=t=e,e=!1,u(t)&&(n=t,t=void 0),t=t||'');var r,s=ot(),a=e?s._week.dow:0,o=[];if(null!=n)return vn(t,(n+a)%7,i,'day');for(r=0;r<7;r++)o[r]=vn(t,(r+a)%7,i,'day');return o}gn.calendar=function(e,t,n){var i=this._calendar[e]||this._calendar.sameElse;return Y(i)?i.call(t,n):i},gn.longDateFormat=function(e){var t=this._longDateFormat[e],n=this._longDateFormat[e.toUpperCase()];return t||!n?t:(this._longDateFormat[e]=n.match(C).map((function(e){return'MMMM'===e||'MM'===e||'DD'===e||'dddd'===e?e.slice(1):e})).join(''),this._longDateFormat[e])},gn.invalidDate=function(){return this._invalidDate},gn.ordinal=function(e){return this._ordinal.replace('%d',e)},gn.preparse=yn,gn.postformat=yn,gn.relativeTime=function(e,t,n,i){var r=this._relativeTime[n];return Y(r)?r(e,t,n,i):r.replace(/%d/i,e)},gn.pastFuture=function(e,t){var n=this._relativeTime[e>0?'future':'past'];return Y(n)?n(t):n.replace(/%s/i,t)},gn.set=function(e){var t,n;for(n in e)a(e,n)&&(Y(t=e[n])?this[n]=t:this['_'+n]=t);this._config=e,this._dayOfMonthOrdinalParseLenient=new RegExp((this._dayOfMonthOrdinalParse.source||this._ordinalParse.source)+'|'+/\\d{1,2}/.source)},gn.eras=function(e,t){var n,r,s,a=this._eras||ot('en')._eras;for(n=0,r=a.length;n<r;++n){switch(typeof a[n].since){case'string':s=i(a[n].since).startOf('day'),a[n].since=s.valueOf()}switch(typeof a[n].until){case'undefined':a[n].until=1/0;break;case'string':s=i(a[n].until).startOf('day').valueOf(),a[n].until=s.valueOf()}}return a},gn.erasParse=function(e,t,n){var i,r,s,a,o,l=this.eras();for(e=e.toUpperCase(),i=0,r=l.length;i<r;++i)if(s=l[i].name.toUpperCase(),a=l[i].abbr.toUpperCase(),o=l[i].narrow.toUpperCase(),n)switch(t){case'N':case'NN':case'NNN':if(a===e)return l[i];break;case'NNNN':if(s===e)return l[i];break;case'NNNNN':if(o===e)return l[i]}else if([s,a,o].indexOf(e)>=0)return l[i]},gn.erasConvertYear=function(e,t){var n=e.since<=e.until?1:-1;return void 0===t?i(e.since).year():i(e.since).year()+(t-e.offset)*n},gn.erasAbbrRegex=function(e){return a(this,'_erasAbbrRegex')||an.call(this),e?this._erasAbbrRegex:this._erasRegex},gn.erasNameRegex=function(e){return a(this,'_erasNameRegex')||an.call(this),e?this._erasNameRegex:this._erasRegex},gn.erasNarrowRegex=function(e){return a(this,'_erasNarrowRegex')||an.call(this),e?this._erasNarrowRegex:this._erasRegex},gn.months=function(e,t){return e?r(this._months)?this._months[e.month()]:this._months[(this._months.isFormat||Me).test(t)?'format':'standalone'][e.month()]:r(this._months)?this._months:this._months.standalone},gn.monthsShort=function(e,t){return e?r(this._monthsShort)?this._monthsShort[e.month()]:this._monthsShort[Me.test(t)?'format':'standalone'][e.month()]:r(this._monthsShort)?this._monthsShort:this._monthsShort.standalone},gn.monthsParse=function(e,t,n){var i,r,s;if(this._monthsParseExact)return Ye.call(this,e,t,n);for(this._monthsParse||(this._monthsParse=[],this._longMonthsParse=[],this._shortMonthsParse=[]),i=0;i<12;i++){if(r=f([2e3,i]),n&&!this._longMonthsParse[i]&&(this._longMonthsParse[i]=new RegExp('^'+this.months(r,'').replace('.','')+'$','i'),this._shortMonthsParse[i]=new RegExp('^'+this.monthsShort(r,'').replace('.','')+'$','i')),n||this._monthsParse[i]||(s='^'+this.months(r,'')+'|^'+this.monthsShort(r,''),this._monthsParse[i]=new RegExp(s.replace('.',''),'i')),n&&'MMMM'===t&&this._longMonthsParse[i].test(e))return i;if(n&&'MMM'===t&&this._shortMonthsParse[i].test(e))return i;if(!n&&this._monthsParse[i].test(e))return i}},gn.monthsRegex=function(e){return this._monthsParseExact?(a(this,'_monthsRegex')||Ne.call(this),e?this._monthsStrictRegex:this._monthsRegex):(a(this,'_monthsRegex')||(this._monthsRegex=Te),this._monthsStrictRegex&&e?this._monthsStrictRegex:this._monthsRegex)},gn.monthsShortRegex=function(e){return this._monthsParseExact?(a(this,'_monthsRegex')||Ne.call(this),e?this._monthsShortStrictRegex:this._monthsShortRegex):(a(this,'_monthsShortRegex')||(this._monthsShortRegex=Se),this._monthsShortStrictRegex&&e?this._monthsShortStrictRegex:this._monthsShortRegex)},gn.week=function(e){return Le(e,this._week.dow,this._week.doy).week},gn.firstDayOfYear=function(){return this._week.doy},gn.firstDayOfWeek=function(){return this._week.dow},gn.weekdays=function(e,t){var n=r(this._weekdays)?this._weekdays:this._weekdays[e&&!0!==e&&this._weekdays.isFormat.test(t)?'format':'standalone'];return!0===e?Ue(n,this._week.dow):e?n[e.day()]:n},gn.weekdaysMin=function(e){return!0===e?Ue(this._weekdaysMin,this._week.dow):e?this._weekdaysMin[e.day()]:this._weekdaysMin},gn.weekdaysShort=function(e){return!0===e?Ue(this._weekdaysShort,this._week.dow):e?this._weekdaysShort[e.day()]:this._weekdaysShort},gn.weekdaysParse=function(e,t,n){var i,r,s;if(this._weekdaysParseExact)return ze.call(this,e,t,n);for(this._weekdaysParse||(this._weekdaysParse=[],this._minWeekdaysParse=[],this._shortWeekdaysParse=[],this._fullWeekdaysParse=[]),i=0;i<7;i++){if(r=f([2e3,1]).day(i),n&&!this._fullWeekdaysParse[i]&&(this._fullWeekdaysParse[i]=new RegExp('^'+this.weekdays(r,'').replace('.','\\\\.?')+'$','i'),this._shortWeekdaysParse[i]=new RegExp('^'+this.weekdaysShort(r,'').replace('.','\\\\.?')+'$','i'),this._minWeekdaysParse[i]=new RegExp('^'+this.weekdaysMin(r,'').replace('.','\\\\.?')+'$','i')),this._weekdaysParse[i]||(s='^'+this.weekdays(r,'')+'|^'+this.weekdaysShort(r,'')+'|^'+this.weekdaysMin(r,''),this._weekdaysParse[i]=new RegExp(s.replace('.',''),'i')),n&&'dddd'===t&&this._fullWeekdaysParse[i].test(e))return i;if(n&&'ddd'===t&&this._shortWeekdaysParse[i].test(e))return i;if(n&&'dd'===t&&this._minWeekdaysParse[i].test(e))return i;if(!n&&this._weekdaysParse[i].test(e))return i}},gn.weekdaysRegex=function(e){return this._weekdaysParseExact?(a(this,'_weekdaysRegex')||$e.call(this),e?this._weekdaysStrictRegex:this._weekdaysRegex):(a(this,'_weekdaysRegex')||(this._weekdaysRegex=je),this._weekdaysStrictRegex&&e?this._weekdaysStrictRegex:this._weekdaysRegex)},gn.weekdaysShortRegex=function(e){return this._weekdaysParseExact?(a(this,'_weekdaysRegex')||$e.call(this),e?this._weekdaysShortStrictRegex:this._weekdaysShortRegex):(a(this,'_weekdaysShortRegex')||(this._weekdaysShortRegex=Ge),this._weekdaysShortStrictRegex&&e?this._weekdaysShortStrictRegex:this._weekdaysShortRegex)},gn.weekdaysMinRegex=function(e){return this._weekdaysParseExact?(a(this,'_weekdaysRegex')||$e.call(this),e?this._weekdaysMinStrictRegex:this._weekdaysMinRegex):(a(this,'_weekdaysMinRegex')||(this._weekdaysMinRegex=Ze),this._weekdaysMinStrictRegex&&e?this._weekdaysMinStrictRegex:this._weekdaysMinRegex)},gn.isPM=function(e){return'p'===(e+'').toLowerCase().charAt(0)},gn.meridiem=function(e,t,n){return e>11?n?'pm':'PM':n?'am':'AM'},st('en',{eras:[{since:'0001-01-01',until:1/0,offset:1,name:'Anno Domini',narrow:'AD',abbr:'AD'},{since:'0000-12-31',until:-1/0,offset:1,name:'Before Christ',narrow:'BC',abbr:'BC'}],dayOfMonthOrdinalParse:/\\d{1,2}(th|st|nd|rd)/,ordinal:function(e){var t=e%10;return e+(1===z(e%100/10)?'th':1===t?'st':2===t?'nd':3===t?'rd':'th')}}),i.lang=b('moment.lang is deprecated. Use moment.locale instead.',st),i.langData=b('moment.langData is deprecated. Use moment.localeData instead.',ot);var Dn=Math.abs;function bn(e,t,n,i){var r=At(t,n);return e._milliseconds+=i*r._milliseconds,e._days+=i*r._days,e._months+=i*r._months,e._bubble()}function Mn(e){return e<0?Math.floor(e):Math.ceil(e)}function Sn(e){return 4800*e/146097}function Tn(e){return 146097*e/4800}function Yn(e){return function(){return this.as(e)}}var On=Yn('ms'),xn=Yn('s'),Nn=Yn('m'),Cn=Yn('h'),Pn=Yn('d'),Rn=Yn('w'),Wn=Yn('M'),Fn=Yn('Q'),Hn=Yn('y');function Ln(e){return function(){return this.isValid()?this._data[e]:NaN}}var En=Ln('milliseconds'),Un=Ln('seconds'),In=Ln('minutes'),An=Ln('hours'),Vn=Ln('days'),jn=Ln('months'),Gn=Ln('years'),Zn=Math.round,zn={ss:44,s:45,m:45,h:22,d:26,w:null,M:11};function $n(e,t,n,i,r){return r.relativeTime(t||1,!!n,e,i)}var qn=Math.abs;function Bn(e){return(e>0)-(e<0)||+e}function Jn(){if(!this.isValid())return this.localeData().invalidDate();var e,t,n,i,r,s,a,o,l=qn(this._milliseconds)/1e3,u=qn(this._days),c=qn(this._months),d=this.asSeconds();return d?(e=Z(l/60),t=Z(e/60),l%=60,e%=60,n=Z(c/12),c%=12,i=l?l.toFixed(3).replace(/\\.?0+$/,''):'',r=d<0?'-':'',s=Bn(this._months)!==Bn(d)?'-':'',a=Bn(this._days)!==Bn(d)?'-':'',o=Bn(this._milliseconds)!==Bn(d)?'-':'',r+'P'+(n?s+n+'Y':'')+(c?s+c+'M':'')+(u?a+u+'D':'')+(t||e||l?'T':'')+(t?o+t+'H':'')+(e?o+e+'M':'')+(l?o+i+'S':'')):'P0D'}var Qn=Nt.prototype;return Qn.isValid=function(){return this._isValid},Qn.abs=function(){var e=this._data;return this._milliseconds=Dn(this._milliseconds),this._days=Dn(this._days),this._months=Dn(this._months),e.milliseconds=Dn(e.milliseconds),e.seconds=Dn(e.seconds),e.minutes=Dn(e.minutes),e.hours=Dn(e.hours),e.months=Dn(e.months),e.years=Dn(e.years),this},Qn.add=function(e,t){return bn(this,e,t,1)},Qn.subtract=function(e,t){return bn(this,e,t,-1)},Qn.as=function(e){if(!this.isValid())return NaN;var t,n,i=this._milliseconds;if('month'===(e=I(e))||'quarter'===e||'year'===e)switch(t=this._days+i/864e5,n=this._months+Sn(t),e){case'month':return n;case'quarter':return n/3;case'year':return n/12}else switch(t=this._days+Math.round(Tn(this._months)),e){case'week':return t/7+i/6048e5;case'day':return t+i/864e5;case'hour':return 24*t+i/36e5;case'minute':return 1440*t+i/6e4;case'second':return 86400*t+i/1e3;case'millisecond':return Math.floor(864e5*t)+i;default:throw new Error('Unknown unit '+e)}},Qn.asMilliseconds=On,Qn.asSeconds=xn,Qn.asMinutes=Nn,Qn.asHours=Cn,Qn.asDays=Pn,Qn.asWeeks=Rn,Qn.asMonths=Wn,Qn.asQuarters=Fn,Qn.asYears=Hn,Qn.valueOf=function(){return this.isValid()?this._milliseconds+864e5*this._days+this._months%12*2592e6+31536e6*z(this._months/12):NaN},Qn._bubble=function(){var e,t,n,i,r,s=this._milliseconds,a=this._days,o=this._months,l=this._data;return s>=0&&a>=0&&o>=0||s<=0&&a<=0&&o<=0||(s+=864e5*Mn(Tn(o)+a),a=0,o=0),l.milliseconds=s%1e3,e=Z(s/1e3),l.seconds=e%60,t=Z(e/60),l.minutes=t%60,n=Z(t/60),l.hours=n%24,a+=Z(n/24),r=Z(Sn(a)),o+=r,a-=Mn(Tn(r)),i=Z(o/12),o%=12,l.days=a,l.months=o,l.years=i,this},Qn.clone=function(){return At(this)},Qn.get=function(e){return e=I(e),this.isValid()?this[e+'s']():NaN},Qn.milliseconds=En,Qn.seconds=Un,Qn.minutes=In,Qn.hours=An,Qn.days=Vn,Qn.weeks=function(){return Z(this.days()/7)},Qn.months=jn,Qn.years=Gn,Qn.humanize=function(e,t){if(!this.isValid())return this.localeData().invalidDate();var n,i,r=!1,s=zn;return'object'==typeof e&&(t=e,e=!1),'boolean'==typeof e&&(r=e),'object'==typeof t&&(s=Object.assign({},zn,t),null!=t.s&&null==t.ss&&(s.ss=t.s-1)),n=this.localeData(),i=function(e,t,n,i){var r=At(e).abs(),s=Zn(r.as('s')),a=Zn(r.as('m')),o=Zn(r.as('h')),l=Zn(r.as('d')),u=Zn(r.as('M')),c=Zn(r.as('w')),d=Zn(r.as('y')),h=s<=n.ss&&['s',s]||s<n.s&&['ss',s]||a<=1&&['m']||a<n.m&&['mm',a]||o<=1&&['h']||o<n.h&&['hh',o]||l<=1&&['d']||l<n.d&&['dd',l];return null!=n.w&&(h=h||c<=1&&['w']||c<n.w&&['ww',c]),(h=h||u<=1&&['M']||u<n.M&&['MM',u]||d<=1&&['y']||['yy',d])[2]=t,h[3]=+e>0,h[4]=i,$n.apply(null,h)}(this,!r,s,n),r&&(i=n.pastFuture(+this,i)),n.postformat(i)},Qn.toISOString=Jn,Qn.toString=Jn,Qn.toJSON=Jn,Qn.locale=Xt,Qn.localeData=en,Qn.toIsoString=b('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)',Jn),Qn.lang=Kt,F('X',0,0,'unix'),F('x',0,0,'valueOf'),fe('x',ue),fe('X',/[+-]?\\d+(\\.\\d{1,3})?/),ge('X',(function(e,t,n){n._d=new Date(1e3*parseFloat(e))})),ge('x',(function(e,t,n){n._d=new Date(z(e))})),i.version='2.26.0',t=St,i.fn=pn,i.min=function(){var e=[].slice.call(arguments,0);return Ot('isBefore',e)},i.max=function(){var e=[].slice.call(arguments,0);return Ot('isAfter',e)},i.now=function(){return Date.now?Date.now():+new Date},i.utc=f,i.unix=function(e){return St(1e3*e)},i.months=function(e,t){return wn(e,t,'months')},i.isDate=c,i.locale=st,i.invalid=p,i.duration=At,i.isMoment=k,i.weekdays=function(e,t,n){return kn(e,t,n,'weekdays')},i.parseZone=function(){return St.apply(null,arguments).parseZone()},i.localeData=ot,i.isDuration=Ct,i.monthsShort=function(e,t){return wn(e,t,'monthsShort')},i.weekdaysMin=function(e,t,n){return kn(e,t,n,'weekdaysMin')},i.defineLocale=at,i.updateLocale=function(e,t){if(null!=t){var n,i,r=Ke;null!=et[e]&&null!=et[e].parentLocale?et[e].set(O(et[e]._config,t)):(null!=(i=rt(e))&&(r=i._config),t=O(r,t),null==i&&(t.abbr=e),(n=new x(t)).parentLocale=et[e],et[e]=n),st(e)}else null!=et[e]&&(null!=et[e].parentLocale?(et[e]=et[e].parentLocale,e===st()&&st(e)):null!=et[e]&&delete et[e]);return et[e]},i.locales=function(){return M(et)},i.weekdaysShort=function(e,t,n){return kn(e,t,n,'weekdaysShort')},i.normalizeUnits=I,i.relativeTimeRounding=function(e){return void 0===e?Zn:'function'==typeof e&&(Zn=e,!0)},i.relativeTimeThreshold=function(e,t){return void 0!==zn[e]&&(void 0===t?zn[e]:(zn[e]=t,'s'===e&&(zn.ss=t-1),!0))},i.calendarFormat=function(e,t){var n=e.diff(t,'days',!0);return n<-6?'sameElse':n<-1?'lastWeek':n<0?'lastDay':n<1?'sameDay':n<2?'nextDay':n<7?'nextWeek':'sameElse'},i.prototype=pn,i.HTML5_FMT={DATETIME_LOCAL:'YYYY-MM-DDTHH:mm',DATETIME_LOCAL_SECONDS:'YYYY-MM-DDTHH:mm:ss',DATETIME_LOCAL_MS:'YYYY-MM-DDTHH:mm:ss.SSS',DATE:'YYYY-MM-DD',TIME:'HH:mm',TIME_SECONDS:'HH:mm:ss',TIME_MS:'HH:mm:ss.SSS',WEEK:'GGGG-[W]WW',MONTH:'YYYY-MM'},i}()}).call(this,n(4)(e))},function(e,t){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},e.paths=[],e.children||(e.children=[]),Object.defineProperty(e,'loaded',{enumerable:!0,get:function(){return e.l}}),Object.defineProperty(e,'id',{enumerable:!0,get:function(){return e.i}}),e.webpackPolyfill=1),e}},function(e,t){function n(e){return Array.isArray(e)?e:[e]}function i(e,t,n){if(e.appliesIf(n)){var i='function'==typeof e.fields?e.fields(n):e.fields.filter((function(e){switch(typeof e.appliesIf){case'undefined':return!0;case'function':return e.appliesIf(n);default:return e.appliesIf}})).map((function(e){var t={};return r(e,t,'label'),r(e,t,'value'),r(e,t,'translate'),r(e,t,'filter'),r(e,t,'width'),r(e,t,'icon'),e.context&&(t.context={},r(e.context,t.context,'count'),r(e.context,t.context,'total')),t}));return e.modifyContext&&e.modifyContext(t,n),{label:e.label,fields:i}}function r(e,t,i){switch(typeof e[i]){case'undefined':return;case'function':t[i]=e[i](n);break;default:t[i]=e[i]}}}e.exports=function(e,t,r){var s=e.fields||[],a=e.context||{},o=e.cards||[],l=t&&(t.contact_type||t.type),u={cards:[],fields:s.filter((function(e){var t=n(e.appliesToType),i=t.filter((function(e){return e&&'!'===e.charAt(0)}));if((t.includes(l)||i.length>0&&!i.includes('!'+l))&&(!e.appliesIf||e.appliesIf()))return delete e.appliesToType,delete e.appliesIf,!0}))};return o.forEach((function(e){var t,s,o,c,d=n(e.appliesToType);if(d.includes('report')&&d.length>1)throw new Error('You cannot set appliesToType to an array which includes the type \\'report\\' and another type.');if(d.includes('report'))for(t=0;t<r.length;++t)s=r[t],!(c=s)||c.errors&&c.errors.length||(o=i(e,a,s))&&u.cards.push(o);else{if(!d.includes(l))return;(o=i(e,a))&&u.cards.push(o)}})),u.context=a,u}}])})); return ContactSummary;",
+    "tasks": {
+        "rules": "define Target { _id: null, contact: null, deleted: null, type: null, pass: null, date: null, groupBy: null }\ndefine Contact { contact: null, reports: null, tasks: null }\ndefine Task { _id: null, deleted: null, doc: null, contact: null, icon: null, date: null, readyStart: null, readyEnd: null, title: null, fields: null, resolved: null, priority: null, priorityLabel: null, reports: null, actions: null }\nrule GenerateEvents {\n  when { c: Contact } then { !function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){'undefined'!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:'Module'}),Object.defineProperty(e,'__esModule',{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&'object'==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,'default',{enumerable:!0,value:e}),2&t&&'string'!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,'a',t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p='',n(n.s=1)}([function(e,t){e.exports=function(e){var t={};!function e(t,n){var r=Object.keys(t);for(var o in r){var i=r[o];switch(typeof t[i]){case'object':e(t[i],n);break;case'function':t[i]=t[i].bind(n)}}}(e,t),t.definition=function e(t){var n=Object.assign({},t),r=Object.keys(n);for(var o in r){var i=r[o];if(Array.isArray(n[i])){n[i]=n[i].slice(0);for(var a=0;a<n[i].length;++a)'object'==typeof n[i][a]&&(n[i][a]=e(n[i][a]))}else'object'==typeof n[i]&&(n[i]=e(n[i]))}return n}(e)}},function(e,t,n){var r=n(2),o=n(4),i=n(5);n(6)(o,c,Utils,Target,emit),i(r,c,Utils,Task,emit),emit('_complete',{_id:!0})},function(e,t,n){const r=n(3),{MAX_DAYS_IN_PREGNANCY:o,today:i,getNewestPregnancyTimestamp:a,getNewestDeliveryTimestamp:s,isAlive:c,isFormArraySubmittedInWindow:p,getDateISOLocal:d,getTimeForMidnight:l,isDeliveryForm:_,getMostRecentLMPDateForPregnancy:u,addDays:f,getRecentANCVisitWithEvent:g,isPregnancyTaskMuted:y,getField:m}=r,v=(e,t,n)=>({id:'pregnancy-home-visit-week'+e,start:t,end:n,dueDate:function(t,n,r){const o=u(n,r);return f(o||r.reported_date,7*e)}});function h(e,t,n,r){if(t.reported_date<s(e))return!0;if(t.reported_date<a(e))return!0;if(g(e,t,'abortion')||g(e,t,'miscarriage'))return!0;if(r<=l(t.reported_date))return!0;if(y(e))return!0;const o=Math.max(f(r,-n.start).getTime(),t.reported_date),i=f(r,n.end+1).getTime();return p(e.reports,['pregnancy_home_visit'],o,i)}e.exports=[{name:'anc.pregnancy_home_visit.known_lmp',icon:'icon-pregnancy',title:'task.anc.pregnancy_home_visit.title',appliesTo:'reports',appliesToType:['pregnancy'],appliesIf:function(e,t){return!!u(e,t)},resolvedIf:h,actions:[{type:'report',form:'pregnancy_home_visit',label:'Pregnancy home visit'}],events:[v(12,7,14),v(20,7,14),v(26,7,14),v(30,7,14),v(34,6,7),v(36,6,7),v(38,6,7),v(40,6,7)]},{name:'anc.pregnancy_home_visit.unknown_lmp',icon:'icon-pregnancy',title:'task.anc.pregnancy_home_visit.title',appliesTo:'reports',appliesToType:['pregnancy'],appliesIf:function(e,t){return!u(e,t)&&f(t.reported_date,o+7)>=i},resolvedIf:h,actions:[{type:'report',form:'pregnancy_home_visit',label:'Pregnancy home visit'}],events:[...Array(21).keys()].map(e=>v(2*(e+1),6,7))},{name:'anc.facility_reminder',icon:'icon-pregnancy',title:'task.anc.facility_reminder.title',appliesTo:'reports',appliesToType:['pregnancy','pregnancy_home_visit'],appliesIf:function(e,t){return m(t,'t_pregnancy_follow_up_date')},resolvedIf:function(e,t,n,r){if(y(e))return!0;const o=Math.max(f(r,-n.start).getTime(),t.reported_date),i=f(r,n.end+1).getTime();return p(e.reports,['pregnancy_facility_visit_reminder'],o,i)},actions:[{type:'report',form:'pregnancy_facility_visit_reminder',label:'Pregnancy facility visit reminder',modifyContent:function(e,t,n){e.source_visit_date=m(n,'t_pregnancy_follow_up_date')}}],events:[{id:'pregnancy-facility-visit-reminder',start:3,end:7,dueDate:function(e,t,n){return d(m(n,'t_pregnancy_follow_up_date'))}}]},{name:'anc.pregnancy_danger_sign_followup',icon:'icon-pregnancy-danger',title:'task.anc.pregnancy_danger_sign_followup.title',appliesTo:'reports',appliesToType:['pregnancy','pregnancy_home_visit','pregnancy_danger_sign','pregnancy_danger_sign_follow_up'],appliesIf:function(e,t){return'yes'===m(t,'t_danger_signs_referral_follow_up')&&c(e)},resolvedIf:function(e,t,n,r){if(y(e))return!0;const o=Math.max(f(r,-n.start).getTime(),t.reported_date+1),i=f(r,n.end+1).getTime();return p(e.reports,['pregnancy_danger_sign_follow_up'],o,i)},actions:[{type:'report',form:'pregnancy_danger_sign_follow_up'}],events:[{id:'pregnancy-danger-sign-follow-up',start:3,end:7,dueDate:function(e,t,n){return d(m(n,'t_danger_signs_referral_follow_up_date'))}}]},{name:'anc.delivery',icon:'icon-mother-child',title:'task.anc.delivery.title',appliesTo:'reports',appliesToType:['pregnancy'],appliesIf:function(e,t){const n=u(e,t);return n&&f(n,336)>=i&&c(e)},resolvedIf:function(e,t,n,r){if(g(e,t,'abortion')||g(e,t,'miscarriage'))return!0;if(y(e))return!0;const o=Math.max(f(r,-n.start).getTime(),t.reported_date),i=f(r,n.end+1).getTime();return p(e.reports,['delivery'],o,i)},actions:[{type:'report',form:'delivery'}],events:[{id:'delivery-reminder',start:28,end:42,dueDate:function(e,t,n){return f(u(t,n),o)}}]},{name:'pnc.danger_sign_followup_mother',icon:'icon-follow-up',title:'task.pnc.danger_sign_followup_mother.title',appliesTo:'reports',appliesToType:['delivery','pnc_danger_sign_follow_up_mother'],appliesIf:function(e,t){return'yes'===m(t,'t_danger_signs_referral_follow_up')&&c(e)},resolvedIf:function(e,t,n,r){if(y(e))return!0;const o=Math.max(f(r,-n.start).getTime(),t.reported_date+1),i=f(r,n.end+1).getTime();return p(e.reports,['pnc_danger_sign_follow_up_mother'],o,i)},actions:[{type:'report',form:'pnc_danger_sign_follow_up_mother',modifyContent:function(e,t,n){_(n)?e.delivery_uuid=n._id:e.delivery_uuid=m(n,'inputs.delivery_uuid')}}],events:[{id:'pnc-danger-sign-follow-up-mother',start:3,end:7,dueDate:function(e,t,n){return d(m(n,'t_danger_signs_referral_follow_up_date'))}}]},{name:'pnc.danger_sign_followup_baby.from_contact',icon:'icon-follow-up',title:'task.pnc.danger_sign_followup_baby.title',appliesTo:'contacts',appliesToType:['person'],appliesIf:function(e){return e.contact&&'yes'===e.contact.t_danger_signs_referral_follow_up&&c(e)},resolvedIf:function(e,t,n,r){const o=Math.max(f(r,-n.start).getTime(),e.contact.reported_date),i=f(r,n.end).getTime();return p(e.reports,['pnc_danger_sign_follow_up_baby'],o,i)},actions:[{type:'report',form:'pnc_danger_sign_follow_up_baby',modifyContent:function(e,t){e.delivery_uuid=t.contact.created_by_doc}}],events:[{id:'pnc-danger-sign-follow-up-baby',start:3,end:7,dueDate:function(e,t){return d(t.contact.t_danger_signs_referral_follow_up_date)}}]},{name:'pnc.danger_sign_followup_baby.from_report',icon:'icon-follow-up',title:'task.pnc.danger_sign_followup_baby.title',appliesTo:'reports',appliesToType:['pnc_danger_sign_follow_up_baby'],appliesIf:function(e,t){return'yes'===m(t,'t_danger_signs_referral_follow_up')&&c(e)},resolvedIf:function(e,t,n,r){if(y(e))return!0;const o=Math.max(f(r,-n.start).getTime(),t.reported_date+1),i=f(r,n.end+1).getTime();return p(e.reports,['pnc_danger_sign_follow_up_baby'],o,i)},actions:[{type:'report',form:'pnc_danger_sign_follow_up_baby',modifyContent:function(e,t,n){e.delivery_uuid=m(n,'inputs.delivery_uuid')}}],events:[{id:'pnc-danger-sign-follow-up-baby',start:3,end:7,dueDate:function(e,t,n){return d(m(n,'t_danger_signs_referral_follow_up_date'))}}]}]},function(e,t){const n=l(Date.now()),r=['pregnancy'],o=['delivery'],i=['pregnancy_home_visit'],a=['pregnancy','pregnancy_home_visit','pregnancy_facility_visit_reminder','pregnancy_danger_sign','pregnancy_danger_sign_follow_up','delivery'];const s=(e,t)=>['fields',...(t||'').split('.')].reduce((e,t)=>{if(void 0!==e)return e[t]},e);function c(e,t){let n;return e.forEach((function(e){t.includes(e.form)&&!e.deleted&&(!n||e.reported_date>n.reported_date)&&(n=e)})),n}function p(e){if(!e)return new Date;const t=e.split(/\\D/),n=new Date(t[0],t[1]-1,t[2]);return function(e){return e instanceof Date&&!isNaN(e)}(n)?n:new Date}function d(e){const t=new Date(e);return t.setHours(0),t.setMinutes(0),t.setSeconds(0),t.setMilliseconds(0),t}function l(e){if('string'==typeof e){if(''===e)return null;e=p(e)}return d(e).getTime()}function _(e,t){const n=d(new Date(e));return n.setDate(n.getDate()+t),n}function u(e){return r.includes(e.form)}function f(e){return i.includes(e.form)}const g=function(e,t){let n;return e.forEach((function(e){t.includes(e.form)&&(!n||e.reported_date>n.reported_date)&&(n=e)})),n},y=function(e){return u(e)&&l(s(e,'lmp_date_8601'))};function m(e,t){return e.reports.filter((function(e){let n=y(t);return n||(n=t.reported_date),f(e)&&e.reported_date>t.reported_date&&e.reported_date<_(n,294)}))}function v(e,t){let n=y(t),r=t.reported_date;return m(e,t).forEach((function(e){const t=function(e){return f(e)&&l(s(e,'lmp_date_8601'))}(e);e.reported_date>r&&''!==t&&t!==n&&(r=e.reported_date,n=t)})),n}e.exports={today:n,MS_IN_DAY:864e5,MAX_DAYS_IN_PREGNANCY:294,addDays:_,isAlive:function(e){return e&&e.contact&&!e.contact.date_of_death},getTimeForMidnight:d,isFormArraySubmittedInWindow:function(e,t,n,r,o){let i=!1,a=0;return e.forEach((function(e){t.includes(e.form)&&e.reported_date>=n&&e.reported_date<=r&&(i=!0,o&&a++)})),o?a>=o:i},isFormArraySubmittedInWindowExcludingThisReport:function(e,t,n,r,o,i){let a=!1,s=0;return e.forEach((function(e){t.includes(e.form)&&e.reported_date>=n&&e.reported_date<=r&&e._id!==o._id&&(a=!0,i&&s++)})),i?s>=i:a},getDateMS:l,getDateISOLocal:p,isDeliveryForm:function(e){return o.includes(e.form)},getMostRecentReport:c,getNewestPregnancyTimestamp:function(e){if(!e.contact)return;const t=c(e.reports,'pregnancy');return t?t.reported_date:0},getNewestDeliveryTimestamp:function(e){if(!e.contact)return;const t=c(e.reports,'delivery');return t?t.reported_date:0},getReportsSubmittedInWindow:function(e,t,n,r,o){const i=[];return e.forEach((function(e){t.includes(e.form)&&e.reported_date>=n&&e.reported_date<=r&&(o&&!o(e)||i.push(e))})),i},countReportsSubmittedInWindow:function(e,t,n,r,o){let i=0;return e.forEach((function(e){t.includes(e.form)&&e.reported_date>=n&&e.reported_date<=r&&(o&&!o(e)||i++)})),i},countANCFacilityVisits:function(e,t){let n=0;const r=m(e,t);return s(t,'anc_visits_hf.anc_visits_hf_past')&&!isNaN(s(t,'anc_visits_hf.anc_visits_hf_past.visited_hf_count'))&&(n+=parseInt(s(t,'anc_visits_hf.anc_visits_hf_past.visited_hf_count'))),n+=r.reduce((function(e,t){const n=s(t,'anc_visits_hf.anc_visits_hf_past');return n?(e+='yes'===n.last_visit_attended&&1,isNaN(n.visited_hf_count)?e:e+('yes'===n.report_other_visits&&parseInt(n.visited_hf_count))):0}),0),n},isFacilityDelivery:function(e,t){return!!e&&(1===arguments.length&&(t=e),'yes'===s(t,'facility_delivery'))},getMostRecentLMPDateForPregnancy:v,getNewestReport:g,getSubsequentPregnancyFollowUps:m,isActivePregnancy:function(e,t){if(!u(t))return!1;const r=(v(e,t)||t.reported_date)>n-254016e5,o=function(e,t,r){return e.reports.filter((function(e){return'delivery'===e.form&&e.reported_date>t.reported_date&&(!r||t.reported_date>=n-864e5*r)}))}(e,t,42).length>0,a=function(e,t){return e.reports.filter((function(e){return u(e)&&e.reported_date>t.reported_date}))}(e,t).length>0;return r&&!o&&!a&&!function(e,t){const n=m(e,t),r=g(n,i);return r&&'abortion'===s(r,'pregnancy_summary.visit_option')}(e,t)&&!function(e,t){const n=m(e,t),r=g(n,i);return r&&'miscarriage'===s(r,'pregnancy_summary.visit_option')}(e,t)},getRecentANCVisitWithEvent:function(e,t,n){const r=m(e,t),o=g(r,i);if(o&&s(o,'pregnancy_summary.visit_option')===n)return o},isPregnancyTaskMuted:function(e){const t=g(e.reports,a);return t&&f(t)&&'clear_all'===s(t,'pregnancy_ended.clear_option')},getField:s}},function(e,t){e.exports=[{id:'hts-number-tested-this-month',type:'count',icon:'icon-person',goal:-1,translation_key:'targets.clients_tested.title',subtitle_translation_key:'targets.this_month.subtitle',appliesTo:'reports',appliesToType:['hts_initial_form','hts_retest_form'],appliesIf:function(e,t){return!!t&&('hts_initial_form'===t.form||'hts_retest_form'===t.form)},date:'reported',idType:'contact'},{id:'hts-number-positive-this-month',type:'count',icon:'icon-person',goal:-1,translation_key:'targets.clients_positive.title',subtitle_translation_key:'targets.this_month.subtitle',appliesTo:'reports',appliesToType:['hts_initial_form','hts_retest_form'],appliesIf:function(e,t){return!!t&&(('hts_initial_form'===t.form||'hts_retest_form'===t.form)&&'_703_positive_99DCT'===Utils.getField(t,'observation._159427_finalResults_99DCT'))},date:'reported',idType:'contact'},{id:'hts-number-linked-this-month',type:'count',icon:'icon-clinic',goal:-1,translation_key:'targets.clients_linked.title',subtitle_translation_key:'targets.this_month.subtitle',appliesTo:'reports',appliesToType:['hts_linkage'],appliesIf:function(e,t){return!!t&&('hts_linkage'===t.form&&''!==Utils.getField(t,'hts_linkage_assessment._162053_cccNumber_99DCT'))},date:'reported',idType:'contact'}]},function(e,t,n){var r=n(0);function o(e,t,n,r,o,i){var a;if(e.appliesToType){var s='contact'===o.contact.type?o.contact.contact_type:o.contact.type;if(!('contacts'===e.appliesTo?-1!==e.appliesToType.indexOf(s):i&&-1!==e.appliesToType.indexOf(i.form)))return}if('scheduled_tasks'===e.appliesTo||!e.appliesIf||e.appliesIf(o,i))if('scheduled_tasks'===e.appliesTo){if(i&&e.appliesIf){if(!i.scheduled_tasks)return;for(a=0;a<i.scheduled_tasks.length;a++)e.appliesIf(o,i,a)&&p(a)}}else p();function c(e,t,n){var r;return(r='function'==typeof e.contactLabel?e.contactLabel(t,n):e.contactLabel)?{name:r}:t.contact}function p(a){var s,p,l,_,u=null;for(s=0;s<e.events.length;s++){if((p=e.events[s]).dueDate)u=p.dueDate(p,o,i,a);else if(i)u=void 0!==a?new Date(t.addDate(new Date(i.scheduled_tasks[a].due),p.days)):new Date(t.addDate(new Date(i.reported_date),p.days));else if(p.dueDate)u=p.dueDate(p,o);else{var f=o.contact&&o.contact.reported_date?new Date(o.contact.reported_date):new Date;u=new Date(t.addDate(f,p.days))}t.isTimely(u,p)&&(_={_id:(i?i._id:o.contact&&o.contact._id)+'~'+(p.id||s)+'~'+e.name,deleted:!(!(o.contact&&o.contact.deleted||i)||!i.deleted),doc:o,contact:c(e,o,i),icon:e.icon,date:u,readyStart:p.start||0,readyEnd:p.end||0,title:e.title,resolved:e.resolvedIf(o,i,p,u,a),actions:e.actions.map(d)},void 0!==a&&(_._id+='-'+a),'function'==typeof(l=e.priority)&&(l=l(o,i)),l&&(_.priority=l.level,_.priorityLabel=l.label),r('task',new n(_)))}}function d(e){var t={source:'task',source_id:!!i?i._id:o.contact&&o.contact._id,contact:o.contact};return e.modifyContent&&e.modifyContent(t,o,i),{type:'report',form:e.form,label:e.label||'Follow up',content:t}}}e.exports=function(e,t,n,i,a){if(e)for(var s,c=0;c<e.length;++c)switch(s=e[c],r(s),s.appliesTo){case'reports':case'scheduled_tasks':for(var p=0;p<t.reports.length;++p)o(s,n,i,a,t,t.reports[p]);break;case'contacts':t.contact&&o(s,n,i,a,t);break;default:throw new Error('Unrecognised task.appliesTo: '+s.appliesTo)}}},function(e,t,n){var r=n(0);function o(e,t,n,r,o,i){var a=!!i;if(o.contact){var s=o.contact.contact_type||o.contact.type,c=a?i.form:s;if(!(e.appliesToType&&e.appliesToType.indexOf(c)<0)&&(!e.appliesIf||e.appliesIf(o,i)))for(var p=a?i:o.contact,d=function(e,t,n){var r;return r='function'==typeof e.idType?e.idType(t,n):'report'===e.idType?n&&n._id:t.contact&&t.contact._id,Array.isArray(r)||(r=[r]),r}(e,o,i),l=!e.passesIf||!!e.passesIf(o,i),_=function(e,t,n,r){if('function'==typeof e.date)return e.date(n,r);if(void 0===e.date||'now'===e.date)return t.now().getTime();if('reported'===e.date)return r?r.reported_date:n.contact.reported_date;throw new Error('Unrecognised value for target.date: '+e.date)}(e,n,o,i),u=e.groupBy&&e.groupBy(o,i),f=0;f<d.length;++f){var g=new t({_id:d[f]+'~'+e.id,contact:o.contact,deleted:!!p.deleted,type:e.id,pass:l,groupBy:u,date:_});e.emitCustom?e.emitCustom(y,g,o,i):y(g)}}function y(e){r('target',e)}}e.exports=function(e,t,n,i,a){for(var s=0;s<e.length;++s){var c=e[s];switch(r(c),c.appliesTo){case'contacts':o(c,i,n,a,t);break;case'reports':for(var p=0;p<t.reports.length;++p){o(c,i,n,a,t,t.reports[p])}break;default:throw new Error('Unrecognised target.appliesTo: '+c.appliesTo)}}}}]); }\n}",
+        "targets": {
+            "enabled": true,
+            "items": [
+                {
+                    "id": "hts-number-tested-this-month",
+                    "type": "count",
+                    "goal": -1,
+                    "translation_key": "targets.clients_tested.title",
+                    "icon": "icon-person",
+                    "subtitle_translation_key": "targets.this_month.subtitle"
+                },
+                {
+                    "id": "hts-number-positive-this-month",
+                    "type": "count",
+                    "goal": -1,
+                    "translation_key": "targets.clients_positive.title",
+                    "icon": "icon-person",
+                    "subtitle_translation_key": "targets.this_month.subtitle"
+                },
+                {
+                    "id": "hts-number-linked-this-month",
+                    "type": "count",
+                    "goal": -1,
+                    "translation_key": "targets.clients_linked.title",
+                    "icon": "icon-clinic",
+                    "subtitle_translation_key": "targets.this_month.subtitle"
+                }
+            ]
+        }
+    },
+    "transitions": {
+        "accept_patient_reports": false,
+        "conditional_alerts": false,
+        "default_responses": false,
+        "update_sent_by": false,
+        "registration": false,
+        "update_clinics": false,
+        "update_notifications": false,
+        "update_scheduled_reports": false,
+        "update_sent_forms": false,
+        "generate_patient_id_on_people": true,
+        "death_reporting": true,
+        "mark_for_outbound": true
+    },
+    "dhisDataSets": [
+        {
+            "guid": "VMuFODsyWaO",
+            "label": "MoH Monthly Integration"
+        }
+    ],
+    "replications": [
+        {
+            "fromSuffix": "user-[^\\-]+-meta",
+            "toSuffix": "users-meta",
+            "text_expression": "",
+            "cron": "0 2 * * *"
+        }
+    ],
+    "dhis_data_sets": [
+        {
+            "id": "VMuFODsyWaO",
+            "translation_key": "dhis.dataset.monthly.integration"
+        }
+    ],
+    "outbound": {
+        "cht_client_registration": {
+            "relevant_to": "doc.type === 'contact' && doc.contact_type === 'universal_client' && doc.new_registration === 'yes' && (doc.record_originator && doc.record_originator === 'cht')",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/medicregistration"
+            },
+            "mapping": {
+                "registration": "doc",
+                "timestamp": "doc.reported_date"
+            }
+        },
+        "cht_client_registration_update": {
+            "relevant_to": "doc.type === 'contact' && doc.contact_type === 'universal_client' && doc.new_registration === 'false' && (doc.record_originator && doc.record_originator === 'cht')",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/medicdemographicupdates"
+            },
+            "mapping": {
+                "demographicUpdate": "doc"
+            }
+        },
+        "cht_form_data": {
+            "relevant_to": "doc.type === 'data_record' && ['hts_initial_form','hts_retest_form','hts_referral','hts_linkage','hiv_treatment_verification','contact','prep_treatment_verification','tracking','hts_client_tracing'].includes(doc.form)",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/medicformsdata"
+            },
+            "mapping": {
+                "encData": "doc",
+                "timestamp": "doc.reported_date"
+            }
+        },
+        "cht_kp_peer_calendar_form_data": {
+            "relevant_to": "doc.type === 'data_record' && doc.form === 'peer_calendar'",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/medicpeercalendar"
+            },
+            "mapping": {
+                "peerCalendarData": "doc",
+                "timestamp": "doc.reported_date"
+            }
+        },
+        "cht_hts_screening_form": {
+            "relevant_to": "doc.type === 'data_record' && ['hts_screening_form'].includes(doc.form) && (doc.fields.hts_service !== 'confirmPositiveResult' && doc.fields.hts_service !== 'linkage')",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/medicformsdata"
+            },
+            "mapping": {
+                "encData": "doc",
+                "timestamp": "doc.reported_date"
+            }
+        },
+        "cht_contact_listing": {
+            "relevant_to": "doc.type === 'contact' && doc.contact_type === 'patient_contact' && doc.record_originator === 'cht'",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/mediccontactsdata"
+            },
+            "mapping": {
+                "formData": "doc"
+            }
+        },
+        "contact_follow_up": {
+            "relevant_to": "doc.type === 'data_record' && doc.form === 'contact_follow_up'",
+            "destination": {
+                "base_url": "http://localhost:8080/",
+                "auth": {
+                    "type": "basic",
+                    "username": "admin",
+                    "password_key": "kenyaemr"
+                },
+                "path": "/openmrs/ws/rest/v1/edata/mediccontacttracedata"
+            },
+            "mapping": {
+                "traceData": "doc",
+                "timestamp": "doc.reported_date"
+            }
+        }
+    }
+}

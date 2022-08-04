@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Facility employee</h:title>
+    <model>
+      <itext>
+        <translation lang="en">
+          <text id="/data/bfacility_employee/phone:jr:constraintMsg">
+            <value>Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678</value>
+          </text>
+          <text id="/data/bfacility_employee/phone_alternate:jr:constraintMsg">
+            <value>Please enter a valid local number, or use the standard international format, which includes a plus sign (+) and country code. For example: +254712345678</value>
+          </text>
+        </translation>
+      </itext>
+      <instance>
+        <data delimiter="#" id="contact:facility_employee:create" prefix="J1!contact:facility_employee:create!" version="2020-09-25 23:52:29">
+          <inputs>
+            <meta>
+              <location>
+                <lat/>
+                <long/>
+                <error/>
+                <message/>
+              </location>
+            </meta>
+            <user>
+              <contact_id/>
+              <facility_id/>
+              <name/>
+            </user>
+          </inputs>
+          <bfacility_employee>
+            <parent>PARENT</parent>
+            <type>contact</type>
+            <contact_type>bfacility_employee</contact_type>
+            <name/>
+            <phone/>
+            <phone_alternate/>
+            <role/>
+            <external_id/>
+            <notes/>
+            <meta tag="hidden">
+              <created_by/>
+              <created_by_person_uuid/>
+              <created_by_place_uuid/>
+            </meta>
+          </bfacility_employee>
+          <meta tag="hidden">
+            <instanceID/>
+          </meta>
+        </data>
+      </instance>
+      <bind nodeset="/data/inputs" relevant="0"/>
+      <bind nodeset="/data/inputs/user/contact_id" type="string"/>
+      <bind nodeset="/data/inputs/user/facility_id" type="string"/>
+      <bind nodeset="/data/inputs/user/name" type="string"/>
+      <bind nodeset="/data/bfacility_employee/parent" type="string"/>
+      <bind nodeset="/data/bfacility_employee/type" type="string"/>
+      <bind nodeset="/data/bfacility_employee/contact_type" type="string"/>
+      <bind nodeset="/data/bfacility_employee/name" required="true()" type="string"/>
+      <bind constraint="1" jr:constraintMsg="jr:itext('/data/bfacility_employee/phone:jr:constraintMsg')" nodeset="/data/bfacility_employee/phone" type="tel"/>
+      <bind constraint="1" jr:constraintMsg="jr:itext('/data/bfacility_employee/phone_alternate:jr:constraintMsg')" nodeset="/data/bfacility_employee/phone_alternate" type="tel"/>
+      <bind nodeset="/data/bfacility_employee/role" required="true()" type="select1"/>
+      <bind nodeset="/data/bfacility_employee/external_id" type="string"/>
+      <bind nodeset="/data/bfacility_employee/notes" type="string"/>
+      <bind calculate="../../../inputs/user/name" nodeset="/data/bfacility_employee/meta/created_by" type="string"/>
+      <bind calculate="../../../inputs/user/contact_id" nodeset="/data/bfacility_employee/meta/created_by_person_uuid" type="string"/>
+      <bind calculate="../../../inputs/user/facility_id" nodeset="/data/bfacility_employee/meta/created_by_place_uuid" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body class="pages">
+    <group ref="/data/inputs">
+      <label></label>
+      <group ref="/data/inputs/user">
+        <label></label>
+        <input ref="/data/inputs/user/contact_id">
+          <label></label>
+        </input>
+        <input ref="/data/inputs/user/facility_id">
+          <label></label>
+        </input>
+        <input ref="/data/inputs/user/name">
+          <label></label>
+        </input>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/bfacility_employee">
+      <label>New facility employee</label>
+      <input ref="/data/bfacility_employee/name">
+        <label>Contact Names</label>
+      </input>
+      <input ref="/data/bfacility_employee/phone">
+        <label>Phone Number</label>
+      </input>
+      <input ref="/data/bfacility_employee/phone_alternate">
+        <label>Alternate Phone Number</label>
+      </input>
+      <select1 ref="/data/bfacility_employee/role">
+        <label>Role</label>
+        <item>
+          <label>CHW</label>
+          <value>chw</value>
+        </item>
+        <item>
+          <label>CHW Supervisor</label>
+          <value>chw_supervisor</value>
+        </item>
+        <item>
+          <label>Nurse</label>
+          <value>nurse</value>
+        </item>
+        <item>
+          <label>Facility Manager</label>
+          <value>manager</value>
+        </item>
+        <item>
+          <label>KP Case manager</label>
+          <value>kp_case_manager</value>
+        </item>
+        <item>
+          <label>KP Peer educator</label>
+          <value>kp_peer_educator</value>
+        </item>
+        <item>
+          <label>HTS provider</label>
+          <value>hts_provider</value>
+        </item>
+        <item>
+          <label>Clinician</label>
+          <value>clinician</value>
+        </item>
+      </select1>
+      <input ref="/data/bfacility_employee/external_id">
+        <label>External ID</label>
+      </input>
+      <input appearance="multiline" ref="/data/bfacility_employee/notes">
+        <label>Notes</label>
+      </input>
+      <group appearance="hidden" ref="/data/bfacility_employee/meta">
+        <label></label>
+      </group>
+    </group>
+  </h:body>
+</h:html>
