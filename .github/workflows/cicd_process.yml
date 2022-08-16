@@ -19,6 +19,7 @@ jobs:
         script: |
           cd /apps/github-workflows/kenyaemr-modules
           sudo rm -rf openmrs-module-afyastat
+          sudo mkdir openmrs-module-afyastat
           sudo chown cicd2:cicd2 openmrs-module-afyastat
           git config --global --add safe.directory /apps/github-workflows/kenyaemr-modules/openmrs-module-afyastat  
           cd /apps/github-workflows/kenyaemr-modules/openmrs-module-afyastat 
