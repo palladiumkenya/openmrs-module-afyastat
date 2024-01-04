@@ -42,10 +42,10 @@
 		<reportingVersion>1.18.0</reportingVersion>
 		<serializationxstreamVersion>0.2.14</serializationxstreamVersion>
 		<uiframeworkVersion>3.15.0</uiframeworkVersion>
-		<kenyaemrVersion>18.0.0</kenyaemrVersion>
-		<kenyacoreVersion>3.0.0</kenyacoreVersion>
+		<kenyaemrVersion>18.7.0</kenyaemrVersion>
+		<kenyacoreVersion>3.0.1</kenyacoreVersion>
 		<kenyauiVersion>3.0.0</kenyauiVersion>
-		<hivtestingservicesVersion>1.2.0</hivtestingservicesVersion>
+		<hivtestingservicesVersion>1.5.0</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
 		<jacksonVersion>2.13.1</jacksonVersion>
@@ -399,20 +399,20 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
 		</repository>
 		<repository>
 			<id>central</id>
 			<name>Maven Repository Switchboard</name>
 			<layout>default</layout>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>https://repo1.maven.org/maven2</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
