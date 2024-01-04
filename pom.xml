@@ -45,7 +45,7 @@
 		<kenyaemrVersion>18.7.0</kenyaemrVersion>
 		<kenyacoreVersion>3.0.1</kenyacoreVersion>
 		<kenyauiVersion>3.0.0</kenyauiVersion>
-		<hivtestingservicesVersion>1.5.0</hivtestingservicesVersion>
+		<hivtestingservicesVersion>1.5.1</hivtestingservicesVersion>
 
 		<jodaTimeVersion>2.9.1</jodaTimeVersion>
 		<jacksonVersion>2.13.1</jacksonVersion>
